@@ -1,7 +1,7 @@
 TouchDrawer
 ===================
 
-Is just a free and open source vector drawing tool for mobile.
+Is just a free and open source vector drawing tool for mobile. Try it today at [michaelsboost.com/TouchDrawer](https://michaelsboost.github.io/TouchDrawer)
 
 Version
 -------------
