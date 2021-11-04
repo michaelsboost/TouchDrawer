@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TouchDrawer</title>
+    <meta charset="utf-8">
+    <meta name="viewport"  content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <meta name="description" content="A free and open source vector drawing tool for mobile.">
+    <meta name="author" content="Michael Schwartz">
+    <link rel="stylesheet" href="libraries/normalize/normalize.css" />
+    <link rel="stylesheet" href="libraries/polyui/polyui-mod.css" />
+    <link rel="stylesheet" href="libraries/alertifyjs/alertify.core.css" />
+    <link rel="stylesheet" href="libraries/alertifyjs/alertify.default.css" />
+    <link rel="stylesheet" href="libraries/pickr/themes/classic.min.css" />
+    <link href="https://fonts.googleapis.com/css?family=Signika+Negative:300,400,700" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link id="apptheme" rel="stylesheet" href="css/dark-theme.css" />
+  </head>
+  <body>
+    <!-- project dimensions -->
+    <div class="settings dimensions" data-dimensions>
+      <div class="settingsbg" data-confirm="dimensions"></div>
+      <div class="projectSettings">
+        <div class="grid">
+          <div class="grid__col--12">
+            <div class="grid__col--6">
+              <h2 class="headline-secondary--grouped nomarb">
+                Width
+              </h2>
+              <input class="form__input" type="number" data-project="width" min="1" step="1" value="800">
+            </div>
+
+            <div class="grid__col--6">
+              <h2 class="headline-secondary--grouped nomarb">
+                Height
+              </h2>
+              <input class="form__input" type="number" data-project="height" min="1" step="1" value="600">
+            </div>
+          </div>
+
+          <div class="grid__col--12 settingsborder">
+            <br>
+            <button class="btn--default w100p" data-confirm="dimensions">Confirm</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- project settings -->
+    <div class="settings hide" data-settings>
+      <div class="settingsbg" data-toggle="projectSettings"></div>
+      <div class="projectSettings" data-projectSettings>
+        <div class="grid">
+          <div class="grid__col--12">
+            <div class="grid__col--6">
+              <h2 class="headline-secondary--grouped nomarb">
+                Project name 
+              </h2>
+              <input class="form__input" type="text" data-project="name" value="First Project">
+            </div>
+
+            <div class="grid__col--6">
+              <h2 class="headline-secondary--grouped nomarb">
+                Choose canvas size 
+                <a data-theme="dark" class="fr" title="Theme">
+                  <i class="fa fa-moon"></i>
+                </a>
+              </h2>
+              <input class="form__input" type="text" data-project="size" value="1080x1080">
+            </div>
+          </div>
+
+          <div class="grid__col--12 settingsborder">
+            <h2 class="headline-secondary--grouped nomarb nomart">Notepad</h2>
+            <textarea class="form__input" data-project="notepad" style="resize: vertical;" placeholder="Important notes about your project go here..."></textarea>
+
+            <button class="btn--default w100p" data-toggle="projectSettings">Close Dialog</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- header -->
+    <div class="header">
+      <div class="mainh">
+<!--
+        <label for="openfile" data-comingsoon>
+          <a title="Load file">
+            <i class="fa fa-file-upload"></i>
+          </a>
+        </label>
+-->
+        <a title="Clear" onclick="clearcanvas()">
+          <i class="fa fa-file"></i>
+        </a>
+        <a id="select" title="Select" onclick="changeAction(this)">
+          <i class="fa fa-hand-pointer"></i>
+        </a>
+        <a title="Color" data-open="palette">
+          <i class="fa fa-palette"></i>
+        </a>
+        <a id="fill" title="Fill" onclick="changeAction(this)">
+          <i class="fa fa-fill-drip"></i>
+        </a>
+        <a id="erase" title="Erase" onclick="changeAction(this)">
+          <i class="fa fa-eraser"></i>
+        </a>
+        <a id="pencil" title="Pencil" onclick="changeAction(this)">
+          <i class="fa fa-pencil-alt"></i>
+        </a>
+        <a id="brush" title="Brush" onclick="changeAction(this)">
+<!--          <i class="fa fa-paint-brush"></i>-->
+          <i class="fa fa-pen-alt"></i>
+        </a>
+        <a id="lasso" title="Lasso Brush" onclick="changeAction(this)">
+          <i class="fa fa-splotch"></i>
+        </a>
+        <a id="spray1" title="Spray 1" onclick="changeAction(this)">
+          <i class="fa fa-spray-can"></i>
+        </a>
+        <a id="spray2" title="Spray 2" onclick="changeAction(this)">
+          <i class="fa fa-circle"></i>
+        </a>
+        <a title="Export PNG" onclick="downloadImage()">
+          <i class="fa fa-file-image"></i>
+        </a>
+        <a title="Export SVG" onclick="downloadSVG()">
+<!--          <i class="fa fa-download"></i>-->
+          <i class="fa fa-file-download"></i>
+        </a>
+        <a href="https://michaelsboost.com/donate" target="_blank" title="Donate">
+          <i class="red fa fa-heart"></i>
+        </a>
+        <a class="hide" href="https://michaelsboost.com/" target="_blank" title="Developer's website">
+          <i class="fa fa-globe"></i>
+        </a>
+        <a href="https://github.com/michaelsboost/svgMotion/" target="_blank" title="Project source code">
+          <i class="fa fa-code"></i>
+        </a>
+        <a title="Settings" data-toggle="projectSettings">
+          <i class="fa fa-cog"></i>
+        </a>
+      </div>
+      <div class="palletmenu hide">
+        <a class="fl" title="Settings" data-toggle="projectSettings">
+          <i class="fa fa-cog"></i>
+        </a>
+        
+        <a class="fr" title="Close Color Palette" data-close="palette" style="position: relative; z-index: 1;">
+          <i class="fa fa-times"></i>
+        </a>
+      </div>
+    </div>
+    
+    <!-- load svg/json file -->
+    <div class="hide">
+      <input type="file" accept="image/svg+xml, application/json" id="openfile" onchange="loadfile(this)">
+    </div>
+
+    <!-- canvas -->
+    <div class="canvas">
+      <canvas id="canvas" class="hide" width="800" height="600"></canvas>
+    </div>
+    
+    <!-- color palette dialog -->
+    <div class="palettedialog hide" data-palette>
+      <div class="palettebg"></div>
+      <div class="palette">
+        <div class="picker"></div>
+      </div>
+    </div>
+    
+    <a class="undo" title="Undo" onclick="undo()">
+      <i class="fa fa-undo"></i>
+    </a>
+    <a class="redo" title="Redo" onclick="redo()">
+      <i class="fa fa-redo"></i>
+    </a>
+
+    <script src="libraries/font-awesome/all.min.js"></script>
+    <script src="libraries/alertifyjs/alertify.js"></script>
+    <script src="libraries/jquery/jquery.js"></script>
+    <script src="libraries/jquery/jquery-migrate-1.2.1.min.js"></script>
+    <script src="libraries/pickr/pickr.min.js"></script>
+    <script src="libraries/bowser/bowser.min.js"></script>
+    <script src="libraries/fabricjs/fabric.js"></script>
+    <script src="libraries/fabricjs/eraser_brush.mixin.js"></script>
+    <script src="js/browsersupport.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/app.js"></script>
+<!--
+    <script id="__bs_script__">
+      //<![CDATA[
+        var script = document.createElement('script');
+        script.setAttribute('async', '');
+        script.setAttribute('src', '%script%'.replace("HOST", location.hostname));
+        document.body.appendChild(script);
+      //]]>
+    </script>
+-->
+  </body>
+</html>

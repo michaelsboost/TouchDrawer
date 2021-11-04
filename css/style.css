@@ -1,0 +1,375 @@
+/* resets */
+@font-face {
+  font-family: Lato;
+  src: url("../libraries/font-awesome/Lato-Light.ttf");
+}
+html, body {
+  height: 100%;
+}
+body {
+  font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+a {
+  cursor: pointer;
+  text-decoration: none;
+}
+.alertify-log {
+  text-shadow: 0 0 #000;
+}
+.alertify-log-success {
+/*  background: #1e7eeb;*/
+  background: #0ed277;
+}
+.alertify-log-error {
+  background: #ec4040;
+}
+button {
+  background: transparent;
+  border: 0;
+}
+html, body {
+  font-family: "Helvetica","Arial",sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+}
+input[type=range] {
+  position: relative;
+  top: -4px;
+  width: calc(100vw - 210px);
+  margin-top: -3.1px;
+  background-color: transparent;
+  -webkit-appearance: none;
+}
+
+/* checkbox */
+input.checkbox {
+  position: relative;
+  margin-top: 10px;
+  -webkit-appearance: none;
+  outline: none;
+  width: 50px;
+  height: 30px;
+  border-radius: 50px;
+}
+input.checkbox:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+}
+input.checkbox:checked:after {
+  left: 20px;
+}
+/* svg checkbox */
+svg.checkbox {
+  cursor: pointer;
+  overflow: visible;
+}
+svg.checkbox:not(.fr) {
+  position: relative;
+  top: 5px;
+}
+svg.checkbox path {
+  transform-origin: center;
+  transform: scale(1.5) translate(2px, -3px);
+  stroke: transparent!important;
+}
+
+/* Hide Arrows From Input Number */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Hide Arrows From Input Number */
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* Project Settings */
+.settings {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99999;
+  overflow: auto;
+}
+.settings h2 {
+  line-height: 48px;
+}
+.settingsbg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  cursor: pointer;
+}
+.projectSettings {
+  width: 100%;
+  
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+}
+.projectSettings > div {
+  border-radius: 1em;
+  padding: 1em 2em;
+}
+.settings .minicolors-panel {
+  margin-top: -16px;
+}
+.settings .minicolors-input {
+  display: inline-block;
+  width: calc(100vw - 85vw);
+}
+.settings select {
+  display: block;
+  padding: 15px;
+  width: 100%;
+  outline: 0;
+  border: 0;
+}
+.settings .minicolors-input[data-selectioncolor] {
+  display: block;
+  padding: 25px 50px;
+  width: 100%;
+  outline: 0;
+  border: 0;
+}
+.settings .minicolors-input[data-selectioncolor] + span.minicolors-swatch {
+  top: 9px;
+  left: 9px;
+  width: 30px;
+  height: 30px;
+}
+.selectioncolor .minicolors-theme-default.minicolors {
+  width: 100%;
+  display: block;
+}
+
+/* SWAL */
+.swal2-icon {
+  font-size: initial!important;
+}
+.swal2-icon.swal2-warning,
+.swal2-icon.swal2-question {
+  font-size: inherit!important;
+  line-height: initial!important;
+}
+.swal2-icon.swal2-warning > .swal2-icon-text,
+.swal2-icon.swal2-question > .swal2-icon-text {
+  margin: auto;
+}
+.swal2-popup #swal2-content {
+  margin-top: 12px;
+}
+
+/* header */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  white-space: nowrap;
+  overflow: auto;
+  user-select: none;
+  margin: 0;
+  padding: 15px 15px 8px 15px;
+  z-index: 1;
+}
+.header a {
+  padding: 0 calc(5vw);
+}
+.header a .fa {
+  font-size: 20px;
+}
+.header svg {
+  width: auto!important;
+/*  height: 15px!important;*/
+  height: 20px!important;
+}
+.svg-inline--fa.fa-undo.fa-w-16, .svg-inline--fa.fa-redo.fa-w-16 {
+  width: auto!important;
+  height: 30px!important;
+}
+
+.undo, .redo {
+  position: absolute;
+  bottom: 0;
+  margin: 15px;
+  font-size: 20px;
+}
+.undo {
+  left: 0;
+}
+.redo {
+  right: 0;
+}
+
+/* color palette */
+.palettedialog, .palettebg {
+  position: absolute;
+  top: 23px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.palette {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+}
+.pcr-button {
+  display: none;
+}
+.pcr-app.visible {
+  top: 50% !important;
+  left: 50% !important;
+  width: 450px !important;
+  height: 240px !important;
+  margin-top: -120px !important;
+  margin-left: -225px !important;
+}
+.pcr-last-color {
+  display: none;
+}
+.pcr-app[data-theme='classic'] .pcr-selection .pcr-color-preview .pcr-current-color {
+  height: 100%;
+}
+.pcr-app[data-theme='classic'] .pcr-selection .pcr-color-palette {
+  height: auto;
+}
+
+/* canvas */
+.canvas {
+  display: block;
+  position: absolute;
+/*  top: 49px;*/
+  top: 47px;
+  height: calc(100% - 47px);
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  overflow: auto;
+  border: 0;
+}
+.canvas > .canvas-container {
+/*
+  width: 100%!important;
+  height: 100%!important;
+*/
+/*
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+*/
+  margin: 100px auto 200px auto;
+}
+
+/* misc */
+.defaultcur {
+  cursor: default;
+}
+.block {
+  display: block;
+}
+.ib {
+  display: inline-block;
+}
+.hide {
+  display: none;
+}
+.hidden {
+  visibility: hidden;
+}
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
+.pr {
+  position: absolute;
+  right: 0;
+}
+.tl {
+  text-align: left;
+}
+.tc {
+  text-align: center;
+}
+.tr {
+  text-align: right;
+}
+.pointer {
+  cursor: pointer;
+}
+.w100p {
+  width: 100%;
+}
+.w50p {
+  width: 50%;
+}
+.w25p {
+  width: 25%;
+}
+.r50p {
+  right: 50%;
+}
+.t50p {
+  top: 50%;
+}
+.b50p {
+  bottom: 50%;
+}
+.nopad {
+  padding: 0;
+}
+.nomar {
+  margin: 0;
+}
+.nomart {
+  margin-top: 0;
+}
+.nomarb {
+  margin-bottom: 0;
+}
+.bdrn {
+  border-radius: 0;
+}
+.dialogbtn {
+  position: fixed;
+  left: 50%;
+  right: 0;
+  bottom: 0;
+}
+.scale1h {
+  transform: scale(1.5);
+}
+.scale2 {
+  transform: scale(2);
+}
+.red {
+  color: #e93657;
+}
+.stack1 {
+  position: relative;
+  z-index: 1;
+}
+.bgnone {
+  background: transparent!important;
+}
