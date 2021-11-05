@@ -168,7 +168,7 @@
         </a>
         
 <!--        <input type="range" id="canvasSize" min="0.01" max="5" value="0.75" step="0.01">-->
-        <input type="range" id="canvasSize" min="0.01" max="5" value="0.9" step="0.01">
+        <input type="range" id="canvasSize" min="0.01" max="3" value="0.9" step="0.01">
         
         <a class="fr" title="Close Zoom" data-close="zoom" style="position: relative; z-index: 1;">
           <i class="fa fa-times"></i>
@@ -182,9 +182,11 @@
     </div>
 
     <!-- canvas -->
-    <div class="canvas">
-      <canvas id="overlay" width="1920" height="1080"></canvas>
-      <canvas id="canvas" width="1920" height="1080"></canvas>
+    <div class="wrapper">
+      <div class="canvas hidden">
+        <canvas id="overlay" width="1920" height="1080"></canvas>
+        <canvas id="canvas" width="1920" height="1080"></canvas>
+      </div>
     </div>
     
     <!-- color palette dialog -->
