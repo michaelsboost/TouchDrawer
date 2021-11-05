@@ -132,9 +132,6 @@ how to remove the virtical space around the range input in IE*/
 }
 
 /* backgrounds */
-body {
-  background: #f4f4f5;
-} 
 select, select option,
 .settingsbg {
   background: rgba(0, 0, 0, 0.8);
@@ -184,7 +181,7 @@ select, select option {
 }
 
 /* canvas */
-.canvas {
+body {
   background-color: white;
   background-image:
     linear-gradient(45deg, #ccc 25%, transparent 25%),

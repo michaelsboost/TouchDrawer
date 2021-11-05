@@ -342,14 +342,14 @@ $('[data-confirm=dimensions]').click(function() {
 //  $('.canvas .wrapper').css('left', varHeight);
 //  $('.canvas .wrapper').css('width', 'calc('+ $('[data-project=height]').val() +'px + '+ $('[data-project=height]').val() +'px + '+ $('[data-project=height]').val() +'px)');
 //  $('.canvas .wrapper').css('height', 'calc('+ $('[data-project=height]').val() +'px + '+ parseFloat(parseFloat($('[data-project=height]').val()) / 4) +'px)');
-  $('.canvas .wrapper')[0].scrollIntoView({
+  $('#canvasSize').trigger('change');
+  $('.canvas #canvas')[0].scrollIntoView({
     // defines vertical alignment - start/center/nearest
     // block: "start",
     // defines horizontal alignment - start/center/nearest
     inline: "center"
   });
   changeAction('brush');
-  $('[data-open=zoom]').trigger('click');
 });
 $('[data-project=width]').on('keydown', function(e) {
   if (e.keyCode === 13) {
