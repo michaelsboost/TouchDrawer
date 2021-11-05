@@ -343,7 +343,7 @@ $('[data-confirm=dimensions]').click(function() {
 //  $('.canvas .wrapper').css('width', 'calc('+ $('[data-project=height]').val() +'px + '+ $('[data-project=height]').val() +'px + '+ $('[data-project=height]').val() +'px)');
 //  $('.canvas .wrapper').css('height', 'calc('+ $('[data-project=height]').val() +'px + '+ parseFloat(parseFloat($('[data-project=height]').val()) / 4) +'px)');
   $('#canvasSize').trigger('change');
-  $('.canvas #canvas')[0].scrollIntoView({
+  $('.canvas')[0].scrollIntoView({
     // defines vertical alignment - start/center/nearest
     // block: "start",
     // defines horizontal alignment - start/center/nearest
@@ -456,7 +456,7 @@ $('[data-close=zoom]').click(function() {
   changeAction(activeTool);
 });
 $('#canvasSize').change(function() {
-  $('.canvas').css('transform', 'scale('+ this.value +')')
+  $('.wrapper').css('transform', 'scale('+ this.value +')')
 });
 
 function changeAction(target) {

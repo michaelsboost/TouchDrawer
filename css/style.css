@@ -246,15 +246,29 @@ input[type=number] {
 }
 
 /* canvas */
+.wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+  transform-origin: center;
+}
 .canvas {
   display: block;
   position: absolute;
   top: 47px;
+  top: 100px;
+/*  top: -75px;*/
+/*  top: 0;*/
   left: 0;
   right: 0;
   bottom: 0;
   margin: 0 auto;
-  overflow: hidden;
+/*  overflow: hidden;*/
+/*  overflow-y: hidden;*/
+/*  overflow: auto;*/
   border: 0;
   text-align: center;
 }
