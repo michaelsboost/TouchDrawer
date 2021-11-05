@@ -326,22 +326,18 @@ canvas.setOverlayColor("rgba(255,255,255,0)",undefined,{erasable:false});
 
 // confirm canvas dimensions
 $('[data-confirm=dimensions]').click(function() {
+  $('.canvas').removeClass('hidden');
   canvas.setWidth($('[data-project=width]').val());
   canvas.setHeight($('[data-project=height]').val());
   canvas.calcOffset();
-//  $('.canvas #overlay').css('top', parseFloat(parseFloat($('[data-project=height]').val()) + 5) + 'px');
-  $('.canvas .canvas-container').css('top', '-' + parseFloat(parseFloat($('[data-project=height]').val()) + 5) + 'px');
+//  $('.canvas .canvas-container').css('top', '-' + parseFloat(parseFloat($('[data-project=height]').val()) + 5) + 'px');
 //  $('.canvas #overlay').css('left', '-' + parseFloat(119) + 'px');
   $('.canvas #overlay')[0].width  = $('[data-project=width]').val();
   $('.canvas #overlay')[0].height = $('[data-project=height]').val();
   $('[data-dimensions]').addClass('hide');
   $('.header').css('z-index', 99999);
-  
-//  var varHeight = 'calc('+ parseFloat(parseFloat($('[data-project=height]').val()) / 2) + 'px / 2)';
-//  $('.canvas .wrapper').css('top', varHeight);
-//  $('.canvas .wrapper').css('left', varHeight);
-//  $('.canvas .wrapper').css('width', 'calc('+ $('[data-project=height]').val() +'px + '+ $('[data-project=height]').val() +'px + '+ $('[data-project=height]').val() +'px)');
-//  $('.canvas .wrapper').css('height', 'calc('+ $('[data-project=height]').val() +'px + '+ parseFloat(parseFloat($('[data-project=height]').val()) / 4) +'px)');
+  $('.canvas .canvas').css('width', 'calc('+ $('[data-project=width]').val() +'px + '+ $('[data-project=width]').val() +'px)');
+  $('.canvas .canvas').css('width', 'calc('+ $('[data-project=height]').val() +'px + '+ $('[data-project=height]').val() +'px)');  
   $('#canvasSize').trigger('change');
   $('.canvas')[0].scrollIntoView({
     // defines vertical alignment - start/center/nearest
@@ -456,7 +452,8 @@ $('[data-close=zoom]').click(function() {
   changeAction(activeTool);
 });
 $('#canvasSize').change(function() {
-  $('.wrapper').css('transform', 'scale('+ this.value +')')
+  $('.canvas').css('transform', 'translateY(-50%) scale('+ this.value +')');
+//  $('.canvas .canvas-container, #overlay').css('left', '-' + parseFloat(parseFloat($('[data-project=width]').val()) + 100) + 'px');
 });
 
 function changeAction(target) {
@@ -577,6 +574,7 @@ function clearcanvas() {
   canvas.clear();
   canvas.backgroundColor = '#fff';
   canvas.renderAll();
+  $('.canvas').addClass('hidden');
   $('[data-dimensions]').removeClass('hide');
   $('[data-project=width]')[0].focus();
   $('[data-project=width]')[0].select();
