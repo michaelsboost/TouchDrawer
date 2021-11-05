@@ -180,6 +180,7 @@ input[type=number] {
   position: fixed;
   top: 0;
   left: 0;
+/*  width: calc(100vw - 28px);*/
   right: 0;
   text-align: center;
   white-space: nowrap;
@@ -200,14 +201,16 @@ input[type=number] {
 /*  height: 15px!important;*/
   height: 20px!important;
 }
-.svg-inline--fa.fa-undo.fa-w-16, .svg-inline--fa.fa-redo.fa-w-16 {
+.svg-inline--fa.fa-undo.fa-w-16, .svg-inline--fa.fa-redo.fa-w-16,
+.svg-inline--fa.fa-search-plus.fa-w-16, .svg-inline--fa.fa-search-minus.fa-w-16 {
   width: auto!important;
   height: 30px!important;
 }
 
 .undo, .redo {
   position: fixed;
-  bottom: 0;
+  top: calc(100vh - 75px);
+/*  bottom: 0;*/
   margin: 15px;
   font-size: 20px;
   z-index: 3;
@@ -216,7 +219,8 @@ input[type=number] {
   left: 0;
 }
 .redo {
-  right: 0;
+/*  right: 0;*/
+  right: 10px;
 }
 
 /* color palette */
@@ -245,16 +249,12 @@ input[type=number] {
 .canvas {
   display: block;
   position: absolute;
-/*  top: 49px;*/
   top: 47px;
-  /* width: 250%; */
-/*  height: 250%;*/
-  /* padding: 250% 0; */
-/*  height: calc(100% - 47px);*/
   left: 0;
   right: 0;
+  bottom: 0;
   margin: 0 auto;
-  overflow: auto;
+  overflow: hidden;
   border: 0;
   text-align: center;
 }
@@ -278,13 +278,10 @@ input[type=number] {
 }
 #overlay {
   position: relative;
-  top: 605px;
+  top: 0;
   margin: auto;
   z-index: 1;
   background: transparent;
-}
-.canvas .wrapper {
-  transform: scale(0.25);
 }
 
 /* misc */

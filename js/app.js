@@ -329,20 +329,27 @@ $('[data-confirm=dimensions]').click(function() {
   canvas.setWidth($('[data-project=width]').val());
   canvas.setHeight($('[data-project=height]').val());
   canvas.calcOffset();
-  $('.canvas .wrapper').removeClass('invisible');
+//  $('.canvas #overlay').css('top', parseFloat(parseFloat($('[data-project=height]').val()) + 5) + 'px');
+  $('.canvas .canvas-container').css('top', '-' + parseFloat(parseFloat($('[data-project=height]').val()) + 5) + 'px');
+//  $('.canvas #overlay').css('left', '-' + parseFloat(119) + 'px');
+  $('.canvas #overlay')[0].width  = $('[data-project=width]').val();
+  $('.canvas #overlay')[0].height = $('[data-project=height]').val();
+  $('[data-dimensions]').addClass('hide');
+  $('.header').css('z-index', 99999);
+  
+//  var varHeight = 'calc('+ parseFloat(parseFloat($('[data-project=height]').val()) / 2) + 'px / 2)';
+//  $('.canvas .wrapper').css('top', varHeight);
+//  $('.canvas .wrapper').css('left', varHeight);
+//  $('.canvas .wrapper').css('width', 'calc('+ $('[data-project=height]').val() +'px + '+ $('[data-project=height]').val() +'px + '+ $('[data-project=height]').val() +'px)');
+//  $('.canvas .wrapper').css('height', 'calc('+ $('[data-project=height]').val() +'px + '+ parseFloat(parseFloat($('[data-project=height]').val()) / 4) +'px)');
   $('.canvas .wrapper')[0].scrollIntoView({
     // defines vertical alignment - start/center/nearest
     // block: "start",
     // defines horizontal alignment - start/center/nearest
     inline: "center"
   });
-  $('.canvas #overlay').css('top', parseFloat(parseFloat($('[data-project=height]').val()) + 9) + 'px');
-//  $('.canvas #overlay').css('left', '-' + parseFloat(119) + 'px');
-  $('.canvas #overlay')[0].width  = $('[data-project=width]').val();
-  $('.canvas #overlay')[0].height = $('[data-project=height]').val();
-  $('[data-dimensions]').addClass('hide');
-  $('.header').css('z-index', 99999);
-  changeAction('lasso');
+  changeAction('brush');
+  $('[data-open=zoom]').trigger('click');
 });
 $('[data-project=width]').on('keydown', function(e) {
   if (e.keyCode === 13) {
@@ -433,31 +440,47 @@ $('[data-close=palette]').click(function() {
   pickr.hide();
 });
 
+// open and close zoom tool
+$('[data-open=zoom]').click(function() {
+  canvas.isDrawingMode = false;
+  $('.canvas-container').css('z-index', 0);
+  $('.history').addClass('hide');
+  $('.mainh').addClass('hide');
+  $('.zoommenu, [data-zoom]').removeClass('hide');
+});
+$('[data-close=zoom]').click(function() {
+  $('.mainh').removeClass('hide');
+  $('.zoommenu, [data-zoom]').addClass('hide');
+  changeAction(activeTool);
+});
+$('#canvasSize').change(function() {
+  $('.canvas').css('transform', 'scale('+ this.value +')')
+});
+
 function changeAction(target) {
-  ['pan','select','fill','erase','pencil','brush','lasso','spray1','spray2'].forEach(action => {
+  ['select','fill','erase','pencil','brush','lasso','spray1','spray2'].forEach(action => {
     var el = document.getElementById(action);
     el.classList.remove('active');
   });
   if(typeof target==='string') target = document.getElementById(target);
   target.classList.add('active');
   switch (target.id) {
-    case "pan":
-      canvas.isDrawingMode = false;
-      $('.canvas-container').css('z-index', 0);
-      break;
     case "select":
       canvas.isDrawingMode = false;
       $('.canvas-container').css('z-index', 1);
+      $('.history').removeClass('hide');
       break;
     case "fill":
       canvas.isDrawingMode = false;
       $('.canvas-container').css('z-index', 1);
+      $('.history').removeClass('hide');
       break;
     case "erase":
       canvas.freeDrawingBrush = new fabric.EraserBrush(canvas);
       canvas.freeDrawingBrush.width = parseFloat($('#brushSize').val());
       canvas.isDrawingMode = true;
       $('.canvas-container').css('z-index', 1);
+      $('.history').removeClass('hide');
       break;
     case "pencil":
       canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
@@ -465,6 +488,7 @@ function changeAction(target) {
       canvas.freeDrawingBrush.color = pickr.getColor().toRGBA().toString();
       canvas.isDrawingMode = true;
       $('.canvas-container').css('z-index', 1);
+      $('.history').removeClass('hide');
       break;
     case "brush":
       canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
@@ -472,12 +496,14 @@ function changeAction(target) {
       canvas.freeDrawingBrush.color = pickr.getColor().toRGBA().toString();
       canvas.isDrawingMode = true;
       $('.canvas-container').css('z-index', 1);
+      $('.history').removeClass('hide');
       break;
     case "lasso":
       canvas.freeDrawingBrush = new fabric.LassoBrush(canvas);
       canvas.freeDrawingBrush.color = pickr.getColor().toRGBA().toString();
       canvas.isDrawingMode = true;
       $('.canvas-container').css('z-index', 1);
+      $('.history').removeClass('hide');
       break;
     case "spray1":
       canvas.freeDrawingBrush = new fabric.SprayBrush(canvas);
@@ -485,6 +511,7 @@ function changeAction(target) {
       canvas.freeDrawingBrush.color = pickr.getColor().toRGBA().toString();
       canvas.isDrawingMode = true;
       $('.canvas-container').css('z-index', 1);
+      $('.history').removeClass('hide');
       break;
     case "spray2":
       canvas.freeDrawingBrush = new fabric.CircleBrush(canvas);
@@ -492,6 +519,7 @@ function changeAction(target) {
       canvas.freeDrawingBrush.color = pickr.getColor().toRGBA().toString();
       canvas.isDrawingMode = true;
       $('.canvas-container').css('z-index', 1);
+      $('.history').removeClass('hide');
       break;
     default:
       break;
@@ -547,7 +575,6 @@ function clearcanvas() {
   canvas.clear();
   canvas.backgroundColor = '#fff';
   canvas.renderAll();
-  $('.canvas .wrapper').addClass('invisible');
   $('[data-dimensions]').removeClass('hide');
   $('[data-project=width]')[0].focus();
   $('[data-project=width]')[0].select();
@@ -656,3 +683,9 @@ window.addEventListener("keydown", function(e) {
     undo();
   }
 });
+
+// bot
+//setTimeout(function() {
+//  $('[data-confirm=dimensions]').trigger('click');
+//  $('[data-open=zoom]').trigger('click');
+//}, 100)

@@ -92,9 +92,10 @@
         <a title="Clear" onclick="clearcanvas()">
           <i class="fa fa-file"></i>
         </a>
-        <a id="pan" title="Pan" onclick="changeAction(this)">
+        <a id="zoom" title="Pan" data-open="zoom">
 <!--          <i class="fa fa-hand-point-up"></i>-->
-          <i class="fa fa-hand-pointer"></i>
+<!--          <i class="fa fa-hand-pointer"></i>-->
+          <i class="fa fa-search"></i>
         </a>
         <a id="select" title="Select" onclick="changeAction(this)">
           <i class="fa fa-mouse-pointer"></i>
@@ -161,6 +162,18 @@
 
         <span class="fr" data-val style="position: relative; left: 13px;">35</span>
       </div>
+      <div class="zoommenu hide">
+        <a class="fl" title="Settings" data-toggle="projectSettings">
+          <i class="fa fa-cog"></i>
+        </a>
+        
+<!--        <input type="range" id="canvasSize" min="0.01" max="5" value="0.75" step="0.01">-->
+        <input type="range" id="canvasSize" min="0.01" max="5" value="0.9" step="0.01">
+        
+        <a class="fr" title="Close Zoom" data-close="zoom" style="position: relative; z-index: 1;">
+          <i class="fa fa-times"></i>
+        </a>
+      </div>
     </div>
     
     <!-- load svg/json file -->
@@ -170,19 +183,17 @@
 
     <!-- canvas -->
     <div class="canvas">
-      <div class="wrapper invisible">
-        <canvas id="overlay" width="1920" height="1080"></canvas>
-        <canvas id="canvas" width="1920" height="1080"></canvas>
-      </div>
+      <canvas id="overlay" width="1920" height="1080"></canvas>
+      <canvas id="canvas" width="1920" height="1080"></canvas>
     </div>
     
     <!-- color palette dialog -->
     <div class="picker hide"></div>
     
-    <a class="undo" title="Undo" onclick="undo()">
+    <a class="undo history" title="Undo" onclick="undo()">
       <i class="fa fa-undo"></i>
     </a>
-    <a class="redo" title="Redo" onclick="redo()">
+    <a class="redo history" title="Redo" onclick="redo()">
       <i class="fa fa-redo"></i>
     </a>
 
