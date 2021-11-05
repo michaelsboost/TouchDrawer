@@ -645,7 +645,7 @@ function downloadImage() {
   var ext = "png";
   var base64 = canvas.toDataURL({
     format: ext,
-    enableRetinaScaling: true
+    enableRetinaScaling: false
   });
   var link = document.createElement("a");
   link.href = base64;
