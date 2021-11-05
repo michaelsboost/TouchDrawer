@@ -247,9 +247,9 @@ input[type=number] {
   position: absolute;
 /*  top: 49px;*/
   top: 47px;
-  width: 250%;
+  /* width: 250%; */
 /*  height: 250%;*/
-  padding: 250% 0;
+  /* padding: 250% 0; */
 /*  height: calc(100% - 47px);*/
   left: 0;
   right: 0;
