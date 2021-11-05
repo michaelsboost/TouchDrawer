@@ -431,12 +431,14 @@ $('#brushSize')[0].onchange = function() {
 $('[data-open=palette]').click(function() {
   $('.mainh').addClass('hide');
   $('.palletmenu, [data-palette]').removeClass('hide');
+  $('.canvas-container').css('z-index', 0);
   pickr.show();
 });
 $('[data-close=palette]').click(function() {
   $('.mainh').removeClass('hide');
   $('.palletmenu, [data-palette]').addClass('hide');
   changeAction(activeTool);
+  $('.canvas-container').css('z-index', 1);
   pickr.hide();
 });
 

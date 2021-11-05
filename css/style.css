@@ -36,7 +36,7 @@ html, body {
 input[type=range] {
   position: relative;
   top: -4px;
-  width: calc(100vw - 40vw - 20px);
+  width: calc(100vw - 40vw - 60px);
   margin-top: -3.1px;
   background-color: transparent;
   -webkit-appearance: none;
@@ -209,8 +209,8 @@ input[type=number] {
 
 .undo, .redo {
   position: fixed;
-  top: calc(100vh - 75px);
-/*  bottom: 0;*/
+/*  top: calc(100vh - 75px);*/
+  bottom: 0;
   margin: 15px;
   font-size: 20px;
   z-index: 3;
