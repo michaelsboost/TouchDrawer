@@ -193,7 +193,8 @@ body {
 }
 .canvas #canvas,
 .canvas .upper-canvas {
-  border: 1px solid #1e7eeb;
+/*  border: 1px solid #1e7eeb;*/
+  outline: 1px solid #1e7eeb;
 }
 
 /* timeline theme */
