@@ -36,7 +36,7 @@ html, body {
 input[type=range] {
   position: relative;
   top: -4px;
-  width: calc(100vw - 210px);
+  width: calc(100vw - 40vw - 10px);
   margin-top: -3.1px;
   background-color: transparent;
   -webkit-appearance: none;
@@ -187,7 +187,7 @@ input[type=number] {
   user-select: none;
   margin: 0;
   padding: 15px 15px 8px 15px;
-  z-index: 1;
+  z-index: 2;
 }
 .header a {
   padding: 0 calc(5vw);
@@ -206,10 +206,11 @@ input[type=number] {
 }
 
 .undo, .redo {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   margin: 15px;
   font-size: 20px;
+  z-index: 3;
 }
 .undo {
   left: 0;
@@ -259,14 +260,18 @@ input[type=number] {
   position: absolute;
 /*  top: 49px;*/
   top: 47px;
-  height: calc(100% - 47px);
+  width: 250%;
+/*  height: 250%;*/
+  padding: 250% 0;
+/*  height: calc(100% - 47px);*/
   left: 0;
   right: 0;
   margin: 0 auto;
   overflow: auto;
   border: 0;
+  text-align: center;
 }
-.canvas > .canvas-container {
+.canvas .canvas-container {
 /*
   width: 100%!important;
   height: 100%!important;
@@ -277,7 +282,22 @@ input[type=number] {
   left: 50%;
   transform: translateY(-50%) translateX(-50%);
 */
-  margin: 100px auto 200px auto;
+/*  margin: 100px auto 200px auto;*/
+/*
+  margin-top:  calc(-21% - 2px);
+  margin-left: calc(3px);
+*/
+  margin: auto;
+}
+#overlay {
+  position: relative;
+  top: 605px;
+  margin: auto;
+  z-index: 1;
+  background: transparent;
+}
+.canvas .wrapper {
+  transform: scale(0.25);
 }
 
 /* misc */

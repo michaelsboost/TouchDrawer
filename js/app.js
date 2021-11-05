@@ -12,6 +12,8 @@ $('[data-confirm=dimensions]').click(function() {
   canvas.setHeight($('[data-project=height]').val());
   canvas.calcOffset();
   $('.canvas canvas').removeClass('hide');
+  $('.canvas #overlay')[0].width  = $('[data-project=width]').val();
+  $('.canvas #overlay').css('height', parseFloat(parseFloat($('[data-project=height]').val()) + parseFloat(parseFloat($('[data-project=height]').val()) / 4)));
   $('[data-dimensions]').addClass('hide');
 });
 $('[data-project=width]').on('keydown', function(e) {
@@ -25,6 +27,22 @@ $('[data-project=height]').on('keydown', function(e) {
     $('[data-confirm=dimensions]').trigger('click');
   }
 });
+setTimeout(function() {
+  $('[data-confirm=dimensions]').trigger('click');
+  $('.canvas #overlay')[0].scrollIntoView({
+    // defines vertical alignment - start/center/nearest
+    // block: "start",
+    // defines horizontal alignment - start/center/nearest
+    inline: "center"
+  });
+  $('.canvas #overlay').css('top', parseFloat(parseFloat($('[data-project=height]').val()) + 10) + 'px');
+//  $('.canvas #overlay').css('left', '-' + parseFloat(119) + 'px');
+  $('.canvas #overlay')[0].width  = $('[data-project=width]').val();
+  $('.canvas #overlay')[0].height = $('[data-project=height]').val();
+
+  let pz = new PinchZoom($('.canvas #overlay')[0]);
+  pz.enable(); // Enables all gesture capturing (is enabled by default)
+}, 100);
 
 // initiate settings color picker
 const pickr = Pickr.create({
@@ -70,13 +88,22 @@ const pickr = Pickr.create({
   }
 });
 pickr.on('init', () => {
-  changeAction('lasso');
+  changeAction('pan');
   pickr.hide();
 });
 pickr.on('save', (color, instance) => {
   pickr.addSwatch(pickr.getColor().toRGBA().toString());
 //  $('[data-close=palette]').trigger('click');
 });
+
+// brush size
+$('[data-decrement]').on('click', function() {
+  $('#brushSize')[0].stepDown();
+  $('[data-val]').text($('#brushSize').val());
+});
+$('#brushSize')[0].onchange = function() {
+  $('[data-val]').text(this.value);
+};
 
 // open and close color picker
 $('[data-open=palette]').click(function() {
@@ -410,52 +437,64 @@ var canvas = this.__canvas = new fabric.Canvas('canvas', {
 canvas.setOverlayColor("rgba(255,255,255,0)",undefined,{erasable:false});
 
 function changeAction(target) {
-  ['select','fill','erase','pencil','brush','lasso','spray1','spray2'].forEach(action => {
+  ['pan','select','fill','erase','pencil','brush','lasso','spray1','spray2'].forEach(action => {
     var el = document.getElementById(action);
     el.classList.remove('active');
   });
   if(typeof target==='string') target = document.getElementById(target);
   target.classList.add('active');
   switch (target.id) {
+    case "pan":
+      canvas.isDrawingMode = false;
+      $('.canvas-container').css('z-index', 0);
+      break;
     case "select":
       canvas.isDrawingMode = false;
+      $('.canvas-container').css('z-index', 1);
       break;
     case "fill":
       canvas.isDrawingMode = false;
+      $('.canvas-container').css('z-index', 1);
       break;
     case "erase":
       canvas.freeDrawingBrush = new fabric.EraserBrush(canvas);
-      canvas.freeDrawingBrush.width = 35;
+      canvas.freeDrawingBrush.width = parseFloat($('#brushSize').val());
       canvas.isDrawingMode = true;
+      $('.canvas-container').css('z-index', 1);
       break;
     case "pencil":
       canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
       canvas.freeDrawingBrush.width = 1;
       canvas.freeDrawingBrush.color = pickr.getColor().toRGBA().toString();
       canvas.isDrawingMode = true;
+      $('.canvas-container').css('z-index', 1);
       break;
     case "brush":
       canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
-      canvas.freeDrawingBrush.width = 35;
+      canvas.freeDrawingBrush.width = parseFloat($('#brushSize').val());
       canvas.freeDrawingBrush.color = pickr.getColor().toRGBA().toString();
       canvas.isDrawingMode = true;
+      $('.canvas-container').css('z-index', 1);
       break;
     case "lasso":
       canvas.freeDrawingBrush = new fabric.LassoBrush(canvas);
       canvas.freeDrawingBrush.color = pickr.getColor().toRGBA().toString();
       canvas.isDrawingMode = true;
+      $('.canvas-container').css('z-index', 1);
       break;
     case "spray1":
       canvas.freeDrawingBrush = new fabric.SprayBrush(canvas);
-      canvas.freeDrawingBrush.width = 35;
+      canvas.freeDrawingBrush.width = parseFloat($('#brushSize').val());
       canvas.freeDrawingBrush.color = pickr.getColor().toRGBA().toString();
       canvas.isDrawingMode = true;
+      $('.canvas-container').css('z-index', 1);
       break;
     case "spray2":
       canvas.freeDrawingBrush = new fabric.CircleBrush(canvas);
-      canvas.freeDrawingBrush.width = 35;
+      canvas.freeDrawingBrush.width = parseFloat($('#brushSize').val());
       canvas.freeDrawingBrush.color = pickr.getColor().toRGBA().toString();
       canvas.isDrawingMode = true;
+      $('.canvas-container').css('z-index', 1);
       break;
     default:
       break;
