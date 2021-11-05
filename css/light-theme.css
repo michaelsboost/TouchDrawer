@@ -136,8 +136,11 @@ body {
   background: #f4f4f5;
 } 
 select, select option,
-.settingsbg, .palettebg {
-  background: rgba(0, 0, 0, 0.5);
+.settingsbg {
+  background: rgba(0, 0, 0, 0.8);
+}
+.pcr-app.visible {
+  box-shadow: 0 0 0 100em rgba(0, 0, 0, 0.8);
 }
 .projectSettings > div {
   background: #fff;

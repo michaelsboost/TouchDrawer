@@ -6,117 +6,10 @@ $('[data-comingsoon]').click(function() {
   return false;
 });
 
-// confirm canvas dimensions
-$('[data-confirm=dimensions]').click(function() {
-  canvas.setWidth($('[data-project=width]').val());
-  canvas.setHeight($('[data-project=height]').val());
-  canvas.calcOffset();
-  $('.canvas canvas').removeClass('hide');
-  $('.canvas #overlay')[0].width  = $('[data-project=width]').val();
-  $('.canvas #overlay').css('height', parseFloat(parseFloat($('[data-project=height]').val()) + parseFloat(parseFloat($('[data-project=height]').val()) / 4)));
-  $('[data-dimensions]').addClass('hide');
+var canvas = this.__canvas = new fabric.Canvas('canvas', {
+  backgroundColor: '#fff'
 });
-$('[data-project=width]').on('keydown', function(e) {
-  if (e.keyCode === 13) {
-    $('[data-project=height]')[0].focus();
-    $('[data-project=height]')[0].select();
-  }
-});
-$('[data-project=height]').on('keydown', function(e) {
-  if (e.keyCode === 13) {
-    $('[data-confirm=dimensions]').trigger('click');
-  }
-});
-setTimeout(function() {
-  $('[data-confirm=dimensions]').trigger('click');
-  $('.canvas #overlay')[0].scrollIntoView({
-    // defines vertical alignment - start/center/nearest
-    // block: "start",
-    // defines horizontal alignment - start/center/nearest
-    inline: "center"
-  });
-  $('.canvas #overlay').css('top', parseFloat(parseFloat($('[data-project=height]').val()) + 10) + 'px');
-//  $('.canvas #overlay').css('left', '-' + parseFloat(119) + 'px');
-  $('.canvas #overlay')[0].width  = $('[data-project=width]').val();
-  $('.canvas #overlay')[0].height = $('[data-project=height]').val();
-
-  let pz = new PinchZoom($('.canvas #overlay')[0]);
-  pz.enable(); // Enables all gesture capturing (is enabled by default)
-}, 100);
-
-// initiate settings color picker
-const pickr = Pickr.create({
-  el: '.picker',
-  theme: 'classic',
-  showAlways: true,
-  default: 'hsva(45, 97%, 100%, 1)',
-  comparison: true,
-  swatches: [
-    'rgba(244, 67, 54, 1)',
-    'rgba(233, 30, 99, 0.95)',
-    'rgba(156, 39, 176, 0.9)',
-    'rgba(103, 58, 183, 0.85)',
-    'rgba(63, 81, 181, 0.8)',
-    'rgba(33, 150, 243, 0.75)',
-    'rgba(3, 169, 244, 0.7)',
-    'rgba(0, 188, 212, 0.7)',
-    'rgba(0, 150, 136, 0.75)',
-    'rgba(76, 175, 80, 0.8)',
-    'rgba(139, 195, 74, 0.85)',
-    'rgba(205, 220, 57, 0.9)',
-    'rgba(255, 235, 59, 0.95)',
-//        'rgba(255, 193, 7, 1)'
-  ],
-  components: {
-
-    // Main components
-    preview: true,
-    opacity: true,
-    hue: true,
-
-    // Input / output Options
-    interaction: {
-      hex: true,
-      rgba: true,
-      hsla: true,
-      hsva: true,
-      cmyk: true,
-      input: true,
-      clear: false,
-      save: true
-    }
-  }
-});
-pickr.on('init', () => {
-  changeAction('pan');
-  pickr.hide();
-});
-pickr.on('save', (color, instance) => {
-  pickr.addSwatch(pickr.getColor().toRGBA().toString());
-//  $('[data-close=palette]').trigger('click');
-});
-
-// brush size
-$('[data-decrement]').on('click', function() {
-  $('#brushSize')[0].stepDown();
-  $('[data-val]').text($('#brushSize').val());
-});
-$('#brushSize')[0].onchange = function() {
-  $('[data-val]').text(this.value);
-};
-
-// open and close color picker
-$('[data-open=palette]').click(function() {
-  $('.mainh').addClass('hide');
-  $('.palletmenu, [data-palette]').removeClass('hide');
-  pickr.show();
-});
-$('[data-close=palette]').click(function() {
-  $('.mainh').removeClass('hide');
-  $('.palletmenu, [data-palette]').addClass('hide');
-  changeAction(activeTool);
-  pickr.hide();
-});
+canvas.setOverlayColor("rgba(255,255,255,0)",undefined,{erasable:false});
 
 // lasso tool
 (function() {
@@ -431,10 +324,114 @@ $('[data-close=palette]').click(function() {
   });
 })();
 
-var canvas = this.__canvas = new fabric.Canvas('canvas', {
-  backgroundColor: '#fff'
+// confirm canvas dimensions
+$('[data-confirm=dimensions]').click(function() {
+  canvas.setWidth($('[data-project=width]').val());
+  canvas.setHeight($('[data-project=height]').val());
+  canvas.calcOffset();
+  $('.canvas .wrapper').removeClass('invisible');
+  $('.canvas .wrapper')[0].scrollIntoView({
+    // defines vertical alignment - start/center/nearest
+    // block: "start",
+    // defines horizontal alignment - start/center/nearest
+    inline: "center"
+  });
+  $('.canvas #overlay').css('top', parseFloat(parseFloat($('[data-project=height]').val()) + 9) + 'px');
+//  $('.canvas #overlay').css('left', '-' + parseFloat(119) + 'px');
+  $('.canvas #overlay')[0].width  = $('[data-project=width]').val();
+  $('.canvas #overlay')[0].height = $('[data-project=height]').val();
+  $('[data-dimensions]').addClass('hide');
+  $('.header').css('z-index', 99999);
+  changeAction('lasso');
 });
-canvas.setOverlayColor("rgba(255,255,255,0)",undefined,{erasable:false});
+$('[data-project=width]').on('keydown', function(e) {
+  if (e.keyCode === 13) {
+    $('[data-project=height]')[0].focus();
+    $('[data-project=height]')[0].select();
+  }
+});
+$('[data-project=height]').on('keydown', function(e) {
+  if (e.keyCode === 13) {
+    $('[data-confirm=dimensions]').trigger('click');
+  }
+});
+
+//var pz = new PinchZoom($('.canvas')[0]);
+//pz.enable(); // Enables all gesture capturing (is enabled by default)
+//pz.disable();
+
+// initiate settings color picker
+const pickr = Pickr.create({
+  el: '.picker',
+  theme: 'classic',
+  showAlways: true,
+  default: 'hsva(45, 97%, 100%, 1)',
+  comparison: true,
+  swatches: [
+    'rgba(244, 67, 54, 1)',
+    'rgba(233, 30, 99, 0.95)',
+    'rgba(156, 39, 176, 0.9)',
+    'rgba(103, 58, 183, 0.85)',
+    'rgba(63, 81, 181, 0.8)',
+    'rgba(33, 150, 243, 0.75)',
+    'rgba(3, 169, 244, 0.7)',
+    'rgba(0, 188, 212, 0.7)',
+    'rgba(0, 150, 136, 0.75)',
+    'rgba(76, 175, 80, 0.8)',
+    'rgba(139, 195, 74, 0.85)',
+    'rgba(205, 220, 57, 0.9)',
+    'rgba(255, 235, 59, 0.95)',
+//        'rgba(255, 193, 7, 1)'
+  ],
+  components: {
+
+    // Main components
+    preview: true,
+    opacity: true,
+    hue: true,
+
+    // Input / output Options
+    interaction: {
+      hex: true,
+      rgba: true,
+      hsla: true,
+      hsva: true,
+      cmyk: true,
+      input: true,
+      clear: false,
+      save: true
+    }
+  }
+});
+pickr.on('init', () => {
+  pickr.hide();
+});
+pickr.on('save', (color, instance) => {
+  pickr.addSwatch(pickr.getColor().toRGBA().toString());
+//  $('[data-close=palette]').trigger('click');
+});
+
+// brush size
+$('[data-decrement]').on('click', function() {
+  $('#brushSize')[0].stepDown();
+  $('[data-val]').text($('#brushSize').val());
+});
+$('#brushSize')[0].onchange = function() {
+  $('[data-val]').text(this.value);
+};
+
+// open and close color picker
+$('[data-open=palette]').click(function() {
+  $('.mainh').addClass('hide');
+  $('.palletmenu, [data-palette]').removeClass('hide');
+  pickr.show();
+});
+$('[data-close=palette]').click(function() {
+  $('.mainh').removeClass('hide');
+  $('.palletmenu, [data-palette]').addClass('hide');
+  changeAction(activeTool);
+  pickr.hide();
+});
 
 function changeAction(target) {
   ['pan','select','fill','erase','pencil','brush','lasso','spray1','spray2'].forEach(action => {
@@ -550,10 +547,11 @@ function clearcanvas() {
   canvas.clear();
   canvas.backgroundColor = '#fff';
   canvas.renderAll();
-  $('.canvas canvas').addClass('hide');
+  $('.canvas .wrapper').addClass('invisible');
   $('[data-dimensions]').removeClass('hide');
   $('[data-project=width]')[0].focus();
   $('[data-project=width]')[0].select();
+  $('.header').css('z-index', 1);
 }
 
 // fill tool

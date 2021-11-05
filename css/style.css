@@ -36,7 +36,7 @@ html, body {
 input[type=range] {
   position: relative;
   top: -4px;
-  width: calc(100vw - 40vw - 10px);
+  width: calc(100vw - 40vw - 20px);
   margin-top: -3.1px;
   background-color: transparent;
   -webkit-appearance: none;
@@ -187,7 +187,7 @@ input[type=number] {
   user-select: none;
   margin: 0;
   padding: 15px 15px 8px 15px;
-  z-index: 2;
+  z-index: 1;
 }
 .header a {
   padding: 0 calc(5vw);
@@ -220,19 +220,6 @@ input[type=number] {
 }
 
 /* color palette */
-.palettedialog, .palettebg {
-  position: absolute;
-  top: 23px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-.palette {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translateY(-50%) translateX(-50%);
-}
 .pcr-button {
   display: none;
 }
@@ -315,6 +302,11 @@ input[type=number] {
 }
 .hidden {
   visibility: hidden;
+}
+.invisible {
+  position: absolute;
+  top: -9999999px;
+  left: -9999999px;
 }
 .fl {
   float: left;

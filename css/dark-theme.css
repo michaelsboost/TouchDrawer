@@ -131,8 +131,11 @@ select, select option,
 .projectSettings > div {
   background: #131722;
 }
-.settingsbg, .palettebg {
+.settingsbg {
   background: rgba(0, 0, 0, 0.8);
+}
+.pcr-app.visible {
+  box-shadow: 0 0 0 100em rgba(0, 0, 0, 0.8);
 }
 .form__input {
   background: #040507;
