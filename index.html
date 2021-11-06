@@ -82,13 +82,11 @@
     <!-- header -->
     <div class="header">
       <div class="mainh">
-<!--
-        <label for="openfile" data-comingsoon>
+        <label for="openfile">
           <a title="Load file">
             <i class="fa fa-file-upload"></i>
           </a>
         </label>
--->
         <a title="Clear" onclick="clearcanvas()">
           <i class="fa fa-file"></i>
         </a>
@@ -106,6 +104,38 @@
         <a id="fill" title="Fill" onclick="changeAction(this)">
           <i class="fa fa-fill-drip"></i>
         </a>
+        <span class="hide" data-selection="tools">
+          <a title="Duplicate" onclick="duplicate()">
+            <i class="fa fa-clone"></i>
+          </a>
+          <a title="Delete" onclick="remove()">
+            <i class="fa fa-trash"></i>
+          </a>
+          
+          <a title="Align Left" onclick="alignLeft()">
+            <i class="fa fa-align-left"></i>
+          </a>
+          <a title="Align Center" onclick="alignCenter()">
+            <i class="fa fa-align-center"></i>
+          </a>
+          <a title="Align Right" onclick="alignRight()">
+            <i class="fa fa-align-right"></i>
+          </a>
+          
+          <a title="Flip H" onclick="flipH()">Flip H</a>
+          <a title="Flip V" onclick="flipV()">Flip V</a>
+          <a title="Rotate CW" onclick="rotateCW()">Rotate CW</a>
+          <a title="Rotate CCW" onclick="rotateCCW()">Rotate CCW</a>
+
+          <a title="Align Top" onclick="alignTop()">Align Top</a>
+          <a title="Align Middle" onclick="alignMiddle()">Align Middle</a>
+          <a title="Align Bottom" onclick="alignBottom()">Align Bottom</a>
+
+          <a title="Send Backwards" onclick="sendBackwards()">Send Backwards</a>
+          <a title="Send To Back" onclick="sendToBack()">Send To Back</a>
+          <a title="Bring Forward" onclick="bringForward()">Bring Forward</a>
+          <a title="Bring To Front" onclick="bringToFront()">Bring To Front</a>
+        </span>
         <a id="erase" title="Erase" onclick="changeAction(this)">
           <i class="fa fa-eraser"></i>
         </a>
@@ -178,7 +208,7 @@
     
     <!-- load svg/json file -->
     <div class="hide">
-      <input type="file" accept="image/svg+xml, application/json" id="openfile" onchange="loadfile(this)">
+      <input type="file" accept="image/svg+xml, application/json" id="openfile" onchange="upload(event)">
     </div>
 
     <!-- canvas -->
