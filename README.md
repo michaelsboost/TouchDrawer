@@ -11,8 +11,6 @@ Version
 To Do
 -------------
 
-* Buttons to set default dimensions for Facebook, Dribbble, etc:
-* A default background color picker
 * A default background image
 * Save/load a json project file
 

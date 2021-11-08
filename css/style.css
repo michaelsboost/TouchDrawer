@@ -206,6 +206,63 @@ input[type=number] {
   width: auto!important;
   height: 30px!important;
 }
+.hscroll {
+  white-space: nowrap;
+  overflow: auto;
+  width: 100%;
+}
+.hscroll [class^="btn--"] {
+  text-transform: capitalize;
+  display: inline-block;
+  width: auto;
+}
+.settingsborder .pcr-app.visible[data-theme=classic] {
+  position: relative!important;
+  margin-top: 0!important;
+  background: transparent;
+  width: 100%!important;
+  left: 0!important;
+  margin-left: 0!important;
+}
+.settingsborder .pcr-app.visible[data-theme=monolith] {
+  position: relative!important;
+  margin-top: -16px!important;
+  background: transparent;
+  height: 230px!important;
+  width: 100%!important;
+  left: 0!important;
+  margin-left: 0!important;
+}
+.settingsborder .pcr-app.visible[data-theme=monolith] .pcr-current-color {
+  width: 100%;
+}
+.settingsborder .pcr-app.visible[data-theme=nano] {
+  position: relative!important;
+  margin-top: 31px!important;
+  background: transparent;
+  height: 164px!important;
+  width: 100%!important;
+  left: 0!important;
+  margin-left: 0!important;
+}
+.wnh {
+  width: calc(50% - 10px);
+}
+.dimensions .projectSettings {
+  position: relative;
+  top: 0;
+  bottom: 0;
+  margin: 70px auto;
+  transform: translateX(-50%);
+}
+.pcr-app .pcr-interaction input.pcr-result[type=text] {
+  display: block;
+  padding: 15px;
+  width: 100%;
+  outline: 0;
+  border: 0;
+  font: inherit;
+}
 
 .undo, .redo {
   position: fixed;
@@ -321,6 +378,9 @@ input[type=number] {
 }
 .pointer {
   cursor: pointer;
+}
+.wauto {
+  width: auto;
 }
 .w100p {
   width: 100%;

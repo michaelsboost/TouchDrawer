@@ -132,6 +132,9 @@ how to remove the virtical space around the range input in IE*/
 }
 
 /* backgrounds */
+.header {
+  background: #fff;
+}
 select, select option,
 .settingsbg {
   background: rgba(0, 0, 0, 0.8);
@@ -139,11 +142,23 @@ select, select option,
 .pcr-app.visible {
   box-shadow: 0 0 0 100em rgba(0, 0, 0, 0.8);
 }
+.settingsborder .pcr-app.visible {
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.8);
+}
 .projectSettings > div {
   background: #fff;
 }
 .palettebg {
   background: rgba(0, 0, 0, 0.5);
+}
+.btn--blue {
+  background-color: #1e7eeb;
+}
+.btn--pink {
+  background-color: #dd7aa1;
+}
+.pcr-app .pcr-interaction input.pcr-result[type=text] {
+  background: #ebecec;
 }
 
 /* icon and font color */
@@ -162,6 +177,9 @@ select, select option {
 }
 .projectSettings a {
   color: #999da1;
+}
+.pcr-app .pcr-interaction input.pcr-result[type=text] {
+  color: #000;
 }
 
 /* borders */

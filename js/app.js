@@ -1,9 +1,33 @@
-var activeTool, projectname;
+var str, w, h, activeTool, projectname;
 
 // alert user for coming soon
 $('[data-comingsoon]').click(function() {
   alertify.log('coming soon...');
   return false;
+});
+
+// initiate dimensions color picker
+const pickrr = Pickr.create({
+  // Which theme you want to use. Can be 'classic', 'monolith' or 'nano'
+  theme: 'monolith',
+  el: '.pickrr',
+  inline: true,
+  showAlways: true,
+  default: '#fff',
+  comparison: true,
+  components: {
+    preview: true,
+    hue: true,
+    interaction: {
+      hex: false,
+      input: true,
+    }
+  },
+});
+pickrr.on('init', () => {
+  setTimeout(function() {
+    pickrr.show();
+  }, 100)
 });
 
 var canvas = this.__canvas = new fabric.Canvas('canvas', {
@@ -326,6 +350,10 @@ canvas.setOverlayColor("rgba(255,255,255,0)",undefined,{erasable:false});
 
 // confirm canvas dimensions
 $('[data-confirm=dimensions]').click(function() {
+  canvas.clear();
+  canvas.backgroundColor = pickrr.getColor().toHEXA().toString();
+  canvas.renderAll();
+  
   $('.canvas').removeClass('hidden');
   canvas.setWidth($('[data-project=width]').val());
   canvas.setHeight($('[data-project=height]').val());
@@ -346,6 +374,7 @@ $('[data-confirm=dimensions]').click(function() {
     inline: "center"
   });
   changeAction('brush');
+  pickrr.hide();
 });
 $('[data-project=width]').on('keydown', function(e) {
   if (e.keyCode === 13) {
@@ -359,16 +388,24 @@ $('[data-project=height]').on('keydown', function(e) {
   }
 });
 
-//var pz = new PinchZoom($('.canvas')[0]);
-//pz.enable(); // Enables all gesture capturing (is enabled by default)
-//pz.disable();
+// size presets
+$('[data-size]').on('click', function() {
+  str = $(this).attr('data-size');
+  w = str.substr(0, str.indexOf('x'));
+  h = str.substring(str.length, str.indexOf('x') + 1);
+  
+  $('[data-project=width]').val(w);
+  $('[data-project=height]').val(h);
+});
+$('[data-size=800x600]').trigger('click');
+//$('[data-confirm=dimensions]').trigger('click');
 
 // initiate settings color picker
 const pickr = Pickr.create({
   el: '.picker',
   theme: 'classic',
   showAlways: true,
-  default: 'hsva(45, 97%, 100%, 1)',
+  default: 'hsla(45, 100%, 0%, 1)',
   comparison: true,
   swatches: [
     'rgba(244, 67, 54, 1)',
@@ -384,7 +421,7 @@ const pickr = Pickr.create({
     'rgba(139, 195, 74, 0.85)',
     'rgba(205, 220, 57, 0.9)',
     'rgba(255, 235, 59, 0.95)',
-//        'rgba(255, 193, 7, 1)'
+    'rgba(255, 193, 7, 1)'
   ],
   components: {
 
@@ -580,13 +617,14 @@ function redo() {
 }
 function clearcanvas() {
   canvas.clear();
-  canvas.backgroundColor = '#fff';
+  canvas.backgroundColor = pickrr.getColor().toHEXA().toString();
   canvas.renderAll();
   $('.canvas').addClass('hidden');
   $('[data-dimensions]').removeClass('hide');
   $('[data-project=width]')[0].focus();
   $('[data-project=width]')[0].select();
   $('.header').css('z-index', 1);
+  pickrr.show();
 }
 function copy() {
   // clone what are you copying since you

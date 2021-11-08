@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="libraries/alertifyjs/alertify.core.css" />
     <link rel="stylesheet" href="libraries/alertifyjs/alertify.default.css" />
     <link rel="stylesheet" href="libraries/pickr/themes/classic.min.css" />
+    <link rel="stylesheet" href="libraries/pickr/themes/monolith.min.css" />
+    <link rel="stylesheet" href="libraries/pickr/themes/nano.min.css" />
     <link href="https://fonts.googleapis.com/css?family=Signika+Negative:300,400,700" rel="stylesheet" />
     <link rel="stylesheet" href="css/style.css" />
     <link id="apptheme" rel="stylesheet" href="css/dark-theme.css" />
@@ -21,25 +23,48 @@
       <div class="settingsbg" data-confirm="dimensions"></div>
       <div class="projectSettings">
         <div class="grid">
-          <div class="grid__col--12">
-            <div class="grid__col--6">
-              <h2 class="headline-secondary--grouped nomarb">
+          <div class="grid__col--12 nomarb">
+            <div class="grid__col--6 ib wnh">
+              <h2 class="headline-secondary--grouped nomarb ib">
                 Width
               </h2>
-              <input class="form__input" type="number" data-project="width" min="1" step="1" value="1920">
+              <input class="form__input ib" type="number" data-project="width" min="1" step="1" value="1920">
             </div>
 
-            <div class="grid__col--6">
-              <h2 class="headline-secondary--grouped nomarb">
+            <div class="grid__col--6 ib wnh">
+              <h2 class="headline-secondary--grouped nomarb ib">
                 Height
               </h2>
-              <input class="form__input" type="number" data-project="height" min="1" step="1" value="1080">
+              <input class="form__input ib" type="number" data-project="height" min="1" step="1" value="1080">
             </div>
+          </div>
+
+          <div class="hscroll">
+            <br>
+            <button class="btn--pink" data-size="851x315">Facebook Cover</button>
+            <button class="btn--pink" data-size="1500x500">Twitter Cover</button>
+            <button class="btn--pink" data-size="2560x1440">YouTube Cover</button>
+            <button class="btn--pink" data-size="1440x425">LinkedIn Cover</button>
+            <button class="btn--pink" data-size="900x480">Twitch Cover</button>
+            <button class="btn--pink" data-size="1024x512">Twitter Post</button>
+            <button class="btn--pink" data-size="940x788">Facebook Post</button>
+            <button class="btn--pink" data-size="810x450">Facebook App</button>
+            <button class="btn--pink" data-size="1200x627">Facebook Ad</button>
+            <button class="btn--pink" data-size="1080x1080">Instagram Post</button>
+            <button class="btn--pink" data-size="1080x1920">Instagram Stories</button>
+            <button class="btn--pink" data-size="540x810">Tumblr Graphic</button>
+            <button class="btn--pink" data-size="735x600">Pinterest Pin</button>
+            <button class="btn--pink" data-size="1206x708">Twitch Video</button>
+            <button class="btn--pink" data-size="646x220">LinkedIn Banner</button>
+            <button class="btn--pink" data-size="800x600">Dribbble Shot</button>
           </div>
 
           <div class="grid__col--12 settingsborder">
             <br>
-            <button class="btn--default w100p" data-confirm="dimensions">Confirm</button>
+            <!-- color palette dialog -->
+            <div class="pickrr"></div>
+            <br>
+            <button class="btn--blue w100p" data-confirm="dimensions">Confirm</button>
           </div>
         </div>
       </div>
@@ -168,7 +193,7 @@
         <a class="hide" href="https://michaelsboost.com/" target="_blank" title="Developer's website">
           <i class="fa fa-globe"></i>
         </a>
-        <a href="https://github.com/michaelsboost/svgMotion/" target="_blank" title="Project source code">
+        <a href="https://github.com/michaelsboost/TouchDrawer/" target="_blank" title="Project source code">
           <i class="fa fa-code"></i>
         </a>
         <a title="Settings" data-toggle="projectSettings">

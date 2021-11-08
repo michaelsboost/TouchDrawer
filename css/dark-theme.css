@@ -137,7 +137,19 @@ select, select option,
 .pcr-app.visible {
   box-shadow: 0 0 0 100em rgba(0, 0, 0, 0.8);
 }
+.settingsborder .pcr-app.visible {
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.8);
+}
 .form__input {
+  background: #040507;
+}
+.btn--blue {
+  background-color: #1e7eeb;
+}
+.btn--pink {
+  background-color: #a5486c;
+}
+.pcr-app .pcr-interaction input.pcr-result[type=text] {
   background: #040507;
 }
 
@@ -159,6 +171,9 @@ select, select option {
 }
 .projectSettings a {
   color: #999da1;
+}
+.pcr-app .pcr-interaction input.pcr-result[type=text] {
+  color: #fff;
 }
 
 /* borders */
