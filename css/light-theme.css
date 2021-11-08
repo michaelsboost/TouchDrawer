@@ -157,7 +157,7 @@ select, select option,
 .btn--pink {
   background-color: #dd7aa1;
 }
-.pcr-app .pcr-interaction input.pcr-result[type=text] {
+.dimensions .pcr-app .pcr-interaction input.pcr-result[type=text] {
   background: #ebecec;
 }
 
@@ -178,7 +178,7 @@ select, select option {
 .projectSettings a {
   color: #999da1;
 }
-.pcr-app .pcr-interaction input.pcr-result[type=text] {
+.dimensions .pcr-app .pcr-interaction input.pcr-result[type=text] {
   color: #000;
 }
 
