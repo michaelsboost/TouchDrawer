@@ -7,6 +7,7 @@
     <meta name="description" content="A free and open source vector drawing tool for mobile.">
     <meta name="author" content="Michael Schwartz">
     <link rel="stylesheet" href="libraries/normalize/normalize.css" />
+    <link rel="stylesheet" href="libraries/font-awesome-4.7.0/font-awesome.min.css" />
     <link rel="stylesheet" href="libraries/polyui/polyui-mod.css" />
     <link rel="stylesheet" href="libraries/alertifyjs/alertify.core.css" />
     <link rel="stylesheet" href="libraries/alertifyjs/alertify.default.css" />
@@ -63,6 +64,8 @@
             <br>
             <!-- color palette dialog -->
             <div class="pickrr"></div>
+            <br>
+            <br>
             <br>
             <button class="btn--blue w100p" data-confirm="dimensions">Confirm</button>
           </div>
@@ -146,15 +149,15 @@
           <a title="Align Right" onclick="alignRight()">
             <i class="fa fa-align-right"></i>
           </a>
+
+          <a title="Align Top" onclick="alignTop()">Align Top</a>
+          <a title="Align Middle" onclick="alignMiddle()">Align Middle</a>
+          <a title="Align Bottom" onclick="alignBottom()">Align Bottom</a>
           
           <a title="Flip H" onclick="flipH()">Flip H</a>
           <a title="Flip V" onclick="flipV()">Flip V</a>
           <a title="Rotate CW" onclick="rotateCW()">Rotate CW</a>
           <a title="Rotate CCW" onclick="rotateCCW()">Rotate CCW</a>
-
-          <a title="Align Top" onclick="alignTop()">Align Top</a>
-          <a title="Align Middle" onclick="alignMiddle()">Align Middle</a>
-          <a title="Align Bottom" onclick="alignBottom()">Align Bottom</a>
 
           <a title="Send Backwards" onclick="sendBackwards()">Send Backwards</a>
           <a title="Send To Back" onclick="sendToBack()">Send To Back</a>
@@ -174,11 +177,27 @@
         <a id="lasso" title="Lasso Brush" onclick="changeAction(this)">
           <i class="fa fa-splotch"></i>
         </a>
+        <a id="rect" title="Rectangle" onclick="changeAction(this)">
+          <i class="fa fa-square"></i>
+        </a>
+        <a id="ellipse" title="Ellipse" onclick="changeAction(this)">
+          <i class="fa fa-circle"></i>
+        </a>
+        <a id="line" title="Line" onclick="changeAction(this)">
+          <svg width="20" height="20">
+            <line stroke-width="5" x1="17" x2="3" y1="3" y2="17" stroke-linecap="round"/>
+          </svg>
+        </a>
+        <a id="triangle" title="Triangle" onclick="changeAction(this)">
+          <svg width="20" height="20">
+            <path d="m0.08052,18.71268l9.93077,-17.37884l9.93077,17.37884l-19.86153,0z" stroke-width="0"/>
+          </svg>
+        </a>
         <a id="spray1" title="Spray 1" onclick="changeAction(this)">
           <i class="fa fa-spray-can"></i>
         </a>
         <a id="spray2" title="Spray 2" onclick="changeAction(this)">
-          <i class="fa fa-circle"></i>
+          <i class="fa fa-spray-can" style="transform-origin: center; transform: rotateX(180deg);"></i>
         </a>
         <a title="Export PNG" onclick="downloadImage()">
           <i class="fa fa-file-image"></i>

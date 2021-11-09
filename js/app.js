@@ -494,7 +494,7 @@ $('#canvasSize').change(function() {
 });
 
 function changeAction(target) {
-  ['select','fill','erase','pencil','brush','lasso','spray1','spray2'].forEach(action => {
+  ['select','fill','erase','pencil','brush','lasso','rect','ellipse','line','triangle','spray1','spray2'].forEach(action => {
     var el = document.getElementById(action);
     el.classList.remove('active');
   });
@@ -502,18 +502,24 @@ function changeAction(target) {
   target.classList.add('active');
   switch (target.id) {
     case "select":
+      removeEvents();
+      changeObjectSelection(true);
       canvas.isDrawingMode = false;
       $('.canvas-container').css('z-index', 1);
       $('.history').removeClass('hide');
       $('[data-selection=tools]').removeClass('hide');
       break;
     case "fill":
+      removeEvents();
+      changeObjectSelection(true);
       canvas.isDrawingMode = false;
       $('.canvas-container').css('z-index', 1);
       $('.history').removeClass('hide');
       $('[data-selection=tools]').addClass('hide');
       break;
     case "erase":
+      removeEvents();
+      changeObjectSelection(false);
       canvas.freeDrawingBrush = new fabric.EraserBrush(canvas);
       canvas.freeDrawingBrush.width = parseFloat($('#brushSize').val());
       canvas.isDrawingMode = true;
@@ -522,6 +528,8 @@ function changeAction(target) {
       $('[data-selection=tools]').addClass('hide');
       break;
     case "pencil":
+      removeEvents();
+      changeObjectSelection(false);
       canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
       canvas.freeDrawingBrush.width = 1;
       canvas.freeDrawingBrush.color = pickr.getColor().toRGBA().toString();
@@ -531,6 +539,8 @@ function changeAction(target) {
       $('[data-selection=tools]').addClass('hide');
       break;
     case "brush":
+      removeEvents();
+      changeObjectSelection(false);
       canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
       canvas.freeDrawingBrush.width = parseFloat($('#brushSize').val());
       canvas.freeDrawingBrush.color = pickr.getColor().toRGBA().toString();
@@ -540,12 +550,26 @@ function changeAction(target) {
       $('[data-selection=tools]').addClass('hide');
       break;
     case "lasso":
+      removeEvents();
+      changeObjectSelection(false);
       canvas.freeDrawingBrush = new fabric.LassoBrush(canvas);
       canvas.freeDrawingBrush.color = pickr.getColor().toRGBA().toString();
       canvas.isDrawingMode = true;
       $('.canvas-container').css('z-index', 1);
       $('.history').removeClass('hide');
       $('[data-selection=tools]').addClass('hide');
+      break;
+    case "rect":
+      drawRect();
+      break;
+    case "ellipse":
+      drawEllipse();
+      break;
+    case "line":
+      drawLine();
+      break;
+    case "triangle":
+      drawTriangle();
       break;
     case "spray1":
       canvas.freeDrawingBrush = new fabric.SprayBrush(canvas);
@@ -586,6 +610,13 @@ canvas.on("object:added", function() {
 //  console.log(undo_history.length);
 });
 canvas.on("object:modified", function() {
+  if (lockHistory) return;
+//  console.log("object:modified");
+  undo_history.push(JSON.stringify(canvas));
+  redo_history.length = 0;
+//  console.log(undo_history.length);
+});
+canvas.on("selection:updated", function() {
   if (lockHistory) return;
 //  console.log("object:modified");
   undo_history.push(JSON.stringify(canvas));
@@ -973,9 +1004,9 @@ function drawLine() {
     var pointer = canvas.getPointer(o.e);
     var points = [pointer.x, pointer.y, pointer.x, pointer.y];
     line = new fabric.Line(points, {
-      strokeWidth: 5,
-      fill: '#07ff11a3',
-      stroke: '#07ff11a3',
+      strokeWidth: parseFloat($('#brushSize').val()),
+      stroke: pickr.getColor().toRGBA().toString(),
+      fill: null,
       originX: 'center',
       originY: 'center',
       centeredRotation: true,
@@ -1018,13 +1049,11 @@ function drawRect() {
       angle: 0,
       selectable: false,
       centeredRotation: true,
-      fill: '#07ff11a3',
-      stroke: 'black',
+      fill: pickr.getColor().toRGBA().toString(),
       centeredRotation: true,
     });
     canvas.add(rect);
   });
-
   canvas.on('mouse:move', function(o) {
     if (!isDown) return;
     var pointer = canvas.getPointer(o.e);
@@ -1050,7 +1079,6 @@ function drawRect() {
 
     canvas.renderAll();
   });
-  
   canvas.on('mouse:up', function(o) {
     isDown = false;
     rect.setCoords();
@@ -1060,6 +1088,7 @@ function drawCircle() {
   var circle, isDown, origX, origY;
   removeEvents();
   changeObjectSelection(false);
+  
   canvas.on('mouse:down', function(o) {
     isDown = true;
     var pointer = canvas.getPointer(o.e);
@@ -1069,16 +1098,13 @@ function drawCircle() {
       left: pointer.x,
       top: pointer.y,
       radius: 1,
-      strokeWidth: 1,
-      fill: '#07ff11a3',
-      stroke: 'black',
+      fill: pickr.getColor().toRGBA().toString(),
       selectable: false,
       originX: 'center',
       originY: 'center'
     });
     canvas.add(circle);
   });
-
   canvas.on('mouse:move', function(o) {
     if (!isDown) return;
     var pointer = canvas.getPointer(o.e);
@@ -1087,7 +1113,6 @@ function drawCircle() {
     });
     canvas.renderAll();
   });
-
   canvas.on('mouse:up', function(o) {
     isDown = false;
     circle.setCoords();
@@ -1098,6 +1123,7 @@ function drawEllipse() {
   var ellipse, isDown, origX, origY;
   removeEvents();
   changeObjectSelection(false);
+  
   canvas.on('mouse:down', function(o) {
     isDown = true;
     var pointer = canvas.getPointer(o.e);
@@ -1109,9 +1135,7 @@ function drawEllipse() {
       rx: pointer.x - origX,
       ry: pointer.y - origY,
       angle: 0,
-      fill: '#07ff11a3',
-      strokeWidth: 1,
-      stroke: 'black',
+      fill: pickr.getColor().toRGBA().toString(),
       selectable: true,
       centeredRotation: true,
       originX: 'center',
@@ -1119,7 +1143,6 @@ function drawEllipse() {
     });
     canvas.add(ellipse);
   });
-
   canvas.on('mouse:move', function(o){
       if (!isDown) return;
       var pointer = canvas.getPointer(o.e);
@@ -1145,7 +1168,6 @@ function drawEllipse() {
       }
       canvas.renderAll();
   });
-
   canvas.on('mouse:up', function(o){
     isDown = false;
     ellipse.setCoords();
@@ -1155,6 +1177,7 @@ function drawTriangle() {
   var triangle, isDown, origX, origY;
   removeEvents();
   changeObjectSelection(false);
+  
   canvas.on('mouse:down', function(o) {
     isDown = true;
     var pointer = canvas.getPointer(o.e);
@@ -1166,9 +1189,7 @@ function drawTriangle() {
       width: pointer.x - origX,
       height: pointer.y - origY,
       strokeWidth: 1,
-      fill: '#07ff11a3',
-      stroke: 'black',
-      strokeWidth: 3,
+      fill: pickr.getColor().toRGBA().toString(),
       selectable: false,
       centeredRotation: true,
       originX: 'left',
@@ -1176,7 +1197,6 @@ function drawTriangle() {
     });
     canvas.add(triangle);
   });
-
   canvas.on('mouse:move', function(o) {
     if (!isDown) return;
     var pointer = canvas.getPointer(o.e);
@@ -1202,7 +1222,6 @@ function drawTriangle() {
 
     canvas.renderAll();
   });
-
   canvas.on('mouse:up', function(o) {
     isDown = false;
     triangle.setCoords();

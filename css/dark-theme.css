@@ -160,8 +160,21 @@ a,
 select, select option {
   color: #fff;
 }
+.header svg path,
+.header svg line {
+  stroke: #fff;
+}
+.header a#triangle svg path {
+  fill: #fff;
+}
 .header a.active {
   color: #1faeff;
+}
+.header a#line.active svg line {
+  stroke: #1faeff;
+}
+.header a#triangle.active svg path {
+  fill: #1faeff;
 }
 .settings {
   color: #797e83;

@@ -226,9 +226,9 @@ input[type=number] {
 }
 .settingsborder .pcr-app.visible[data-theme=monolith] {
   position: relative!important;
-  margin-top: -16px!important;
+  margin-top: -53px!important;
   background: transparent;
-  height: 230px!important;
+  height: 244px!important;
   width: 100%!important;
   left: 0!important;
   margin-left: 0!important;
@@ -285,12 +285,18 @@ input[type=number] {
   display: none;
 }
 .pcr-app.visible {
+/*
   top: 50% !important;
   left: 50% !important;
   width: 450px !important;
   height: 240px !important;
   margin-top: -120px !important;
   margin-left: -225px !important;
+*/
+  top: 50px!important;
+  left: 20px!important;
+  width: calc(100vw) !important;
+  height: calc(100% - 50px) !important;
 }
 .pcr-last-color {
   display: none;
