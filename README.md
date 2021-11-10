@@ -11,8 +11,6 @@ Version
 To Do
 -------------
 
-* A default background image
-* Save/load a json project file
 * Design a logo
 * Header for social media and search engines
 

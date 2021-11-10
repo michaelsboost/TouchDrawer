@@ -7,7 +7,6 @@
     <meta name="description" content="A free and open source vector drawing tool for mobile.">
     <meta name="author" content="Michael Schwartz">
     <link rel="stylesheet" href="libraries/normalize/normalize.css" />
-    <link rel="stylesheet" href="libraries/font-awesome-4.7.0/font-awesome.min.css" />
     <link rel="stylesheet" href="libraries/polyui/polyui-mod.css" />
     <link rel="stylesheet" href="libraries/alertifyjs/alertify.core.css" />
     <link rel="stylesheet" href="libraries/alertifyjs/alertify.default.css" />
@@ -61,11 +60,36 @@
           </div>
 
           <div class="grid__col--12 settingsborder">
+            <h2 class="headline-secondary--grouped nomarb ib">
+              BG Color
+            </h2>
             <br>
             <!-- color palette dialog -->
             <div class="pickrr"></div>
             <br>
             <br>
+          </div>
+          <div class="grid__col--12 nomarb">
+            <div class="grid__col--6 ib wnh">
+              <h2 class="headline-secondary--grouped nomarb">
+                <span class="fl">
+                  BG Image:
+                </span>
+                
+                <a class="clearinput fr hide" data-clearinput>
+                  <i class="fa fa-times"></i>
+                </a>
+              </h2>
+            </div>
+
+            <div class="grid__col--6 ib wnh">
+<!--              <input id="backimage" type="file" accept="image/png, image/jpeg, image/svg+xml">-->
+<!--              <input type="file" accept="image/svg+xml" id="openfile" onchange="upload(event)">-->
+              <input id="openfile" type="file" accept="image/png, image/jpeg, image/svg+xml">
+            </div>
+          </div>
+
+          <div class="grid__col--12 settingsborder">
             <br>
             <button class="btn--blue w100p" data-confirm="dimensions">Confirm</button>
           </div>
@@ -79,22 +103,13 @@
       <div class="projectSettings" data-projectSettings>
         <div class="grid">
           <div class="grid__col--12">
-            <div class="grid__col--6">
-              <h2 class="headline-secondary--grouped nomarb">
-                Project name 
-              </h2>
-              <input class="form__input" type="text" data-project="name" value="First Project">
-            </div>
-
-            <div class="grid__col--6">
-              <h2 class="headline-secondary--grouped nomarb">
-                Choose canvas size 
-                <a data-theme="dark" class="fr" title="Theme">
-                  <i class="fa fa-moon"></i>
-                </a>
-              </h2>
-              <input class="form__input" type="text" data-project="size" value="1080x1080">
-            </div>
+            <h2 class="headline-secondary--grouped nomarb">
+              Project name 
+              <a data-theme="dark" class="fr" title="Theme">
+                <i class="fa fa-moon"></i>
+              </a>
+            </h2>
+            <input class="form__input" type="text" data-project="name" value="First Project">
           </div>
 
           <div class="grid__col--12 settingsborder">
@@ -163,6 +178,7 @@
           <a title="Send To Back" onclick="sendToBack()">Send To Back</a>
           <a title="Bring Forward" onclick="bringForward()">Bring Forward</a>
           <a title="Bring To Front" onclick="bringToFront()">Bring To Front</a>
+          <a title="Ungroup" onclick="ungroup()">Ungroup</a>
         </span>
         <a id="erase" title="Erase" onclick="changeAction(this)">
           <i class="fa fa-eraser"></i>
@@ -228,7 +244,7 @@
           <i class="fa fa-caret-left"></i>
         </a>
         
-        <input type="range" id="brushSize" min="1" max="100" value="35">
+        <input type="range" id="brushSize" min="1" max="100" value="15">
         
         <a class="fr" title="Close Color Palette" data-close="palette" style="position: relative; z-index: 1;">
           <i class="fa fa-times"></i>
@@ -249,11 +265,6 @@
         </a>
       </div>
     </div>
-    
-    <!-- load svg/json file -->
-    <div class="hide">
-      <input type="file" accept="image/svg+xml, application/json" id="openfile" onchange="upload(event)">
-    </div>
 
     <!-- canvas -->
     <div class="wrapper">
@@ -265,6 +276,11 @@
     
     <!-- color palette dialog -->
     <div class="picker hide"></div>
+    
+    <!-- loaded svg image source -->
+    <div class="hide">
+      <img id="imgURL">
+    </div>
     
     <a class="undo history" title="Undo" onclick="undo()">
       <i class="fa fa-undo"></i>
@@ -282,7 +298,6 @@
     <script src="libraries/fabricjs/fabric.js"></script>
     <script src="libraries/fabricjs/eraser_brush.mixin.js"></script>
     <script src="js/browsersupport.js"></script>
-    <script src="js/settings.js"></script>
     <script src="js/app.js"></script>
 <!--
     <script id="__bs_script__">

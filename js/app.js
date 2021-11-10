@@ -1,10 +1,48 @@
-var str, w, h, activeTool, projectname;
+var str, w, h, wsize, hsize, activeTool, projectname, lockHistory, undo_history, redo_history;
 
 // alert user for coming soon
 $('[data-comingsoon]').click(function() {
   alertify.log('coming soon...');
   return false;
 });
+
+// toggle settings dialog
+$("[data-toggle=projectSettings]").click(function() {
+  $("[data-settings]").fadeToggle();
+});
+
+// update title when project name changes
+$('[data-project=name]').on('keydown', function(e) {
+  document.title = 'TouchDrawer: ' + this.value;
+  e.preventDefault();
+}).trigger('keydown');
+
+// toggle theme
+$('[data-theme]').on('click', function() {
+  if ($(this).find('svg').hasClass('fa-moon')) {
+    $('link[href="css/dark-theme.css"]').attr('href', 'css/light-theme.css');
+    $(this).html('<svg class="svg-inline--fa fa-sun fa-w-16" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="sun" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 160c-52.9 0-96 43.1-96 96s43.1 96 96 96 96-43.1 96-96-43.1-96-96-96zm246.4 80.5l-94.7-47.3 33.5-100.4c4.5-13.6-8.4-26.5-21.9-21.9l-100.4 33.5-47.4-94.8c-6.4-12.8-24.6-12.8-31 0l-47.3 94.7L92.7 70.8c-13.6-4.5-26.5 8.4-21.9 21.9l33.5 100.4-94.7 47.4c-12.8 6.4-12.8 24.6 0 31l94.7 47.3-33.5 100.5c-4.5 13.6 8.4 26.5 21.9 21.9l100.4-33.5 47.3 94.7c6.4 12.8 24.6 12.8 31 0l47.3-94.7 100.4 33.5c13.6 4.5 26.5-8.4 21.9-21.9l-33.5-100.4 94.7-47.3c13-6.5 13-24.7.2-31.1zm-155.9 106c-49.9 49.9-131.1 49.9-181 0-49.9-49.9-49.9-131.1 0-181 49.9-49.9 131.1-49.9 181 0 49.9 49.9 49.9 131.1 0 181z"></path></svg>');
+    $('[data-theme]').attr('data-theme', 'light');
+  } 
+  else {
+    $('link[href="css/light-theme.css"]').attr('href', 'css/dark-theme.css');
+    $('[data-theme]').attr('data-theme', 'dark');
+    $(this).html('<svg class="svg-inline--fa fa-moon fa-w-16" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="moon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M283.211 512c78.962 0 151.079-35.925 198.857-94.792 7.068-8.708-.639-21.43-11.562-19.35-124.203 23.654-238.262-71.576-238.262-196.954 0-72.222 38.662-138.635 101.498-174.394 9.686-5.512 7.25-20.197-3.756-22.23A258.156 258.156 0 0 0 283.211 0c-141.309 0-256 114.511-256 256 0 141.309 114.511 256 256 256z"></path></svg>');
+  }
+  localStorage.setItem('theme', $('[data-theme]').attr('data-theme'));
+});
+
+// remember theme
+if (!localStorage.getItem('theme') || localStorage.getItem('theme').toLowerCase() === 'dark') {
+  $('[data-theme]').attr('data-theme', 'dark');
+  $('[data-theme]').html('<svg class="svg-inline--fa fa-moon fa-w-16" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="moon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M283.211 512c78.962 0 151.079-35.925 198.857-94.792 7.068-8.708-.639-21.43-11.562-19.35-124.203 23.654-238.262-71.576-238.262-196.954 0-72.222 38.662-138.635 101.498-174.394 9.686-5.512 7.25-20.197-3.756-22.23A258.156 258.156 0 0 0 283.211 0c-141.309 0-256 114.511-256 256 0 141.309 114.511 256 256 256z"></path></svg>');
+  $('link[href="css/light-theme.css"]').attr('href', 'css/dark-theme.css');
+} 
+else {
+  $('[data-theme]').html('<svg class="svg-inline--fa fa-sun fa-w-16" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="sun" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 160c-52.9 0-96 43.1-96 96s43.1 96 96 96 96-43.1 96-96-43.1-96-96-96zm246.4 80.5l-94.7-47.3 33.5-100.4c4.5-13.6-8.4-26.5-21.9-21.9l-100.4 33.5-47.4-94.8c-6.4-12.8-24.6-12.8-31 0l-47.3 94.7L92.7 70.8c-13.6-4.5-26.5 8.4-21.9 21.9l33.5 100.4-94.7 47.4c-12.8 6.4-12.8 24.6 0 31l94.7 47.3-33.5 100.5c-4.5 13.6 8.4 26.5 21.9 21.9l100.4-33.5 47.3 94.7c6.4 12.8 24.6 12.8 31 0l47.3-94.7 100.4 33.5c13.6 4.5 26.5-8.4 21.9-21.9l-33.5-100.4 94.7-47.3c13-6.5 13-24.7.2-31.1zm-155.9 106c-49.9 49.9-131.1 49.9-181 0-49.9-49.9-49.9-131.1 0-181 49.9-49.9 131.1-49.9 181 0 49.9 49.9 49.9 131.1 0 181z"></path></svg>');
+  $('[data-theme]').attr('data-theme', 'light');
+  $('link[href="css/dark-theme.css"]').attr('href', 'css/light-theme.css');
+}
 
 // initiate dimensions color picker
 const pickrr = Pickr.create({
@@ -348,18 +386,79 @@ canvas.setOverlayColor("rgba(255,255,255,0)",undefined,{erasable:false});
   });
 })();
 
+// read file data
+function displayPreview(file) {
+  var reader = new FileReader();
+
+  reader.onload = function(e) {
+    var img = new Image();
+    img.src = e.target.result;
+    imgURL.src = img.src;
+    img.onload = function() {
+      wsize = img.width;
+      hsize = img.height;
+      $('[data-project=width]').val(wsize).attr('disabled', 'true');
+      $('[data-project=height]').val(hsize).attr('disabled', 'true');
+      $('.hscroll').addClass('hide');
+      
+      if (file.type === 'image/svg+xml') {
+        $('#canvas').css('background-image', '');
+      } else {
+        $('#canvas').css('background-image', 'url("'+ img.src +'")');
+      }
+      $('[data-clearinput]').removeClass('hide');
+    };
+  };
+  reader.readAsDataURL(file);
+};
+openfile.onchange = function(e) {
+  var file = e.target.files[0];
+  
+  // check if it's a svg
+  if (file.type === 'image/svg+xml') {
+    displayPreview(file);
+  } else {
+    displayPreview(file);
+  }
+}
+$('[data-clearinput]').on('click', function() {
+  openfile.value = '';
+  $(this).addClass('hide');
+  $('[data-project=width]').removeAttr('disabled');
+  $('[data-project=height]').removeAttr('disabled');
+  $('.hscroll').removeClass('hide');
+});
+
 // confirm canvas dimensions
 $('[data-confirm=dimensions]').click(function() {
+  // clear history when a new project is created
+  lockHistory = false;
+  undo_history = [];
+  redo_history = [];
+  undo_history.push(JSON.stringify(canvas));
+  
   canvas.clear();
-  canvas.backgroundColor = pickrr.getColor().toHEXA().toString();
+  
+  if (openfile.value) {
+    canvas.setWidth(wsize);
+    canvas.setHeight(hsize);
+        
+    // load svg in as a group
+    fabric.loadSVGFromURL(imgURL.src, function(objects, options) {
+     var svg = fabric.util.groupSVGElements(objects, options);
+     canvas.add(svg);
+    });
+  } else {
+    canvas.backgroundColor = pickrr.getColor().toHEXA().toString();
+    canvas.setWidth($('[data-project=width]').val());
+    canvas.setHeight($('[data-project=height]').val());
+    canvas.calcOffset();
+    $('#canvas').css('background-image', 'none');
+  }
+  
   canvas.renderAll();
   
   $('.canvas').removeClass('hidden');
-  canvas.setWidth($('[data-project=width]').val());
-  canvas.setHeight($('[data-project=height]').val());
-  canvas.calcOffset();
-//  $('.canvas .canvas-container').css('top', '-' + parseFloat(parseFloat($('[data-project=height]').val()) + 5) + 'px');
-//  $('.canvas #overlay').css('left', '-' + parseFloat(119) + 'px');
   $('.canvas #overlay')[0].width  = $('[data-project=width]').val();
   $('.canvas #overlay')[0].height = $('[data-project=height]').val();
   $('[data-dimensions]').addClass('hide');
@@ -367,14 +466,12 @@ $('[data-confirm=dimensions]').click(function() {
   $('.canvas .canvas').css('width', 'calc('+ $('[data-project=width]').val() +'px + '+ $('[data-project=width]').val() +'px)');
   $('.canvas .canvas').css('width', 'calc('+ $('[data-project=height]').val() +'px + '+ $('[data-project=height]').val() +'px)');  
   $('#canvasSize').trigger('change');
-  $('.canvas')[0].scrollIntoView({
-    // defines vertical alignment - start/center/nearest
-    // block: "start",
-    // defines horizontal alignment - start/center/nearest
-    inline: "center"
-  });
   changeAction('brush');
   pickrr.hide();
+  
+  // make first undo
+  undo_history.push(JSON.stringify(canvas));
+  redo_history.length = 0;
 });
 $('[data-project=width]').on('keydown', function(e) {
   if (e.keyCode === 13) {
@@ -597,11 +694,6 @@ function changeAction(target) {
 }
 
 // undo redo commandhistory
-var lockHistory = false;
-var undo_history = [];
-var redo_history = [];
-undo_history.push(JSON.stringify(canvas));
-
 canvas.on("object:added", function() {
   if (lockHistory) return;
 //  console.log("object:added");
@@ -911,28 +1003,18 @@ function bringToFront() {
     canvas.renderAll();
   }
 }
+function ungroup() {
+  var activeObject = canvas.getActiveObject();
+  if(activeObject.type=="group"){
+    var items = activeObject._objects;
+    activeObject._restoreObjectsState();
+    canvas.remove(activeObject);
+    for(var i = 0; i < items.length; i++) {
+      canvas.add(items[i]);
+      canvas.item(canvas.size()-1).hasControls = true;
+    }
 
-var w, h;
-function upload(e) {
-  canvas.clear();
-  canvas.backgroundColor = '#fff';
-  
-  var fileType = e.target.files[0].type;
-  var url = URL.createObjectURL(e.target.files[0]);
-  
-  var img = new Image();
-  img.onload = function() {
-    w = this.width;
-    h = this.height;
-    canvas.setDimensions({width:w, height:h});
-  }
-  img.src = url;
-
-  if (fileType === 'image/svg+xml') { //check if svg
-    fabric.loadSVGFromURL(url, function(objects, options) {
-       var svg = fabric.util.groupSVGElements(objects, options);
-       canvas.add(svg);
-    });
+    canvas.renderAll();
   }
 }
 
@@ -1005,6 +1087,7 @@ function drawLine() {
     var points = [pointer.x, pointer.y, pointer.x, pointer.y];
     line = new fabric.Line(points, {
       strokeWidth: parseFloat($('#brushSize').val()),
+      strokeLineCap: 'round',
       stroke: pickr.getColor().toRGBA().toString(),
       fill: null,
       originX: 'center',
@@ -1299,9 +1382,3 @@ window.addEventListener("keydown", function(e) {
     undo();
   }
 });
-
-// bot
-//setTimeout(function() {
-//  $('[data-confirm=dimensions]').trigger('click');
-//  $('[data-open=zoom]').trigger('click');
-//}, 100)

@@ -41,6 +41,34 @@ input[type=range] {
   background-color: transparent;
   -webkit-appearance: none;
 }
+.alertify-logs {
+  z-index: 99999;
+}
+@media (min-width: 1px) and (max-width: 768px) {
+  [class^="grid__col--"] {
+    margin-top: 0;
+    margin-bottom: 0;
+    min-height: 1px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  input[type=file] {
+    padding: 0 0 15px 15px;
+    position: relative;
+    top: -20px;
+  }
+}
+@media (min-width: 769px) {
+  [class^="grid__col--"]:last-of-type {
+    float: right;
+  }
+  [class^="grid__col--"] + [class^="grid__col--"] {
+    margin-left: 2%;
+  }
+  input[type=file] {
+    padding: 20px 15px 15px 15px;
+  }
+}
 
 /* checkbox */
 input.checkbox {

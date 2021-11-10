@@ -188,6 +188,15 @@ select, select option {
 .dimensions .pcr-app .pcr-interaction input.pcr-result[type=text] {
   color: #fff;
 }
+.clearinput .fa-times {
+  color: #FF6060;
+}
+.fa-moon {
+  color: #fff;
+}
+.fa-sun {
+  color: #bfc154;
+}
 
 /* borders */
 .header {
