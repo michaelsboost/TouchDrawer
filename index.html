@@ -83,8 +83,6 @@
             </div>
 
             <div class="grid__col--6 ib wnh">
-<!--              <input id="backimage" type="file" accept="image/png, image/jpeg, image/svg+xml">-->
-<!--              <input type="file" accept="image/svg+xml" id="openfile" onchange="upload(event)">-->
               <input id="openfile" type="file" accept="image/png, image/jpeg, image/svg+xml">
             </div>
           </div>
@@ -141,6 +139,9 @@
         <a id="select" title="Select" onclick="changeAction(this)">
           <i class="fa fa-mouse-pointer"></i>
         </a>
+        <a title="Select All" data-selectall>
+          <i class="fa fa-object-group"></i>
+        </a>
         <a title="Color" data-open="palette">
           <i class="fa fa-palette"></i>
         </a>
@@ -153,6 +154,9 @@
           </a>
           <a title="Delete" onclick="remove()">
             <i class="fa fa-trash"></i>
+          </a>
+          <a title="Ungroup" onclick="ungroup()">
+            <i class="fa fa-object-ungroup"></i>
           </a>
           
           <a title="Align Left" onclick="alignLeft()">
@@ -178,7 +182,6 @@
           <a title="Send To Back" onclick="sendToBack()">Send To Back</a>
           <a title="Bring Forward" onclick="bringForward()">Bring Forward</a>
           <a title="Bring To Front" onclick="bringToFront()">Bring To Front</a>
-          <a title="Ungroup" onclick="ungroup()">Ungroup</a>
         </span>
         <a id="erase" title="Erase" onclick="changeAction(this)">
           <i class="fa fa-eraser"></i>

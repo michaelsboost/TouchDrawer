@@ -88,6 +88,9 @@ var canvas = this.__canvas = new fabric.Canvas('canvas', {
   backgroundColor: '#fff'
 });
 canvas.setOverlayColor("rgba(255,255,255,0)",undefined,{erasable:false});
+fabric.Object.prototype.transparentCorners = false;
+fabric.Object.prototype.cornerColor = '#1faeff';
+//fabric.Object.prototype.cornerStyle = 'circle';
 
 // lasso tool
 (function() {
@@ -489,6 +492,11 @@ $('[data-confirm=dimensions]').click(function() {
   undo_history.push(JSON.stringify(canvas));
   redo_history.length = 0;
 });
+
+setTimeout(function() {
+  $('[data-confirm=dimensions]').trigger('click');
+}, 500);
+
 $('[data-project=width]').on('keydown', function(e) {
   if (e.keyCode === 13) {
     $('[data-project=height]')[0].focus();
@@ -732,6 +740,22 @@ canvas.on("selection:updated", function() {
 //  console.log(undo_history.length);
 });
 
+// select all then group command
+$('[data-selectall]').click(function() {
+  removeEvents();
+  changeObjectSelection(true);
+  canvas.isDrawingMode = false;
+  $('.canvas-container').css('z-index', 1);
+  $('.history').removeClass('hide');
+  $('[data-selection=tools]').addClass('hide');
+  
+  selectall();
+  group();
+  $('#select').trigger('click');
+  canvas.setActiveObject(canvas.item(0));
+  canvas.renderAll();
+});
+
 function undo() {
   if (undo_history.length > 0) {
     lockHistory = true;
@@ -764,6 +788,14 @@ function clearcanvas() {
   $('[data-project=width]')[0].select();
   $('.header').css('z-index', 1);
   pickrr.show();
+}
+function selectall() {
+  canvas.discardActiveObject();
+  var sel = new fabric.ActiveSelection(canvas.getObjects(), {
+    canvas: canvas,
+  });
+  canvas.setActiveObject(sel);
+  canvas.requestRenderAll();
 }
 function copy() {
   // clone what are you copying since you
@@ -1033,6 +1065,16 @@ function ungroup() {
     canvas.renderAll();
   }
 }
+function group() {
+  if (!canvas.getActiveObject()) {
+    return;
+  }
+  if (canvas.getActiveObject().type !== 'activeSelection') {
+    return;
+  }
+  canvas.getActiveObject().toGroup();
+  canvas.requestRenderAll();
+}
 
 // fill tool
 function fillTool() {
@@ -1042,7 +1084,8 @@ function fillTool() {
   if (obj.hasFill()) {
     // is a fill
     obj.set('fill', pickr.getColor().toRGBA().toString());
-  } else {
+  } 
+  else {
     // is a stroke
     obj.set('stroke', pickr.getColor().toRGBA().toString());
   }
