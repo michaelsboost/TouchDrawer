@@ -17,6 +17,14 @@ $('[data-project=name]').on('keydown', function(e) {
   e.preventDefault();
 }).trigger('keydown');
 
+// remember notepad text
+$('[data-project=notepad]').on('keyup', function(e) {
+  localStorage.setItem('notepad', this.value);
+});
+if (localStorage.getItem('notepad')) {
+  $('[data-project=notepad]').val(localStorage.getItem('notepad'));
+}
+
 // toggle theme
 $('[data-theme]').on('click', function() {
   if ($(this).find('svg').hasClass('fa-moon')) {
