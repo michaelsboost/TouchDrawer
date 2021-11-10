@@ -17,6 +17,14 @@ $('[data-project=name]').on('keydown', function(e) {
   e.preventDefault();
 }).trigger('keydown');
 
+// remember project name
+$('[data-project=name]').on('keyup', function(e) {
+  localStorage.setItem('projectname', this.value);
+});
+if (localStorage.getItem('projectname')) {
+  $('[data-project=name]').val(localStorage.getItem('projectname'));
+}
+
 // remember notepad text
 $('[data-project=notepad]').on('keyup', function(e) {
   localStorage.setItem('notepad', this.value);
