@@ -493,10 +493,6 @@ $('[data-confirm=dimensions]').click(function() {
   redo_history.length = 0;
 });
 
-setTimeout(function() {
-  $('[data-confirm=dimensions]').trigger('click');
-}, 500);
-
 $('[data-project=width]').on('keydown', function(e) {
   if (e.keyCode === 13) {
     $('[data-project=height]')[0].focus();
@@ -519,7 +515,6 @@ $('[data-size]').on('click', function() {
   $('[data-project=height]').val(h);
 });
 $('[data-size=800x600]').trigger('click');
-//$('[data-confirm=dimensions]').trigger('click');
 
 // initiate settings color picker
 const pickr = Pickr.create({
@@ -569,7 +564,6 @@ pickr.on('init', () => {
 });
 pickr.on('save', (color, instance) => {
   pickr.addSwatch(pickr.getColor().toRGBA().toString());
-//  $('[data-close=palette]').trigger('click');
 });
 
 // brush size
@@ -615,7 +609,7 @@ $('#canvasSize').change(function() {
 });
 
 function changeAction(target) {
-  ['select','fill','erase','pencil','brush','lasso','rect','ellipse','line','triangle','spray1','spray2'].forEach(action => {
+  ['select','fill','erase','pencil','brush','lasso','rectb','rect','ellipseb','ellipse','line','triangleb','triangle','spray1','spray2'].forEach(action => {
     var el = document.getElementById(action);
     el.classList.remove('active');
   });
@@ -680,14 +674,23 @@ function changeAction(target) {
       $('.history').removeClass('hide');
       $('[data-selection=tools]').addClass('hide');
       break;
+    case "rectb":
+      drawBorderedRect();
+      break;
     case "rect":
       drawRect();
+      break;
+    case "ellipseb":
+      drawBorderedEllipse();
       break;
     case "ellipse":
       drawEllipse();
       break;
     case "line":
       drawLine();
+      break;
+    case "triangleb":
+      drawBorderedTriangle();
       break;
     case "triangle":
       drawTriangle();
@@ -837,10 +840,13 @@ function duplicate() {
   paste();
 }
 function remove() {
-  canvas.getActiveObjects().forEach((obj) => {
-    canvas.remove(obj)
-  });
-  canvas.discardActiveObject().renderAll()
+  var activeObj = canvas.getActiveObject() || canvas.getActiveGroup();
+  if (activeObj) {
+    canvas.getActiveObjects().forEach((obj) => {
+      canvas.remove(obj)
+    });
+    canvas.discardActiveObject().renderAll()
+  }
 }
 
 // transforms
@@ -1093,6 +1099,7 @@ function fillTool() {
 //  canvas.setActiveObject(canvas.item(id));
   canvas.discardActiveObject();
   canvas.renderAll();
+  canvas.renderAll();
 }
 canvas.on('selection:created', function() {
   // if fill is not active cancel operation
@@ -1168,6 +1175,64 @@ function drawLine() {
   canvas.on('mouse:up', function(o) {
     isDown = false;
     line.setCoords();
+  });
+}
+function drawBorderedRect() {
+  var rect, isDown, origX, origY;
+  removeEvents();
+  changeObjectSelection(false);
+
+  canvas.on('mouse:down', function(o) {
+    isDown = true;
+    var pointer = canvas.getPointer(o.e);
+    origX = pointer.x;
+    origY = pointer.y;
+    var pointer = canvas.getPointer(o.e);
+    rect = new fabric.Rect({
+      left: origX,
+      top: origY,
+      originX: 'left',
+      originY: 'top',
+      width: pointer.x - origX,
+      height: pointer.y - origY,
+      angle: 0,
+      selectable: false,
+      centeredRotation: true,
+      fill: null,
+      strokeWidth: parseFloat($('#brushSize').val()),
+      stroke: pickr.getColor().toRGBA().toString(),
+      centeredRotation: true,
+    });
+    canvas.add(rect);
+  });
+  canvas.on('mouse:move', function(o) {
+    if (!isDown) return;
+    var pointer = canvas.getPointer(o.e);
+
+    if (origX > pointer.x) {
+      rect.set({
+        left: Math.abs(pointer.x)
+      });
+    }
+    if (origY > pointer.y) {
+      rect.set({
+        top: Math.abs(pointer.y)
+      });
+    }
+
+    rect.set({
+      width: Math.abs(origX - pointer.x)
+    });
+    rect.set({
+      height: Math.abs(origY - pointer.y)
+    });
+
+
+    canvas.renderAll();
+  });
+  canvas.on('mouse:up', function(o) {
+    isDown = false;
+    rect.setCoords();
   });
 }
 function drawRect() {
@@ -1261,6 +1326,62 @@ function drawCircle() {
   });
 
 }
+function drawBorderedEllipse() {
+  var ellipse, isDown, origX, origY;
+  removeEvents();
+  changeObjectSelection(false);
+  
+  canvas.on('mouse:down', function(o) {
+    isDown = true;
+    var pointer = canvas.getPointer(o.e);
+    origX = pointer.x;
+    origY = pointer.y;
+    ellipse = new fabric.Ellipse({
+      left: pointer.x,
+      top: pointer.y,
+      rx: pointer.x - origX,
+      ry: pointer.y - origY,
+      angle: 0,
+      fill: null,
+      strokeWidth: parseFloat($('#brushSize').val()),
+      stroke: pickr.getColor().toRGBA().toString(),
+      selectable: true,
+      centeredRotation: true,
+      originX: 'center',
+      originY: 'center'
+    });
+    canvas.add(ellipse);
+  });
+  canvas.on('mouse:move', function(o){
+      if (!isDown) return;
+      var pointer = canvas.getPointer(o.e);
+      var rx = Math.abs(origX - pointer.x)/2;
+      var ry = Math.abs(origY - pointer.y)/2;
+      if (rx > ellipse.strokeWidth) {
+        rx -= ellipse.strokeWidth/2
+      }
+       if (ry > ellipse.strokeWidth) {
+        ry -= ellipse.strokeWidth/2
+      }
+      ellipse.set({ rx: rx, ry: ry});
+
+      if(origX>pointer.x){
+          ellipse.set({originX: 'right' });
+      } else {
+          ellipse.set({originX: 'left' });
+      }
+      if(origY>pointer.y){
+          ellipse.set({originY: 'bottom'  });
+      } else {
+          ellipse.set({originY: 'top'  });
+      }
+      canvas.renderAll();
+  });
+  canvas.on('mouse:up', function(o){
+    isDown = false;
+    ellipse.setCoords();
+  });
+}
 function drawEllipse() {
   var ellipse, isDown, origX, origY;
   removeEvents();
@@ -1315,6 +1436,62 @@ function drawEllipse() {
     ellipse.setCoords();
   });
 }
+function drawBorderedTriangle() {
+  var triangle, isDown, origX, origY;
+  removeEvents();
+  changeObjectSelection(false);
+  
+  canvas.on('mouse:down', function(o) {
+    isDown = true;
+    var pointer = canvas.getPointer(o.e);
+    origX = pointer.x;
+    origY = pointer.y;
+    triangle = new fabric.Triangle({
+      left: pointer.x,
+      top: pointer.y,
+      width: pointer.x - origX,
+      height: pointer.y - origY,
+      fill: null,
+      strokeWidth: parseFloat($('#brushSize').val()),
+      stroke: pickr.getColor().toRGBA().toString(),
+      selectable: false,
+      centeredRotation: true,
+      originX: 'left',
+      originY: 'top'
+    });
+    canvas.add(triangle);
+  });
+  canvas.on('mouse:move', function(o) {
+    if (!isDown) return;
+    var pointer = canvas.getPointer(o.e);
+
+    if (origX > pointer.x) {
+      triangle.set({
+        left: Math.abs(pointer.x)
+      });
+    }
+    if (origY > pointer.y) {
+      triangle.set({
+        top: Math.abs(pointer.y)
+      });
+    }
+
+    triangle.set({
+      width: Math.abs(origX - pointer.x)
+    });
+    triangle.set({
+      height: Math.abs(origY - pointer.y)
+    });
+
+
+    canvas.renderAll();
+  });
+  canvas.on('mouse:up', function(o) {
+    isDown = false;
+    triangle.setCoords();
+  });
+
+}
 function drawTriangle() {
   var triangle, isDown, origX, origY;
   removeEvents();
@@ -1330,7 +1507,6 @@ function drawTriangle() {
       top: pointer.y,
       width: pointer.x - origX,
       height: pointer.y - origY,
-      strokeWidth: 1,
       fill: pickr.getColor().toRGBA().toString(),
       selectable: false,
       centeredRotation: true,
@@ -1439,5 +1615,10 @@ window.addEventListener("keydown", function(e) {
   // (CTRL+Z)
   if ( e.ctrlKey && e.keyCode == 90 ) {
     undo();
+  }
+  // (DEL)
+  if ( e.keyCode == 46 ) {
+    remove();
+    return false;
   }
 });

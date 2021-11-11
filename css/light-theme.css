@@ -170,7 +170,10 @@ select, select option {
   color: #767676;
 }
 .header svg path,
-.header svg line {
+.header svg line,
+.header a#rectb svg rect,
+.header a#ellipseb svg circle,
+.header a#triangleb svg path {
   stroke: #767676;
 }
 .header a#triangle svg path {
@@ -179,7 +182,10 @@ select, select option {
 .header a.active {
   color: #1faeff;
 }
-.header a#line.active svg line {
+.header a#line.active svg line,
+.header a#rectb.active svg rect,
+.header a#ellipseb.active svg circle,
+.header a#triangleb.active svg path {
   stroke: #1faeff;
 }
 .header a#triangle.active svg path {

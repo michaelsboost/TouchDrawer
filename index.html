@@ -196,8 +196,18 @@
         <a id="lasso" title="Lasso Brush" onclick="changeAction(this)">
           <i class="fa fa-splotch"></i>
         </a>
+        <a id="rectb" title="Bordered Rectangle" onclick="changeAction(this)">
+          <svg width="20" height="20">
+            <rect x="1" y="1" width="18" height="18" rx="2" stroke-width="2" fill="none" />
+          </svg>
+        </a>
         <a id="rect" title="Rectangle" onclick="changeAction(this)">
           <i class="fa fa-square"></i>
+        </a>
+        <a id="ellipseb" title="Bordered Ellipse" onclick="changeAction(this)">
+          <svg width="20" height="20">
+            <circle cx="10" cy="10" r="8" stroke-width="2" fill="none"/>
+          </svg>
         </a>
         <a id="ellipse" title="Ellipse" onclick="changeAction(this)">
           <i class="fa fa-circle"></i>
@@ -205,6 +215,11 @@
         <a id="line" title="Line" onclick="changeAction(this)">
           <svg width="20" height="20">
             <line stroke-width="5" x1="17" x2="3" y1="3" y2="17" stroke-linecap="round"/>
+          </svg>
+        </a>
+        <a id="triangleb" title="Bordered Triangle" onclick="changeAction(this)">
+          <svg width="20" height="20">
+            <path d="m2.60646,16.65155l7.37305,-12.90315l7.37305,12.90315l-14.74609,0l0,0z" stroke-width="2"/>
           </svg>
         </a>
         <a id="triangle" title="Triangle" onclick="changeAction(this)">
