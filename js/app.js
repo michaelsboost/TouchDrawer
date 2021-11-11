@@ -485,7 +485,7 @@ $('[data-confirm=dimensions]').click(function() {
   $('.canvas .canvas').css('width', 'calc('+ $('[data-project=width]').val() +'px + '+ $('[data-project=width]').val() +'px)');
   $('.canvas .canvas').css('width', 'calc('+ $('[data-project=height]').val() +'px + '+ $('[data-project=height]').val() +'px)');  
   $('#canvasSize').trigger('change');
-  changeAction('brush');
+  changeAction('pencil');
   pickrr.hide();
   
   // make first undo
