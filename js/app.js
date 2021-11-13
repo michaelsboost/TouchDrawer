@@ -634,6 +634,7 @@ $('[data-restore=canvas]').click(function() {
   instance.restore();
 });
 
+// tools
 function changeAction(target) {
   ['select','fill','erase','pencil','brush','lasso','rectb','rect','ellipseb','ellipse','line','triangleb','triangle','spray1','spray2'].forEach(action => {
     var el = document.getElementById(action);
@@ -728,6 +729,8 @@ function changeAction(target) {
       drawTriangle();
       break;
     case "spray1":
+      removeEvents();
+      changeObjectSelection(false);
       canvas.freeDrawingBrush = new fabric.SprayBrush(canvas);
       canvas.freeDrawingBrush.width = parseFloat($('#brushSize').val());
       canvas.freeDrawingBrush.color = pickr.getColor().toRGBA().toString();
@@ -737,6 +740,8 @@ function changeAction(target) {
       $('[data-selection=tools]').addClass('hide');
       break;
     case "spray2":
+      removeEvents();
+      changeObjectSelection(false);
       canvas.freeDrawingBrush = new fabric.CircleBrush(canvas);
       canvas.freeDrawingBrush.width = parseFloat($('#brushSize').val());
       canvas.freeDrawingBrush.color = pickr.getColor().toRGBA().toString();
