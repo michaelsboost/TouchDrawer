@@ -1,18 +1,14 @@
 TouchDrawer
 ===================
 
-Is just a free and open source vector drawing tool for mobile. Try it today at [michaelsboost.com/TouchDrawer](https://michaelsboost.github.io/TouchDrawer)
+Just a free and open source vector drawing tool for mobile. Try it today at [michaelsboost.com/TouchDrawer](https://michaelsboost.github.io/TouchDrawer)
+
+![](https://raw.githubusercontent.com/michaelsboost/TouchDrawer/gh-pages/header.png)
 
 Version
 -------------
 
 0.0.1
-
-To Do
--------------
-
-* Design a logo
-* Header for social media and search engines
 
 License
 -------------
