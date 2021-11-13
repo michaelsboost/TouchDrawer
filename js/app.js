@@ -595,13 +595,14 @@ $('[data-open=zoom]').click(function() {
   $('.history').addClass('hide');
   $('.mainh').addClass('hide');
   $('.zoommenu, [data-zoom]').removeClass('hide');
-  $('.canvas-container').on('touchstart mousedown', function() {
-    canvas.discardActiveObject();
-  });
+  canvas.discardActiveObject();
   if (canvas.item(0)) {
-    canvas.item(0)["hasControls"] = false;
-    canvas.item(0)["hasBorders"] = false;
-    canvas.item(0)["selectable"] = false;
+    for(var i = 0; i < canvas.getObjects().length; i++) {
+      canvas.item(i)["hasControls"] = false;
+      canvas.item(i)["hasBorders"] = false;
+      canvas.item(i)["selectable"] = false;
+      canvas.item(i)["evented"] = false;
+    }
     canvas.renderAll();
   }
   
@@ -612,6 +613,15 @@ $('[data-close=zoom]').click(function() {
   $('.mainh').removeClass('hide');
   $('.zoommenu, [data-zoom]').addClass('hide');
   canvas.discardActiveObject();
+  if (canvas.item(0)) {
+    for(var i = 0; i < canvas.getObjects().length; i++) {
+      canvas.item(i)["hasControls"] = true;
+      canvas.item(i)["hasBorders"] = true;
+      canvas.item(i)["selectable"] = true;
+      canvas.item(i)["evented"] = true;
+    }
+    canvas.renderAll();
+  }
   changeAction(activeTool);
   
   // pause panzoom
