@@ -30,6 +30,7 @@ TouchDrawer uses a number of open source projects to work properly:
 * [Pickr](https://simonwep.github.io/pickr/) - The color picker
 * [AlertifyJS](http://alertifyjs.com/) - For the awesome and stylish notification dialogs
 * [Font Awesome](https://fontawesome.com/) - a font and icon toolkit
+* [panzoom](https://github.com/anvaka/panzoom/) - Used to pan and zoom the canvas
 * [FabricJS](http://fabricjs.com/) - The technology that makes this application possible
 
 Development

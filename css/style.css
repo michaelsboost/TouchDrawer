@@ -359,15 +359,11 @@ input[type=number] {
   transform-origin: top;
   margin: auto;
 }
-.canvas .canvas-container, #overlay {
+.canvas .canvas-container {
   position: absolute!important;
   top: 0;
   left: 0;
   margin: auto;
-}
-#overlay {
-  z-index: 1;
-  background: transparent;
 }
 
 /* misc */

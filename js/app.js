@@ -478,8 +478,6 @@ $('[data-confirm=dimensions]').click(function() {
   canvas.renderAll();
   
   $('.canvas').removeClass('hidden');
-  $('.canvas #overlay')[0].width  = $('[data-project=width]').val();
-  $('.canvas #overlay')[0].height = $('[data-project=height]').val();
   $('[data-dimensions]').addClass('hide');
   $('.header').css('z-index', 99999);
   $('.canvas .canvas').css('width', 'calc('+ $('[data-project=width]').val() +'px + '+ $('[data-project=width]').val() +'px)');
@@ -597,15 +595,33 @@ $('[data-open=zoom]').click(function() {
   $('.history').addClass('hide');
   $('.mainh').addClass('hide');
   $('.zoommenu, [data-zoom]').removeClass('hide');
+  $('.canvas-container').on('touchstart mousedown', function() {
+    canvas.discardActiveObject();
+  });
+  if (canvas.item(0)) {
+    canvas.item(0)["hasControls"] = false;
+    canvas.item(0)["hasBorders"] = false;
+    canvas.item(0)["selectable"] = false;
+    canvas.renderAll();
+  }
+  
+  // resume panzoom
+  instance.resume();
 });
 $('[data-close=zoom]').click(function() {
   $('.mainh').removeClass('hide');
   $('.zoommenu, [data-zoom]').addClass('hide');
+  canvas.discardActiveObject();
   changeAction(activeTool);
+  
+  // pause panzoom
+  instance.pause();
 });
-$('#canvasSize').change(function() {
-  $('.canvas').css('transform', 'translateY(-50%) scale('+ this.value +')');
-//  $('.canvas .canvas-container, #overlay').css('left', '-' + parseFloat(parseFloat($('[data-project=width]').val()) + 100) + 'px');
+
+// restore canvas
+$('[data-restore=canvas]').click(function() {
+  $('.canvas-container').css('transform', '');
+  instance.restore();
 });
 
 function changeAction(target) {
@@ -623,6 +639,12 @@ function changeAction(target) {
       $('.canvas-container').css('z-index', 1);
       $('.history').removeClass('hide');
       $('[data-selection=tools]').removeClass('hide');
+      if (canvas.item(0)) {
+        canvas.item(0)["hasControls"] = true;
+        canvas.item(0)["hasBorders"] = true;
+        canvas.item(0)["selectable"] = true;
+        canvas.renderAll();
+      }
       break;
     case "fill":
       removeEvents();
@@ -1117,7 +1139,7 @@ canvas.on('selection:updated', function() {
   
   fillTool();
 });
-canvas.on('mouse:over', function(event){
+canvas.on('mouse:over', function(event) {
   if (!$('.header #fill.active').is(':visible')) {
     return false;
   }
@@ -1126,7 +1148,7 @@ canvas.on('mouse:over', function(event){
     event.target.hoverCursor = 'pointer';
   }
 });
-canvas.on('touch:gesture', function(event){
+canvas.on('touch:gesture', function(event) {
   if (event.e.touches && event.e.touches.length == 2) {
     // Get event point
     var point = new fabric.Point(event.self.x, event.self.y);
@@ -1596,6 +1618,24 @@ function downloadSVG() {
   a.click();
   URL.revokeObjectURL(blobURL);
 };
+
+// init panzoom
+var drawArea = document.querySelector('.canvas-container');
+var instance = panzoom(drawArea);
+instance.pause();
+
+// pause panzoom if active is visble
+$('.header .mainh a').click(function() {
+  if ($('.header .active').is(':visible')) {
+    // pause panzoom
+    instance.pause();
+  }
+});
+
+// bot
+//setTimeout(function() {
+//  $('[data-confirm=dimensions]').trigger('click');
+//}, 300);
 
 // shortcut keys
 window.addEventListener("keydown", function(e) {

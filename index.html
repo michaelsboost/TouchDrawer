@@ -3,7 +3,10 @@
   <head>
     <title>TouchDrawer</title>
     <meta charset="utf-8">
+<!--
     <meta name="viewport"  content="initial-scale=1.0, user-scalable=yes">
+-->
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="description" content="A free and open source vector drawing tool for mobile.">
     <meta name="author" content="Michael Schwartz">
     <link rel="stylesheet" href="libraries/normalize/normalize.css" />
@@ -275,11 +278,16 @@
           <i class="fa fa-cog"></i>
         </a>
         
-<!--        <input type="range" id="canvasSize" min="0.01" max="5" value="0.75" step="0.01">-->
-        <input type="range" id="canvasSize" min="0.01" max="3" value="0.9" step="0.01">
-        
         <a class="fr" title="Close Zoom" data-close="zoom" style="position: relative; z-index: 1;">
           <i class="fa fa-times"></i>
+        </a>
+        
+        <a class="fr" title="Restore Canvas" data-restore="canvas" style="position: relative; z-index: 1;">
+<!--          <i class="fa fa-window-restore"></i>-->
+          <i class="fa fa-expand"></i>
+<!--          <i class="fa fa-compress"></i>-->
+<!--          <i class="fa fa-compress-arrows-alt"></i>-->
+<!--          <i class="fa fa-expand-arrows-alt"></i>-->
         </a>
       </div>
     </div>
@@ -287,7 +295,6 @@
     <!-- canvas -->
     <div class="wrapper">
       <div class="canvas hidden">
-        <canvas id="overlay" width="1920" height="1080"></canvas>
         <canvas id="canvas" width="1920" height="1080"></canvas>
       </div>
     </div>
@@ -315,6 +322,7 @@
     <script src="libraries/bowser/bowser.min.js"></script>
     <script src="libraries/fabricjs/fabric.js"></script>
     <script src="libraries/fabricjs/eraser_brush.mixin.js"></script>
+    <script src="libraries/panzoom/panzoom.mod.js"></script>
     <script src="js/browsersupport.js"></script>
     <script src="js/app.js"></script>
 <!--
