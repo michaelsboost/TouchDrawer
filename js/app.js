@@ -1212,6 +1212,10 @@ function drawLine() {
   canvas.on('mouse:up', function(o) {
     isDown = false;
     line.setCoords();
+    if (lockHistory) return;
+  //  console.log("object:modified");
+    undo_history.push(JSON.stringify(canvas));
+    redo_history.length = 0;
   });
 }
 function drawBorderedRect() {
@@ -1270,6 +1274,10 @@ function drawBorderedRect() {
   canvas.on('mouse:up', function(o) {
     isDown = false;
     rect.setCoords();
+    if (lockHistory) return;
+  //  console.log("object:modified");
+    undo_history.push(JSON.stringify(canvas));
+    redo_history.length = 0;
   });
 }
 function drawRect() {
@@ -1326,6 +1334,10 @@ function drawRect() {
   canvas.on('mouse:up', function(o) {
     isDown = false;
     rect.setCoords();
+    if (lockHistory) return;
+  //  console.log("object:modified");
+    undo_history.push(JSON.stringify(canvas));
+    redo_history.length = 0;
   });
 }
 function drawCircle() {
@@ -1360,8 +1372,11 @@ function drawCircle() {
   canvas.on('mouse:up', function(o) {
     isDown = false;
     circle.setCoords();
+    if (lockHistory) return;
+  //  console.log("object:modified");
+    undo_history.push(JSON.stringify(canvas));
+    redo_history.length = 0;
   });
-
 }
 function drawBorderedEllipse() {
   var ellipse, isDown, origX, origY;
@@ -1417,6 +1432,10 @@ function drawBorderedEllipse() {
   canvas.on('mouse:up', function(o){
     isDown = false;
     ellipse.setCoords();
+    if (lockHistory) return;
+  //  console.log("object:modified");
+    undo_history.push(JSON.stringify(canvas));
+    redo_history.length = 0;
   });
 }
 function drawEllipse() {
@@ -1471,6 +1490,10 @@ function drawEllipse() {
   canvas.on('mouse:up', function(o){
     isDown = false;
     ellipse.setCoords();
+    if (lockHistory) return;
+  //  console.log("object:modified");
+    undo_history.push(JSON.stringify(canvas));
+    redo_history.length = 0;
   });
 }
 function drawBorderedTriangle() {
@@ -1526,8 +1549,11 @@ function drawBorderedTriangle() {
   canvas.on('mouse:up', function(o) {
     isDown = false;
     triangle.setCoords();
+    if (lockHistory) return;
+  //  console.log("object:modified");
+    undo_history.push(JSON.stringify(canvas));
+    redo_history.length = 0;
   });
-
 }
 function drawTriangle() {
   var triangle, isDown, origX, origY;
@@ -1580,8 +1606,11 @@ function drawTriangle() {
   canvas.on('mouse:up', function(o) {
     isDown = false;
     triangle.setCoords();
+    if (lockHistory) return;
+  //  console.log("object:modified");
+    undo_history.push(JSON.stringify(canvas));
+    redo_history.length = 0;
   });
-
 }
 function enableSelection() {
   removeEvents();
