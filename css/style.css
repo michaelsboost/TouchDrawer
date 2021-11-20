@@ -331,8 +331,8 @@ input.numinhead[type=text] {
   width: calc(100vw - 100px);
   height: calc(100% - 22px);
 */
-  width: calc(100vw - 126px);
-  height: calc(100% - -2px);
+  width: calc(100vw - 142px);
+  height: calc(100% - 5px);
 }
 .pcr-last-color {
   display: none;
