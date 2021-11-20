@@ -1544,10 +1544,10 @@ $('[data-tools=colorpicker]').trigger('click');
 $('[data-tools=colorpicker]').trigger('click');
 setTimeout(function() {
 //  $('[data-call=new]').trigger('click');
-//  $('[data-tools=zoom]').trigger('click');
+ $('[data-tools=zoom]').trigger('click');
 //  $('[data-tools=select]').trigger('click');
 //  $('[data-tools=brush]').trigger('click');
-  $('[data-tools=filters]').trigger('click');
+  // $('[data-tools=filters]').trigger('click');
 }, 300);
 //$('[data-tools=brush]').trigger('click');
 //$('[data-tools=ellipse]').trigger('click');
