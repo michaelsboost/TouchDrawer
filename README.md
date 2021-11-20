@@ -30,9 +30,11 @@ TouchDrawer uses a number of open source projects to work properly:
 * [Normalize](https://github.com/necolas/normalize.css) - CSS reset library
 * [jQuery](http://jquery.com/) - duh
 * [Pickr](https://simonwep.github.io/pickr/) - The color picker
-* [AlertifyJS](http://alertifyjs.com/) - For the awesome and stylish notification dialogs
+* [AlertifyJS](http://alertifyjs.com/) - For the awesome and stylish notification logs
+* [SweetAlert](https://sweetalert.js.org/guides/) - For the awesome and stylish alert dialogs
 * [panzoom](https://github.com/anvaka/panzoom/) - Used to pan and zoom the canvas
-* [FabricJS](http://fabricjs.com/) - The technology that makes this application possible
+* [gifshot](https://github.com/yahoo/gifshot) - The technology that makes the gif animation possible
+* [FabricJS](http://fabricjs.com/) - The technology that makes the drawing possible
 
 Development
 -------------
