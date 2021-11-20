@@ -1,340 +1,442 @@
+<!--
+  Version: 1.000-alpha
+  TouchDrawer, copyright (c) by Michael Schwartz
+  Distributed under an MIT license: https://github.com/michaelsboost/TouchDrawer/blob/gh-pages/LICENSE
+  
+  This is svgMotion (https://michaelsboost.github.io/TouchDrawer/), Just a free and open source vector drawing tool for mobile.
+-->
+
 <!DOCTYPE html>
 <html>
   <head>
-    <title>TouchDrawer</title>
+    <title>TouchDrawer: Demo</title>
     <meta charset="utf-8">
-<!--
-    <meta name="viewport"  content="initial-scale=1.0, user-scalable=yes">
--->
-    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="description" content="A free and open source vector drawing tool for mobile.">
+    <meta name="viewport"  content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <meta name="description" content="Just a free and open source vector drawing tool for mobile.">
     <meta name="author" content="Michael Schwartz">
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="192x192" href="favicon-192x192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="android-chrome-512x512.png">
-    
+    <link rel="icon" type="image/png" sizes="512x512" href="favicon-512x512.png">
     <link rel="stylesheet" href="libraries/normalize/normalize.css" />
-    <link rel="stylesheet" href="libraries/polyui/polyui-mod.css" />
     <link rel="stylesheet" href="libraries/alertifyjs/alertify.core.css" />
     <link rel="stylesheet" href="libraries/alertifyjs/alertify.default.css" />
+    <link rel="stylesheet" href="libraries/sweetalert2/sweetalert2.min.css" />
     <link rel="stylesheet" href="libraries/pickr/themes/classic.min.css" />
     <link rel="stylesheet" href="libraries/pickr/themes/monolith.min.css" />
     <link rel="stylesheet" href="libraries/pickr/themes/nano.min.css" />
-    <link href="https://fonts.googleapis.com/css?family=Signika+Negative:300,400,700" rel="stylesheet" />
     <link rel="stylesheet" href="css/style.css" />
-    <link id="apptheme" rel="stylesheet" href="css/dark-theme.css" />
-    
     <meta property="og:url"         content="https://michaelsboost.com/TouchDrawer" />
     <meta property="og:type"        content="website" />
     <meta property="og:title"       content="TouchDrawer" />
-    <meta property="og:description" content="A free and open source vector drawing tool for mobile." />
+    <meta property="og:description" content="Just a free and open source vector drawing tool for mobile." />
     <meta property="og:image"       content="https://raw.githubusercontent.com/michaelsboost/TouchDrawer/gh-pages/header.png" />
   </head>
   <body>
-    <!-- project dimensions -->
-    <div class="settings dimensions" data-dimensions>
-      <div class="settingsbg" data-confirm="dimensions"></div>
-      <div class="projectSettings">
-        <div class="grid">
-          <div class="grid__col--12 nomarb">
-            <div class="grid__col--6 ib wnh">
-              <h2 class="headline-secondary--grouped nomarb ib">
-                Width
-              </h2>
-              <input class="form__input ib" type="number" data-project="width" min="1" step="1" value="1920">
-            </div>
-
-            <div class="grid__col--6 ib wnh">
-              <h2 class="headline-secondary--grouped nomarb ib">
-                Height
-              </h2>
-              <input class="form__input ib" type="number" data-project="height" min="1" step="1" value="1080">
-            </div>
-          </div>
-
-          <div class="hscroll">
-            <br>
-            <button class="btn--pink" data-size="851x315">Facebook Cover</button>
-            <button class="btn--pink" data-size="1500x500">Twitter Cover</button>
-            <button class="btn--pink" data-size="2560x1440">YouTube Cover</button>
-            <button class="btn--pink" data-size="1440x425">LinkedIn Cover</button>
-            <button class="btn--pink" data-size="900x480">Twitch Cover</button>
-            <button class="btn--pink" data-size="1024x512">Twitter Post</button>
-            <button class="btn--pink" data-size="940x788">Facebook Post</button>
-            <button class="btn--pink" data-size="810x450">Facebook App</button>
-            <button class="btn--pink" data-size="1200x627">Facebook Ad</button>
-            <button class="btn--pink" data-size="1080x1080">Instagram Post</button>
-            <button class="btn--pink" data-size="1080x1920">Instagram Stories</button>
-            <button class="btn--pink" data-size="540x810">Tumblr Graphic</button>
-            <button class="btn--pink" data-size="735x600">Pinterest Pin</button>
-            <button class="btn--pink" data-size="1206x708">Twitch Video</button>
-            <button class="btn--pink" data-size="646x220">LinkedIn Banner</button>
-            <button class="btn--pink" data-size="800x600">Dribbble Shot</button>
-          </div>
-
-          <div class="grid__col--12 settingsborder">
-            <h2 class="headline-secondary--grouped nomarb ib">
-              BG Color
-            </h2>
-            <br>
-            <!-- color palette dialog -->
-            <div class="pickrr"></div>
-            <br>
-            <br>
-          </div>
-          <div class="grid__col--12 nomarb">
-            <div class="grid__col--6 ib wnh">
-              <h2 class="headline-secondary--grouped nomarb">
-                <span class="fl">
-                  BG Image:
-                </span>
-                
-                <a class="clearinput fr hide" data-clearinput>
-                  <i class="fa fa-times"></i>
-                </a>
-              </h2>
-            </div>
-
-            <div class="grid__col--6 ib wnh">
-              <input id="openfile" type="file" accept="image/png, image/jpeg, image/svg+xml">
-            </div>
-          </div>
-
-          <div class="grid__col--12 settingsborder">
-            <br>
-            <button class="btn--blue w100p" data-confirm="dimensions">Confirm</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <!-- project settings -->
-    <div class="settings hide" data-settings>
-      <div class="settingsbg" data-toggle="projectSettings"></div>
-      <div class="projectSettings" data-projectSettings>
-        <div class="grid">
-          <div class="grid__col--12">
-            <h2 class="headline-secondary--grouped nomarb">
-              Project name 
-              <a data-theme="dark" class="fr" title="Theme">
-                <i class="fa fa-moon"></i>
-              </a>
-            </h2>
-            <input class="form__input" type="text" data-project="name" value="First Project">
-          </div>
-
-          <div class="grid__col--12 settingsborder">
-            <h2 class="headline-secondary--grouped nomarb nomart">Notepad</h2>
-            <textarea class="form__input" data-project="notepad" style="resize: vertical;" placeholder="Important notes about your project go here..."></textarea>
-
-            <button class="btn--default w100p" data-toggle="projectSettings">Close Dialog</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <!-- header -->
-    <div class="header">
-      <div class="mainh">
-        <label for="openfile">
-          <a title="Load file">
-            <i class="fa fa-file-upload"></i>
+    <!-- main menu -->
+    <div data-topmenu>
+      <div data-mainmenu>
+        <span>
+          <a data-info title="App Information">
+            <img src="logo.svg">
           </a>
-        </label>
-        <a title="Clear" onclick="clearcanvas()">
-          <i class="fa fa-file"></i>
-        </a>
-        <a id="zoom" title="Pan" data-open="zoom">
-<!--          <i class="fa fa-hand-point-up"></i>-->
-<!--          <i class="fa fa-hand-pointer"></i>-->
-          <i class="fa fa-search"></i>
-        </a>
-        <a id="select" title="Select" onclick="changeAction(this)">
-          <i class="fa fa-mouse-pointer"></i>
-        </a>
-        <a title="Select All" data-selectall>
-          <i class="fa fa-object-group"></i>
-        </a>
-        <a title="Color" data-open="palette">
-          <i class="fa fa-palette"></i>
-        </a>
-        <a id="fill" title="Fill" onclick="changeAction(this)">
-          <i class="fa fa-fill-drip"></i>
-        </a>
-        <span class="hide" data-selection="tools">
-          <a title="Duplicate" onclick="duplicate()">
-            <i class="fa fa-clone"></i>
+          <a href="https://michaelsboost.com/donate/" target="_blank" title="Donate">
+            <img src="svgs/donate.svg">
           </a>
-          <a title="Delete" onclick="remove()">
-            <i class="fa fa-trash"></i>
-          </a>
-          <a title="Ungroup" onclick="ungroup()">
-            <i class="fa fa-object-ungroup"></i>
-          </a>
-          
-          <a title="Align Left" onclick="alignLeft()">
-            <i class="fa fa-align-left"></i>
-          </a>
-          <a title="Align Center" onclick="alignCenter()">
-            <i class="fa fa-align-center"></i>
-          </a>
-          <a title="Align Right" onclick="alignRight()">
-            <i class="fa fa-align-right"></i>
-          </a>
-
-          <a title="Align Top" onclick="alignTop()">Align Top</a>
-          <a title="Align Middle" onclick="alignMiddle()">Align Middle</a>
-          <a title="Align Bottom" onclick="alignBottom()">Align Bottom</a>
-          
-          <a title="Flip H" onclick="flipH()">Flip H</a>
-          <a title="Flip V" onclick="flipV()">Flip V</a>
-          <a title="Rotate CW" onclick="rotateCW()">Rotate CW</a>
-          <a title="Rotate CCW" onclick="rotateCCW()">Rotate CCW</a>
-
-          <a title="Send Backwards" onclick="sendBackwards()">Send Backwards</a>
-          <a title="Send To Back" onclick="sendToBack()">Send To Back</a>
-          <a title="Bring Forward" onclick="bringForward()">Bring Forward</a>
-          <a title="Bring To Front" onclick="bringToFront()">Bring To Front</a>
+          <button data-call="new">NEW</button>
+          <button data-comingsoon data-load>LOAD</button>
         </span>
-        <a id="erase" title="Erase" onclick="changeAction(this)">
-          <i class="fa fa-eraser"></i>
-        </a>
-        <a id="pencil" title="Pencil" onclick="changeAction(this)">
-          <i class="fa fa-pencil-alt"></i>
-        </a>
-        <a id="brush" title="Brush" onclick="changeAction(this)">
-<!--          <i class="fa fa-paint-brush"></i>-->
-          <i class="fa fa-pen-alt"></i>
-        </a>
-        <a id="lasso" title="Lasso Brush" onclick="changeAction(this)">
-          <i class="fa fa-splotch"></i>
-        </a>
-        <a id="rectb" title="Bordered Rectangle" onclick="changeAction(this)">
-          <svg width="20" height="20">
-            <rect x="1" y="1" width="18" height="18" rx="2" stroke-width="2" fill="none" />
-          </svg>
-        </a>
-        <a id="rect" title="Rectangle" onclick="changeAction(this)">
-          <i class="fa fa-square"></i>
-        </a>
-        <a id="ellipseb" title="Bordered Ellipse" onclick="changeAction(this)">
-          <svg width="20" height="20">
-            <circle cx="10" cy="10" r="8" stroke-width="2" fill="none"/>
-          </svg>
-        </a>
-        <a id="ellipse" title="Ellipse" onclick="changeAction(this)">
-          <i class="fa fa-circle"></i>
-        </a>
-        <a id="line" title="Line" onclick="changeAction(this)">
-          <svg width="20" height="20">
-            <line stroke-width="5" x1="17" x2="3" y1="3" y2="17" stroke-linecap="round"/>
-          </svg>
-        </a>
-        <a id="triangleb" title="Bordered Triangle" onclick="changeAction(this)">
-          <svg width="20" height="20">
-            <path d="m2.60646,16.65155l7.37305,-12.90315l7.37305,12.90315l-14.74609,0l0,0z" stroke-width="2"/>
-          </svg>
-        </a>
-        <a id="triangle" title="Triangle" onclick="changeAction(this)">
-          <svg width="20" height="20">
-            <path d="m0.08052,18.71268l9.93077,-17.37884l9.93077,17.37884l-19.86153,0z" stroke-width="0"/>
-          </svg>
-        </a>
-        <a id="spray1" title="Spray 1" onclick="changeAction(this)">
-          <i class="fa fa-spray-can"></i>
-        </a>
-        <a id="spray2" title="Spray 2" onclick="changeAction(this)">
-          <i class="fa fa-spray-can" style="transform-origin: center; transform: rotateX(180deg);"></i>
-        </a>
-        <a title="Export PNG" onclick="downloadImage()">
-          <i class="fa fa-file-image"></i>
-        </a>
-        <a title="Export SVG" onclick="downloadSVG()">
-<!--          <i class="fa fa-download"></i>-->
-          <i class="fa fa-file-download"></i>
-        </a>
-        <a href="https://michaelsboost.com/donate" target="_blank" title="Donate">
-          <i class="red fa fa-heart"></i>
-        </a>
-        <a class="hide" href="https://michaelsboost.com/" target="_blank" title="Developer's website">
-          <i class="fa fa-globe"></i>
-        </a>
-        <a href="https://github.com/michaelsboost/TouchDrawer/" target="_blank" title="Project source code">
-          <i class="fa fa-code"></i>
-        </a>
-        <a title="Settings" data-toggle="projectSettings">
-          <i class="fa fa-cog"></i>
-        </a>
-      </div>
-      <div class="palletmenu hide">
-        <a class="fl" title="Settings" data-toggle="projectSettings">
-          <i class="fa fa-cog"></i>
-        </a>
-        
-        <a data-decrement class="fl">
-          <i class="fa fa-caret-left"></i>
-        </a>
-        
-        <input type="range" id="brushSize" min="1" max="100" value="15">
-        
-        <a class="fr" title="Close Color Palette" data-close="palette" style="position: relative; z-index: 1;">
-          <i class="fa fa-times"></i>
-        </a>
 
-        <span class="fr" data-val style="position: relative; left: 13px;">35</span>
+        <span>
+          <h1 data-projectname>My Project</h1>
+        </span>
+
+        <span data-menubuttons>
+          <button data-comingsoon data-save>SAVE</button>
+          <button data-comingsoon data-export="zip">ZIP</button>
+          <button data-comingsoon data-export="gif">GIF</button>
+
+          <a data-call="settings" title="Settings">
+            <img src="svgs/cog.svg">
+          </a>
+        </span>
       </div>
-      <div class="zoommenu hide">
-        <a class="fl" title="Settings" data-toggle="projectSettings">
-          <i class="fa fa-cog"></i>
-        </a>
+      <div data-toolsmenu>
+        <span>
+          <a data-info title="App Information">
+            <img src="logo.svg">
+          </a>
+          <a href="https://michaelsboost.com/donate/" target="_blank" title="Donate">
+            <img src="svgs/donate.svg">
+          </a>
+        </span>
         
-        <a class="fr" title="Close Zoom" data-close="zoom" style="position: relative; z-index: 1;">
-          <i class="fa fa-times"></i>
-        </a>
-        
-        <a class="fr" title="Restore Canvas" data-restore="canvas" style="position: relative; z-index: 1;">
-<!--          <i class="fa fa-window-restore"></i>-->
-          <i class="fa fa-expand"></i>
-<!--          <i class="fa fa-compress"></i>-->
-<!--          <i class="fa fa-compress-arrows-alt"></i>-->
-<!--          <i class="fa fa-expand-arrows-alt"></i>-->
-        </a>
+        <div data-toolsoption="zoom">
+           <span>
+            <button data-call="new">NEW</button>
+            <button data-comingsoon data-load>LOAD</button>
+          </span>
+
+          <span>
+            <h1 data-projectname>My Project</h1>
+          </span>
+
+          <span data-menubuttons>
+            <button data-comingsoon data-save>SAVE</button>
+            <button data-comingsoon data-export="zip">ZIP</button>
+            <button data-comingsoon data-export="gif">GIF</button>
+
+            <a data-resetzoompos title="Reset Default Size">
+              <img src="svgs/resetsize.svg">
+            </a>
+            <a data-call="settings" title="Settings">
+              <img src="svgs/cog.svg">
+            </a>
+          </span>
+        </div>
+        <div data-toolsoption="colorpicker">
+          <a data-triggertool="fill">
+            <img src="svgs/fill.svg">
+          </a>
+          <button class="active">Fill</button>
+          <button>Stroke</button>
+          <button data-flipcolors>Flip</button>
+        </div>
+        <div data-toolsoption="select">
+          <a data-forselect onclick="group()">
+            <img src="svgs/group.svg">
+          </a>
+          <a data-forselect onclick="duplicate()">
+            <img src="svgs/duplicate.svg">
+          </a>
+          <a data-forselect onclick="remove()">
+            <img src="svgs/trash.svg">
+          </a>
+          <a data-selectortool="ungroup" onclick="ungroup()" style="display: none;">
+            <img src="svgs/ungroup.svg">
+          </a>
+          <a data-forselect onclick="alignLeft()">
+            <img src="svgs/alignleft.svg">
+          </a>
+          <a data-forselect onclick="alignCenter()">
+            <img src="svgs/aligncenter.svg">
+          </a>
+          <a data-forselect onclick="alignRight()">
+            <img src="svgs/alignright.svg">
+          </a>
+          <a data-forselect onclick="alignTop()">
+            <img src="svgs/aligntop.svg">
+          </a>
+          <a data-forselect onclick="alignMiddle()">
+            <img src="svgs/alignmiddle.svg">
+          </a>
+          <a data-forselect onclick="alignBottom()">
+            <img src="svgs/alignbottom.svg">
+          </a>
+          <a data-forselect onclick="flipH()">
+            <img src="svgs/fliph.svg">
+          </a>
+          <a  data-forselect onclick="flipV()">
+            <img src="svgs/flipv.svg">
+          </a>
+          <a data-forselect onclick="rotateCCW()">
+            <img src="svgs/rotateccw.svg">
+          </a>
+          <a data-forselect onclick="rotateCW()">
+            <img src="svgs/rotatecw.svg">
+          </a>
+          <a data-forselect onclick="sendBackwards()">
+            <img src="svgs/sendbackward.svg">
+          </a>
+          <a data-forselect onclick="sendForward()">
+            <img src="svgs/sendforward.svg">
+          </a>
+        </div>
+        <div data-toolsoption="pencil"></div>
+        <div data-toolsoption="brush"></div>
+        <div data-toolsoption="lasso"></div>
+        <div data-toolsoption="rect"></div>
+        <div data-toolsoption="ellipse"></div>
+        <div data-toolsoption="line"></div>
+        <div data-toolsoption="triangle"></div>
+        <div data-toolsoption="splatter"></div>
+        <div data-toolsoption="spray"></div>
+        <div data-toolsoption="eraser"></div>
+        <div data-toolsoption="fill"></div>
+        <div data-toolsoption="filters">
+          <a data-filter="blur" title="Blur">
+            <img src="svgs/blur.svg">
+          </a>
+          <a data-filter="hue" title="Hue">
+            <img src="svgs/hue.svg" style="filter: brightness(1);">
+          </a>
+          <a data-filter="brightness" title="Brightness">
+            <img src="svgs/brightness.svg">
+          </a>
+          <a data-filter="contrast" title="Contrast">
+            <img src="svgs/contrast.svg">
+          </a>
+          <a data-filter="saturation" title="Saturation">
+            <img src="svgs/saturation.svg">
+          </a>
+          <a data-filter="grayscale" title="Grayscale">
+            <img src="svgs/panda.svg" style="filter: brightness(1.25) grayscale(1);">
+          </a>
+          <a data-filter="sepia" title="Sepia">
+            <img src="svgs/panda.svg" style="filter: brightness(1) sepia(1);">
+          </a>
+          <a data-filter="invert" title="Invert">
+            <img src="svgs/invert.svg">
+          </a>
+        </div>
+        <div data-toolsoption="brushsize">
+          strokeLineCap: 
+          <select id="brushStrokeCap">
+            <option value="butt">butt</option>
+            <option value="round" selected>round</option>
+            <option value="square">square</option>
+          </select>
+          strokeLineJoin: 
+          <select id="brushStrokeLineJoin">
+            <option value="bevel">bevel</option>
+            <option value="round" selected>round</option>
+            <option value="miter">miter</option>
+          </select>
+          Miter: <input id="brushMiter" type="number" class="numinhead" min="1" value="1" step="1">
+          Brush size: <input id="brushSize" type="number" class="numinhead" min="0" value="20" step="1">
+        </div>
+        <div data-toolsoption="blur">
+          Blur:
+          
+          <a data-close="filter">
+            <img src="svgs/times.svg">
+          </a>
+        </div>
+        <div data-toolsoption="hue">
+          Hue:
+          
+          <a data-close="filter">
+            <img src="svgs/times.svg">
+          </a>
+        </div>
+        <div data-toolsoption="brightness">
+          Brightness:
+          
+          <a data-close="filter">
+            <img src="svgs/times.svg">
+          </a>
+        </div>
+        <div data-toolsoption="contrast">
+          Contrast:
+          
+          <a data-close="filter">
+            <img src="svgs/times.svg">
+          </a>
+        </div>
+        <div data-toolsoption="saturation">
+          Saturation:
+          
+          <a data-close="filter">
+            <img src="svgs/times.svg">
+          </a>
+        </div>
+        <div data-toolsoption="grayscale">
+          Grayscale:
+          
+          <a data-close="filter">
+            <img src="svgs/times.svg">
+          </a>
+        </div>
+        <div data-toolsoption="sepia">
+          Sepia:
+          
+          <a data-close="filter">
+            <img src="svgs/times.svg">
+          </a>
+        </div>
+        <div data-toolsoption="invert">
+          Invert:
+          
+          <a data-close="filter">
+            <img src="svgs/times.svg">
+          </a>
+        </div>
       </div>
     </div>
-
+    
     <!-- canvas -->
-    <div class="wrapper">
-      <div class="canvas hidden">
+    <div class="dialog" data-canvasbg>
+      <div data-canvas>
         <canvas id="canvas" width="1920" height="1080"></canvas>
       </div>
     </div>
     
-    <!-- color palette dialog -->
-    <div class="picker hide"></div>
-    
-    <!-- loaded svg image source -->
-    <div class="hide">
-      <img id="imgURL">
+    <!-- dialogs -->
+    <div data-dialogs>
+      <div class="dialog" data-dialog="new">
+        <div style="display: flex; justify-content: space-between; flex-direction: row; flex-wrap: nowrap;">
+          <h2>Width:</h2>
+          <h2>Height:</h2>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <input data-new="width" type="number" min="1" value="1920" placeholder="width">
+          <input data-new="height" type="number" min="1" value="1080" placeholder="height">
+        </div>
+
+        <h2>Presets:</h2>
+        <div class="hscroll">
+          <button data-size="851x315">Facebook Cover</button>
+          <button data-size="1500x500">Twitter Cover</button>
+          <button data-size="2560x1440">YouTube Cover</button>
+          <button data-size="1440x425">LinkedIn Cover</button>
+          <button data-size="900x480">Twitch Cover</button>
+          <button data-size="1024x512">Twitter Post</button>
+          <button data-size="940x788">Facebook Post</button>
+          <button data-size="810x450">Facebook App</button>
+          <button data-size="1200x627">Facebook Ad</button>
+          <button data-size="1080x1080">Instagram Post</button>
+          <button data-size="1080x1920">Instagram Stories</button>
+          <button data-size="540x810">Tumblr Graphic</button>
+          <button data-size="735x600">Pinterest Pin</button>
+          <button data-size="1206x708">Twitch Video</button>
+          <button data-size="646x220">LinkedIn Banner</button>
+          <button data-size="800x600">Dribbble Shot</button>
+        </div>
+        
+        <h2>FPS:</h2>
+        <input data-new="fps" type="number" min="1" value="30">
+
+        <button data-confirm="newproject">Confirm</button>
+      </div>
+      <div class="dialog" data-dialog="settings">
+        <h2>FPS:</h2>
+        <input data-fps type="number" min="1" value="30">
+
+        <h2>Notepad:</h2>
+        <textarea data-notepad placeholder="your notes go here...."></textarea>
+      </div>
+      <div class="dialog colorpicker" data-dialog="colorpicker">
+        <div class="fill-pickr pickr"></div>
+        <div class="stroke-pickr pickr"></div>
+      </div>
     </div>
     
-    <a class="undo history" title="Undo" onclick="undo()">
-      <i class="fa fa-undo"></i>
-    </a>
-    <a class="redo history" title="Redo" onclick="redo()">
-      <i class="fa fa-redo"></i>
-    </a>
+    <!-- left side -->
+    <div data-lefticons>
+      <a data-tools="zoom" title="Pan/Zoom Tool">
+        <img src="svgs/zoom.svg">
+      </a>
+      <a data-tools="colorpicker" title="Color Picker">
+        <img src="svgs/color.svg">
+      </a>
+      <a data-tools="select" title="Select">
+        <img src="svgs/select.svg">
+      </a>
+      <a data-tools="pencil" title="Pencil">
+        <img src="svgs/pencil.svg">
+      </a>
+      <a data-tools="brush" title="Brush">
+        <img src="svgs/brush.svg">
+      </a>
+      <a data-tools="lasso" title="Lasso">
+        <img src="svgs/lasso.svg">
+      </a>
+      <a data-tools="rect" title="Rect">
+        <img src="svgs/rect.svg">
+      </a>
+      <a data-tools="ellipse" title="Ellipse">
+        <img src="svgs/ellipse.svg">
+      </a>
+      <a data-tools="line" title="Line">
+        <img src="svgs/line2.svg">
+      </a>
+      <a data-tools="triangle" title="Triangle">
+        <img src="svgs/triangle.svg">
+      </a>
+      <a data-tools="splatter" title="Splatter">
+        <img src="svgs/splatter.svg">
+      </a>
+      <a data-tools="spray" title="Spray">
+        <img src="svgs/spray.svg">
+      </a>
+      <a data-tools="eraser" title="Eraser">
+        <img src="svgs/eraser.svg">
+      </a>
+      <a data-tools="fill" title="Fill">
+        <img src="svgs/fill.svg">
+      </a>
+      <a data-tools="filters" title="Filters">
+        <img src="svgs/filters.svg">
+      </a>
+    </div>
+    
+    <!-- right side -->
+    <div data-righticons>
+      <a data-layer="rough" data-comingsoon title="Rough Layer">
+        <img src="svgs/layers1.svg">
+      </a>
+      <a data-layer="paint" data-comingsoon title="Paint Layer">
+        <img src="svgs/layers2.svg">
+      </a>
+      <a data-layer="highlights" data-comingsoon title="Highlights Layer">
+        <img src="svgs/layers3.svg">
+      </a>
+      <a data-layer="ink" data-comingsoon title="Ink Layer">
+        <img src="svgs/layers4.svg">
+      </a>
+      <a data-play="true" data-comingsoon title="Play">
+        <img src="svgs/play.svg">
+      </a>
+      <a data-export="pngframe" title="Export Frame As PNG" onclick="downloadImage()">
+        <img src="svgs/saveimage2.svg">
+      </a>
+      <a data-export="svgframe" title="Export Frame As SVG" onclick="downloadSVG()">
+        <img src="svgs/savecode2.svg">
+      </a>
+    </div>
+    
+    <!-- bottom menu -->
+    <div data-bottommenu>
+      <span>
+        <a data-undo title="Undo">
+          <img src="svgs/undo.svg">
+        </a>
+        <a data-add data-comingsoon title="Add Frame">
+          <img src="svgs/add2.svg">
+        </a>
+      </span>
+      
+      <span data-frames></span>
+      
+      <span>
+        <a data-delete data-comingsoon title="Delete Frame">
+          <img src="svgs/trash.svg">
+        </a>
+        <a data-redo title="Redo">
+          <img src="svgs/redo.svg">
+        </a>
+      </span>
+    </div>
 
-    <script src="libraries/font-awesome/all.min.js"></script>
     <script src="libraries/alertifyjs/alertify.js"></script>
+    <script src="libraries/bowser/bowser.min.js"></script>
+    <script src="libraries/fabricjs/fabric.min.js"></script>
+    <script src="libraries/fabricjs/eraser_brush.mixin.js"></script>
+    <script src="libraries/gifshot/gifshot.min.js"></script>
     <script src="libraries/jquery/jquery.js"></script>
     <script src="libraries/jquery/jquery-migrate-1.2.1.min.js"></script>
-    <script src="libraries/pickr/pickr.min.js"></script>
-    <script src="libraries/bowser/bowser.min.js"></script>
-    <script src="libraries/fabricjs/fabric.js"></script>
-    <script src="libraries/fabricjs/eraser_brush.mixin.js"></script>
+<!--
+    <script src="libraries/jszip/Blob.js"></script>
+    <script src="libraries/jszip/FileSaver.js"></script>
+    <script src="libraries/jszip/jszip.min.js"></script>
+    <script src="libraries/jszip/jszip-utils.js"></script>
+-->
     <script src="libraries/panzoom/panzoom.mod.js"></script>
+    <script src="libraries/pickr/pickr.min.js"></script>
+<!--    <script src="libraries/saveSvgAsPng/saveSvgAsPng.js"></script>-->
+    <script src="libraries/sweetalert2/sweetalert2.min.js"></script>
+<!--    <script src="libraries/tinycolor/tinycolor.js"></script>-->
     <script src="js/browsersupport.js"></script>
     <script src="js/app.js"></script>
 <!--

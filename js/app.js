@@ -1,96 +1,210 @@
-var str, w, h, wsize, hsize, activeTool, projectname, lockHistory, undo_history, redo_history;
+/*
+  Version: 1.000-alpha
+  TouchDrawer, copyright (c) by Michael Schwartz
+  Distributed under an MIT license: https://github.com/michaelsboost/TouchDrawer/blob/gh-pages/LICENSE
+  
+  This is svgMotion (https://michaelsboost.github.io/TouchDrawer/), Just a free and open source vector drawing tool for mobile.
+*/
 
-// alert user for coming soon
+// variables
+var $data, thisTool, prevTool, line, isDown;
+
+// feature coming soon
 $('[data-comingsoon]').click(function() {
   alertify.log('coming soon...');
   return false;
 });
-
-// toggle settings dialog
-$("[data-toggle=projectSettings]").click(function() {
-  $("[data-settings]").fadeToggle();
+$('[data-alert]').on('click', function() {
+  var val = $(this).attr('data-alert');
+  alertify.log(val);
 });
 
-// update title when project name changes
-$('[data-project=name]').on('keydown', function(e) {
-  document.title = 'TouchDrawer: ' + this.value;
-  e.preventDefault();
-}).trigger('keydown');
-
-// remember project name
-$('[data-project=name]').on('keyup', function(e) {
-  localStorage.setItem('projectname', this.value);
-});
-if (localStorage.getItem('projectname')) {
-  $('[data-project=name]').val(localStorage.getItem('projectname'));
-}
-
-// remember notepad text
-$('[data-project=notepad]').on('keyup', function(e) {
-  localStorage.setItem('notepad', this.value);
-});
-if (localStorage.getItem('notepad')) {
-  $('[data-project=notepad]').val(localStorage.getItem('notepad'));
-}
-
-// toggle theme
-$('[data-theme]').on('click', function() {
-  if ($(this).find('svg').hasClass('fa-moon')) {
-    $('link[href="css/dark-theme.css"]').attr('href', 'css/light-theme.css');
-    $(this).html('<svg class="svg-inline--fa fa-sun fa-w-16" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="sun" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 160c-52.9 0-96 43.1-96 96s43.1 96 96 96 96-43.1 96-96-43.1-96-96-96zm246.4 80.5l-94.7-47.3 33.5-100.4c4.5-13.6-8.4-26.5-21.9-21.9l-100.4 33.5-47.4-94.8c-6.4-12.8-24.6-12.8-31 0l-47.3 94.7L92.7 70.8c-13.6-4.5-26.5 8.4-21.9 21.9l33.5 100.4-94.7 47.4c-12.8 6.4-12.8 24.6 0 31l94.7 47.3-33.5 100.5c-4.5 13.6 8.4 26.5 21.9 21.9l100.4-33.5 47.3 94.7c6.4 12.8 24.6 12.8 31 0l47.3-94.7 100.4 33.5c13.6 4.5 26.5-8.4 21.9-21.9l-33.5-100.4 94.7-47.3c13-6.5 13-24.7.2-31.1zm-155.9 106c-49.9 49.9-131.1 49.9-181 0-49.9-49.9-49.9-131.1 0-181 49.9-49.9 131.1-49.9 181 0 49.9 49.9 49.9 131.1 0 181z"></path></svg>');
-    $('[data-theme]').attr('data-theme', 'light');
-  } 
-  else {
-    $('link[href="css/light-theme.css"]').attr('href', 'css/dark-theme.css');
-    $('[data-theme]').attr('data-theme', 'dark');
-    $(this).html('<svg class="svg-inline--fa fa-moon fa-w-16" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="moon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M283.211 512c78.962 0 151.079-35.925 198.857-94.792 7.068-8.708-.639-21.43-11.562-19.35-124.203 23.654-238.262-71.576-238.262-196.954 0-72.222 38.662-138.635 101.498-174.394 9.686-5.512 7.25-20.197-3.756-22.23A258.156 258.156 0 0 0 283.211 0c-141.309 0-256 114.511-256 256 0 141.309 114.511 256 256 256z"></path></svg>');
-  }
-  localStorage.setItem('theme', $('[data-theme]').attr('data-theme'));
+// TouchDrawer info
+$('[data-info]').click(function() {
+//  alertify.log('<div style="font-size: 14px; text-align: center;"><img src="logo.svg" style="width: 50%;"><br><h1>TouchDrawer</h1><h5>Version 1.000-alpha</h5></div>');
+  
+  swal({
+    html: '<img src="logo.svg" style="width: 50%;"><br><h1>TouchDrawer</h1><h5>Version 1.000-alpha</h5><a href="https://github.com/michaelsboost/TouchDrawer/blob/gh-pages/LICENSE" target="_blank">Open Source License</a>'
+  });
+//  $('.swal2-show').css('background', '#000');
+  $('.swal2-show').css('font-size', '14px');
+  $('.swal2-show').css('background', '#131722');
+  $('.swal2-show a').css('color', '#3085d6');
+  $('.swal2-show h1, .swal2-show h5').css({
+    'font-weight': '100',
+    'color': '#fff'
+  });
 });
 
-// remember theme
-if (!localStorage.getItem('theme') || localStorage.getItem('theme').toLowerCase() === 'dark') {
-  $('[data-theme]').attr('data-theme', 'dark');
-  $('[data-theme]').html('<svg class="svg-inline--fa fa-moon fa-w-16" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="moon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M283.211 512c78.962 0 151.079-35.925 198.857-94.792 7.068-8.708-.639-21.43-11.562-19.35-124.203 23.654-238.262-71.576-238.262-196.954 0-72.222 38.662-138.635 101.498-174.394 9.686-5.512 7.25-20.197-3.756-22.23A258.156 258.156 0 0 0 283.211 0c-141.309 0-256 114.511-256 256 0 141.309 114.511 256 256 256z"></path></svg>');
-  $('link[href="css/light-theme.css"]').attr('href', 'css/dark-theme.css');
-} 
-else {
-  $('[data-theme]').html('<svg class="svg-inline--fa fa-sun fa-w-16" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="sun" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 160c-52.9 0-96 43.1-96 96s43.1 96 96 96 96-43.1 96-96-43.1-96-96-96zm246.4 80.5l-94.7-47.3 33.5-100.4c4.5-13.6-8.4-26.5-21.9-21.9l-100.4 33.5-47.4-94.8c-6.4-12.8-24.6-12.8-31 0l-47.3 94.7L92.7 70.8c-13.6-4.5-26.5 8.4-21.9 21.9l33.5 100.4-94.7 47.4c-12.8 6.4-12.8 24.6 0 31l94.7 47.3-33.5 100.5c-4.5 13.6 8.4 26.5 21.9 21.9l100.4-33.5 47.3 94.7c6.4 12.8 24.6 12.8 31 0l47.3-94.7 100.4 33.5c13.6 4.5 26.5-8.4 21.9-21.9l-33.5-100.4 94.7-47.3c13-6.5 13-24.7.2-31.1zm-155.9 106c-49.9 49.9-131.1 49.9-181 0-49.9-49.9-49.9-131.1 0-181 49.9-49.9 131.1-49.9 181 0 49.9 49.9 49.9 131.1 0 181z"></path></svg>');
-  $('[data-theme]').attr('data-theme', 'light');
-  $('link[href="css/dark-theme.css"]').attr('href', 'css/light-theme.css');
-}
-
-// initiate dimensions color picker
-const pickrr = Pickr.create({
-  // Which theme you want to use. Can be 'classic', 'monolith' or 'nano'
-  theme: 'monolith',
-  el: '.pickrr',
-  inline: true,
-  showAlways: true,
-  default: '#fff',
-  comparison: true,
-  components: {
-    preview: true,
-    hue: true,
-    interaction: {
-      hex: false,
-      input: true,
+// init new project
+$('[data-confirm="newproject"]').click(function() {
+  swal({
+    title: 'Proceed with new project?',
+    text: "Are you sure? All your data will be lost!",
+    type: 'question',
+    showCancelButton: true
+  }).then((result) => {
+    if (result.value) {
+      // initiate a new project
+      alertify.log('Init new project');
+      
+      // reset fps
+      $('[data-fps]').val( $('[data-new=fps]').val() );
+      
+      // clear notepad
+      $('[data-notepad]').val('');
+  
+      // close new icon
+      $('[data-call=new]').trigger('click');
+      
+      // init zoom tool by default
+      $('[data-tools=zoom]').trigger('click');
+    } else {
+      return false;
     }
-  },
-});
-pickrr.on('init', () => {
-  setTimeout(function() {
-    pickrr.show();
-  }, 100)
+  })
 });
 
+// size presets
+$('[data-size]').on('click', function() {
+  str = $(this).attr('data-size');
+  w = str.substr(0, str.indexOf('x'));
+  h = str.substring(str.length, str.indexOf('x') + 1);
+  
+  $('[data-new=width]').val(w);
+  $('[data-new=height]').val(h);
+});
+
+// reset project name
+$('[data-projectname]').click(function() {
+  swal({
+    title: 'Project name!',
+    input: 'text',
+    inputValue: this.textContent,
+    inputPlaceholder: "Project name!",
+    showCancelButton: true,
+    confirmButtonText: 'Confirm',
+    showLoaderOnConfirm: true
+  }).then((result) => {
+    if (result.value) {
+      this.textContent = result.value.replace(/[^\w\s]/gi, '');
+    } else {
+      swal(
+        'Oops!',
+        console.error().toString(),
+        'error'
+      );
+    }
+  });
+});
+
+// init panzoom
+var drawArea = document.querySelector('[data-canvas]');
+var instance = panzoom(drawArea, {
+  bounds: true,
+  boundsPadding: 0.1
+});
+instance.pause();
+
+// initialize color picker
+// fill color
+const fillPickr = Pickr.create({
+  // Which theme you want to use. Can be 'classic', 'monolith' or 'nano'
+  theme: 'classic',
+  el: '.fill-pickr',
+  inline: 'true',
+  default: 'hsl(0, 0%, 100%)',
+  comparison: true,
+//  swatches: [
+//    '#000',
+//    '#fff',
+//    'rgba(0, 0, 0, 0)'
+//  ],
+  components: {
+
+    // Main components
+    preview: true,
+    opacity: true,
+    hue: true,
+
+    // Input / output Options
+    interaction: {
+      hex: true,
+      rgba: true,
+      hsla: true,
+      hsva: true,
+      cmyk: true,
+      input: true,
+      clear: false
+//      save: true
+    }
+  }
+});
+fillPickr.on('init', () => {
+  fillPickr.show();
+});
+
+// stroke color
+const strokePickr = Pickr.create({
+  // Which theme you want to use. Can be 'classic', 'monolith' or 'nano'
+  theme: 'classic',
+  el: '.stroke-pickr',
+  inline: 'true',
+  default: 'hsla(45, 100%, 0%, 1)',
+  comparison: true,
+//  swatches: [
+//    '#000',
+//    '#fff',
+//    'rgba(0, 0, 0, 0)'
+//  ],
+  components: {
+
+    // Main components
+    preview: true,
+    opacity: true,
+    hue: true,
+
+    // Input / output Options
+    interaction: {
+      hex: true,
+      rgba: true,
+      hsla: true,
+      hsva: true,
+      cmyk: true,
+      input: true,
+      clear: false
+//      save: true
+    }
+  }
+});
+strokePickr.on('init', () => {
+  strokePickr.show();
+});
+
+// initialize the canvas
 var canvas = this.__canvas = new fabric.Canvas('canvas', {
   backgroundColor: '#fff'
 });
 canvas.setOverlayColor("rgba(255,255,255,0)",undefined,{erasable:false});
 fabric.Object.prototype.transparentCorners = false;
 fabric.Object.prototype.cornerColor = '#1faeff';
-//fabric.Object.prototype.cornerStyle = 'circle';
+
+// clear history when a new project is created
+lockHistory = false;
+undo_history = [];
+redo_history = [];
+undo_history.push(JSON.stringify(canvas));
+
+canvas.clear();
+canvas.setWidth($('[data-new=width]').val());
+canvas.setHeight($('[data-new=height]').val());
+canvas.calcOffset();
+
+canvas.renderAll();
+
+// make first undo
+undo_history.push(JSON.stringify(canvas));
+redo_history.length = 0;
 
 // lasso tool
 (function() {
@@ -405,356 +519,496 @@ fabric.Object.prototype.cornerColor = '#1faeff';
   });
 })();
 
-// read file data
-function displayPreview(file) {
-  var reader = new FileReader();
-
-  reader.onload = function(e) {
-    var img = new Image();
-    img.src = e.target.result;
-    imgURL.src = img.src;
-    img.onload = function() {
-      wsize = img.width;
-      hsize = img.height;
-      $('[data-project=width]').val(wsize).attr('disabled', 'true');
-      $('[data-project=height]').val(hsize).attr('disabled', 'true');
-      $('.hscroll').addClass('hide');
-      
-      if (file.type === 'image/svg+xml') {
-        $('#canvas').css('background-image', '');
-      } else {
-        $('#canvas').css('background-image', 'url("'+ img.src +'")');
-      }
-      $('[data-clearinput]').removeClass('hide');
-    };
-  };
-  reader.readAsDataURL(file);
-};
-openfile.onchange = function(e) {
-  var file = e.target.files[0];
+// toggle tools
+// open tools menu
+function openToolsMenu(tool) {
+  removeEvents();
+  canvas.discardActiveObject();
+  canvas.renderAll();
+  $('[data-mainmenu], [data-dialog]').hide();
+  $('[data-toolsmenu]').show();
   
-  // check if it's a svg
-  if (file.type === 'image/svg+xml') {
-    displayPreview(file);
+  // detect active tool
+  $('[data-selection]').hide();
+  $('[data-toolsoption]').hide();
+  $('[data-toolsoption='+ tool.toString().toLowerCase() +']').show();
+  
+  // is the tool menu
+  
+  // zoom tool
+  if (tool.toString().toLowerCase() === 'zoom') {
+    instance.resume();
   } else {
-    displayPreview(file);
+    instance.pause();
+  }
+  
+  // color picker tool
+  if (tool.toString().toLowerCase() === 'colorpicker') {
+    $('[data-toolsoption=colorpicker] button.active').trigger('click');
+  }
+  
+  // other tools
+  if (tool.toString().toLowerCase() === 'select') {
+    $('[ data-forselect]').hide();
+    changeObjectSelection(true);
+    canvas.isDrawingMode = false;
+    canvas.selection = true;
+    if (canvas.item(0)) {
+      canvas.item(0)["hasControls"] = true;
+      canvas.item(0)["hasBorders"] = true;
+      canvas.item(0)["selectable"] = true;
+      canvas.renderAll();
+    }
+  }
+  if (tool.toString().toLowerCase() === 'fill') {
+    changeObjectSelection(true);
+    canvas.isDrawingMode = false;
+  }
+  if (tool.toString().toLowerCase() === 'eraser') {
+    changeObjectSelection(false);
+    canvas.freeDrawingBrush = new fabric.EraserBrush(canvas);
+    canvas.freeDrawingBrush.width = parseFloat($('#brushSize').val());
+    canvas.isDrawingMode = true;
+    $('[data-toolsoption=brushsize]').show();
+  }
+  if (tool.toString().toLowerCase() === 'pencil') {
+    changeObjectSelection(false);
+    canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
+    canvas.freeDrawingBrush.strokeLineCap = $('#brushStrokeCap').val(); // butt / round / square
+    canvas.freeDrawingBrush.strokeLineJoin = $('#brushStrokeLineJoin').val(); // bevel / round / miter
+    canvas.freeDrawingBrush.strokeMiterLimit = $('#brushMiter').val();
+    canvas.freeDrawingBrush.width = 1;
+    canvas.freeDrawingBrush.color = strokePickr.getColor().toRGBA().toString();
+    canvas.isDrawingMode = true;
+  }
+  if (tool.toString().toLowerCase() === 'brush') {
+    changeObjectSelection(false);
+    canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
+    canvas.freeDrawingBrush.strokeLineCap = $('#brushStrokeCap').val(); // butt / round / square
+    canvas.freeDrawingBrush.strokeLineJoin = $('#brushStrokeLineJoin').val(); // bevel / round / miter
+    canvas.freeDrawingBrush.strokeMiterLimit = $('#brushMiter').val();
+    canvas.freeDrawingBrush.width = parseFloat($('#brushSize').val());
+    canvas.freeDrawingBrush.color = strokePickr.getColor().toRGBA().toString();
+    canvas.isDrawingMode = true;
+    $('[data-toolsoption=brushsize]').show();
+  }
+  if (tool.toString().toLowerCase() === 'lasso') {
+    changeObjectSelection(false);
+    canvas.freeDrawingBrush = new fabric.LassoBrush(canvas);
+    canvas.freeDrawingBrush.color = fillPickr.getColor().toRGBA().toString();
+    canvas.isDrawingMode = true;
+  }
+  if (tool.toString().toLowerCase() === 'rect') {
+    changeObjectSelection(false);
+    drawRect();
+    $('[data-toolsoption=brushsize]').show();
+  }
+  if (tool.toString().toLowerCase() === 'ellipse') {
+    changeObjectSelection(false);
+    drawEllipse();
+    $('[data-toolsoption=brushsize]').show();
+  }
+  if (tool.toString().toLowerCase() === 'line') {
+    changeObjectSelection(false);
+    drawLine();
+    $('[data-toolsoption=brushsize]').show();
+  }
+  if (tool.toString().toLowerCase() === 'triangle') {
+    changeObjectSelection(false);
+    drawTriangle();
+    $('[data-toolsoption=brushsize]').show();
+  }
+  if (tool.toString().toLowerCase() === 'splatter') {
+    changeObjectSelection(false);
+    canvas.freeDrawingBrush = new fabric.SprayBrush(canvas);
+    canvas.freeDrawingBrush.width = parseFloat($('#brushSize').val());
+    canvas.freeDrawingBrush.strokeLineCap = $('#brushStrokeCap').val(); // butt / round / square
+    canvas.freeDrawingBrush.strokeLineJoin = $('#brushStrokeLineJoin').val(); // bevel / round / miter
+    canvas.freeDrawingBrush.strokeMiterLimit = $('#brushMiter').val();
+    canvas.freeDrawingBrush.color = fillPickr.getColor().toRGBA().toString();
+    canvas.isDrawingMode = true;
+    $('[data-toolsoption=brushsize]').show();
+  }
+  if (tool.toString().toLowerCase() === 'spray') {
+    changeObjectSelection(false);
+    canvas.freeDrawingBrush = new fabric.CircleBrush(canvas);
+    canvas.freeDrawingBrush.width = parseFloat($('#brushSize').val());
+    canvas.freeDrawingBrush.strokeLineCap = $('#brushStrokeCap').val(); // butt / round / square
+    canvas.freeDrawingBrush.strokeLineJoin = $('#brushStrokeLineJoin').val(); // bevel / round / miter
+    canvas.freeDrawingBrush.strokeMiterLimit = $('#brushMiter').val();
+    canvas.freeDrawingBrush.color = fillPickr.getColor().toRGBA().toString();
+    canvas.isDrawingMode = true;
+    $('[data-toolsoption=brushsize]').show();
   }
 }
-$('[data-clearinput]').on('click', function() {
-  openfile.value = '';
-  $(this).addClass('hide');
-  $('[data-project=width]').removeAttr('disabled');
-  $('[data-project=height]').removeAttr('disabled');
-  $('.hscroll').removeClass('hide');
+
+// Hide select tool options for when the object isn't selected
+canvas.on('before:selection:cleared', function() {
+  $('[ data-forselect]').hide();
+  $('[data-selectortool=ungroup]').hide();
 });
 
-// confirm canvas dimensions
-$('[data-confirm=dimensions]').click(function() {
-  // clear history when a new project is created
-  lockHistory = false;
-  undo_history = [];
-  redo_history = [];
-  undo_history.push(JSON.stringify(canvas));
+// If select tool and user selects object detect that object
+canvas.on("selection:created", function() {
+  $('[ data-forselect]').show();
   
-  canvas.clear();
-  
-  if (openfile.value) {
-    canvas.setWidth(wsize);
-    canvas.setHeight(hsize);
-        
-    // load svg in as a group
-    fabric.loadSVGFromURL(imgURL.src, function(objects, options) {
-     var svg = fabric.util.groupSVGElements(objects, options);
-     canvas.add(svg);
-    });
-  } else {
-    canvas.backgroundColor = pickrr.getColor().toHEXA().toString();
-    canvas.setWidth($('[data-project=width]').val());
-    canvas.setHeight($('[data-project=height]').val());
-    canvas.calcOffset();
-    $('#canvas').css('background-image', 'none');
+  // used to detect the object type
+  var activeObject = canvas.getActiveObject();
+  if(activeObject.type === "group") {
+    $('[data-selectortool=ungroup]').show();
   }
-  
+});
+
+// trigger tools
+$('[data-triggertool]').on('click', function() {
+  thisTool = $(this).attr('data-triggertool').toString().toLowerCase();
+   $('[data-tools='+ thisTool +']').trigger('click');
+});
+
+// change color picker (fill/stroke dialogs)
+$('[data-toolsoption=colorpicker] button').on('click', function() {  
+  if ($(this).text().toString().toLowerCase() === 'fill') {
+    $('[data-toolsoption]').hide();
+    $('[data-dialog=colorpicker]').show();
+    $('[data-toolsoption=colorpicker]').show().find('button').removeAttr('class');
+    $(this).addClass('active');
+    fillPickr.show();
+    strokePickr.hide();
+  }
+  if ($(this).text().toString().toLowerCase() === 'stroke') {
+    $('[data-toolsoption]').hide();
+    $('[data-dialog=colorpicker]').show();
+    $('[data-toolsoption=colorpicker]').show().find('button').removeAttr('class');
+    $(this).addClass('active');
+    fillPickr.hide();
+    strokePickr.show();
+  }
+  if ($(this).text().toString().toLowerCase() === 'flip') {
+    $('[data-toolsoption]').hide();
+    $('[data-dialog=colorpicker]').show();
+
+    var txt = $('[data-toolsoption=colorpicker] button.active').text().toString().toLowerCase();
+    var beforeStroke = strokePickr.getColor().toRGBA().toString();
+    var beforeFill   = fillPickr.getColor().toRGBA().toString();
+
+    fillPickr.setColor(beforeStroke);
+    strokePickr.setColor(beforeFill);
+
+    if (txt === 'fill') {
+      fillPickr.show();
+      strokePickr.hide();
+    }
+    if (txt === 'stroke') {
+      fillPickr.hide();
+      strokePickr.show();
+    }
+
+    $('[data-tools=colorpicker]').trigger('click');
+    $('[data-tools=colorpicker]').trigger('click');
+  }
+});
+
+// close tools menu
+function closeToolsMenu() {
+  removeEvents();
+  changeObjectSelection(false);
+  canvas.discardActiveObject();
   canvas.renderAll();
   
-  $('.canvas').removeClass('hidden');
-  $('[data-dimensions]').addClass('hide');
-  $('.header').css('z-index', 99999);
-  $('.canvas .canvas').css('width', 'calc('+ $('[data-project=width]').val() +'px + '+ $('[data-project=width]').val() +'px)');
-  $('.canvas .canvas').css('width', 'calc('+ $('[data-project=height]').val() +'px + '+ $('[data-project=height]').val() +'px)');  
-  $('#canvasSize').trigger('change');
-  changeAction('pencil');
-  pickrr.hide();
-  
-  // make first undo
-  undo_history.push(JSON.stringify(canvas));
-  redo_history.length = 0;
-});
-
-$('[data-project=width]').on('keydown', function(e) {
-  if (e.keyCode === 13) {
-    $('[data-project=height]')[0].focus();
-    $('[data-project=height]')[0].select();
-  }
-});
-$('[data-project=height]').on('keydown', function(e) {
-  if (e.keyCode === 13) {
-    $('[data-confirm=dimensions]').trigger('click');
-  }
-});
-
-// size presets
-$('[data-size]').on('click', function() {
-  str = $(this).attr('data-size');
-  w = str.substr(0, str.indexOf('x'));
-  h = str.substring(str.length, str.indexOf('x') + 1);
-  
-  $('[data-project=width]').val(w);
-  $('[data-project=height]').val(h);
-});
-$('[data-size=800x600]').trigger('click');
-
-// initiate settings color picker
-const pickr = Pickr.create({
-  el: '.picker',
-  theme: 'classic',
-  showAlways: true,
-  default: 'hsla(45, 100%, 0%, 1)',
-  comparison: true,
-  swatches: [
-    'rgba(244, 67, 54, 1)',
-    'rgba(233, 30, 99, 0.95)',
-    'rgba(156, 39, 176, 0.9)',
-    'rgba(103, 58, 183, 0.85)',
-    'rgba(63, 81, 181, 0.8)',
-    'rgba(33, 150, 243, 0.75)',
-    'rgba(3, 169, 244, 0.7)',
-    'rgba(0, 188, 212, 0.7)',
-    'rgba(0, 150, 136, 0.75)',
-    'rgba(76, 175, 80, 0.8)',
-    'rgba(139, 195, 74, 0.85)',
-    'rgba(205, 220, 57, 0.9)',
-    'rgba(255, 235, 59, 0.95)',
-    'rgba(255, 193, 7, 1)'
-  ],
-  components: {
-
-    // Main components
-    preview: true,
-    opacity: true,
-    hue: true,
-
-    // Input / output Options
-    interaction: {
-      hex: true,
-      rgba: true,
-      hsla: true,
-      hsva: true,
-      cmyk: true,
-      input: true,
-      clear: false,
-      save: true
-    }
-  }
-});
-pickr.on('init', () => {
-  pickr.hide();
-});
-pickr.on('save', (color, instance) => {
-  pickr.addSwatch(pickr.getColor().toRGBA().toString());
-});
-
-// brush size
-$('[data-decrement]').on('click', function() {
-  $('#brushSize')[0].stepDown();
-  $('[data-val]').text($('#brushSize').val());
-});
-$('#brushSize')[0].onchange = function() {
-  $('[data-val]').text(this.value);
-};
-
-// open and close color picker
-$('[data-open=palette]').click(function() {
-  $('.mainh').addClass('hide');
-  $('.palletmenu, [data-palette]').removeClass('hide');
-  $('.canvas-container').css('z-index', 0);
-  pickr.show();
-});
-$('[data-close=palette]').click(function() {
-  $('.mainh').removeClass('hide');
-  $('.palletmenu, [data-palette]').addClass('hide');
-  changeAction(activeTool);
-  $('.canvas-container').css('z-index', 1);
-  pickr.hide();
-});
-
-// open and close zoom tool
-$('[data-open=zoom]').click(function() {
-  canvas.isDrawingMode = false;
-  $('.canvas-container').css('z-index', 0);
-  $('.history').addClass('hide');
-  $('.mainh').addClass('hide');
-  $('.zoommenu, [data-zoom]').removeClass('hide');
-  canvas.discardActiveObject();
-  if (canvas.item(0)) {
-    for(var i = 0; i < canvas.getObjects().length; i++) {
-      canvas.item(i)["hasControls"] = false;
-      canvas.item(i)["hasBorders"] = false;
-      canvas.item(i)["selectable"] = false;
-      canvas.item(i)["evented"] = false;
-    }
-    canvas.renderAll();
-  }
-  
-  // resume panzoom
-  instance.resume();
-});
-$('[data-close=zoom]').click(function() {
-  $('.mainh').removeClass('hide');
-  $('.zoommenu, [data-zoom]').addClass('hide');
-  canvas.discardActiveObject();
-  if (canvas.item(0)) {
-    for(var i = 0; i < canvas.getObjects().length; i++) {
-      canvas.item(i)["hasControls"] = true;
-      canvas.item(i)["hasBorders"] = true;
-      canvas.item(i)["selectable"] = true;
-      canvas.item(i)["evented"] = true;
-    }
-    canvas.renderAll();
-  }
-  changeAction(activeTool);
-  
-  // pause panzoom
+  $('[data-mainmenu]').show();
+  $('[data-toolsmenu], [data-dialog]').hide();
+  $('[data-selection]').hide();
   instance.pause();
+}
+$('[data-tools]').on('click', function(val) {
+  thisTool = $(this).attr('data-tools').toString().toLowerCase();
+  val = thisTool;
+  
+  // if tool is not active
+  if (!$('[data-tools].active').is(':visible')) {
+    $(this).addClass('active');
+    openToolsMenu(val);
+  } else {
+    // if tool is active
+    // are you clicking on same tool or not?
+    $(this).each(function(i) {
+      // if you are remove the class
+      if ($('[data-tools].active').attr('data-tools').toString().toLowerCase() === thisTool) {
+        $('[data-tools].active').removeClass('active');
+        closeToolsMenu()
+
+        // if not remove the class from the original and then add it
+      } else {
+        $('[data-tools].active').removeClass('active');
+        $(this).addClass('active');
+        openToolsMenu(val);
+      }
+    });
+  }
 });
 
-// restore canvas
-$('[data-restore=canvas]').click(function() {
-  $('.canvas-container').css('transform', '');
-  instance.restore();
+// change brush size
+$('#brushSize, #brushStrokeCap, #brushStrokeLineJoin, #brushMiter').change(function() {
+  var activeTool = $('[data-tools].active').attr('data-tools').toString().toLowerCase();
+  openToolsMenu(activeTool);
+});
+
+// filters
+$('[data-filter]').on('click', function() {
+  // first hide all tool options
+  $('[data-toolsoption]').hide();
+  
+  // now only show the active filter's tool options
+  $this = $(this).attr('data-filter').toString().toLowerCase();
+  $('[data-toolsoption='+ $this +']').show();
+});
+$('[data-close=filter]').click(function() {
+  // first hide all tool options
+  $('[data-toolsoption]').hide();
+  
+  // now only show filters tool options
+  $('[data-toolsoption=filters]').show();
 });
 
 // tools
-function changeAction(target) {
-  ['select','fill','erase','pencil','brush','lasso','rectb','rect','ellipseb','ellipse','line','triangleb','triangle','spray1','spray2'].forEach(action => {
-    var el = document.getElementById(action);
-    el.classList.remove('active');
+function drawLine() {
+  canvas.on('mouse:down', function(o) {
+    isDown = true;
+    var pointer = canvas.getPointer(o.e);
+    var points = [pointer.x, pointer.y, pointer.x, pointer.y];
+    line = new fabric.Line(points, {
+      strokeWidth: parseFloat($('#brushSize').val()),
+      strokeLineCap: $('#brushStrokeCap').val(), // butt / round / square
+      strokeLineJoin: $('#brushStrokeLineJoin').val(), // bevel / round / miter
+      strokeMiterLimit: $('#brushMiter').val(),
+      stroke: strokePickr.getColor().toRGBA().toString(),
+      fill: null,
+      originX: 'center',
+      originY: 'center',
+      centeredRotation: true,
+      selectable: false
+    });
+    canvas.add(line);
   });
-  if(typeof target==='string') target = document.getElementById(target);
-  target.classList.add('active');
-  switch (target.id) {
-    case "select":
-      removeEvents();
-      changeObjectSelection(true);
-      canvas.isDrawingMode = false;
-      $('.canvas-container').css('z-index', 1);
-      $('.history').removeClass('hide');
-      $('[data-selection=tools]').removeClass('hide');
-      if (canvas.item(0)) {
-        canvas.item(0)["hasControls"] = true;
-        canvas.item(0)["hasBorders"] = true;
-        canvas.item(0)["selectable"] = true;
-        canvas.renderAll();
+  canvas.on('mouse:move', function(o) {
+    if (!isDown) return;
+    var pointer = canvas.getPointer(o.e);
+    line.set({
+      x2: pointer.x,
+      y2: pointer.y
+    });
+    canvas.renderAll();
+  });
+  canvas.on('mouse:up', function(o) {
+    isDown = false;
+    line.setCoords();
+    if (lockHistory) return;
+  //  console.log("object:modified");
+    undo_history.push(JSON.stringify(canvas));
+    redo_history.length = 0;
+  });
+}
+function drawRect() {
+  var rect, isDown, origX, origY;
+
+  canvas.on('mouse:down', function(o) {
+    isDown = true;
+    var pointer = canvas.getPointer(o.e);
+    origX = pointer.x;
+    origY = pointer.y;
+    var pointer = canvas.getPointer(o.e);
+    rect = new fabric.Rect({
+      left: origX,
+      top: origY,
+      originX: 'left',
+      originY: 'top',
+      width: pointer.x - origX,
+      height: pointer.y - origY,
+      angle: 0,
+      selectable: false,
+      centeredRotation: true,
+      strokeWidth: parseFloat($('#brushSize').val()),
+      strokeLineCap: $('#brushStrokeCap').val(), // butt / round / square
+      strokeLineJoin: $('#brushStrokeLineJoin').val(), // bevel / round / miter
+      strokeMiterLimit: $('#brushMiter').val(),
+      stroke: strokePickr.getColor().toRGBA().toString(),
+      fill: fillPickr.getColor().toRGBA().toString(),
+      centeredRotation: true,
+    });
+    canvas.add(rect);
+  });
+  canvas.on('mouse:move', function(o) {
+    if (!isDown) return;
+    var pointer = canvas.getPointer(o.e);
+
+    if (origX > pointer.x) {
+      rect.set({
+        left: Math.abs(pointer.x)
+      });
+    }
+    if (origY > pointer.y) {
+      rect.set({
+        top: Math.abs(pointer.y)
+      });
+    }
+
+    rect.set({
+      width: Math.abs(origX - pointer.x)
+    });
+    rect.set({
+      height: Math.abs(origY - pointer.y)
+    });
+
+
+    canvas.renderAll();
+  });
+  canvas.on('mouse:up', function(o) {
+    isDown = false;
+    rect.setCoords();
+    if (lockHistory) return;
+  //  console.log("object:modified");
+    undo_history.push(JSON.stringify(canvas));
+    redo_history.length = 0;
+  });
+}
+function drawEllipse() {
+  var ellipse, isDown, origX, origY;
+  
+  canvas.on('mouse:down', function(o) {
+    isDown = true;
+    var pointer = canvas.getPointer(o.e);
+    origX = pointer.x;
+    origY = pointer.y;
+    ellipse = new fabric.Ellipse({
+      left: pointer.x,
+      top: pointer.y,
+      rx: pointer.x - origX,
+      ry: pointer.y - origY,
+      angle: 0,
+      strokeWidth: parseFloat($('#brushSize').val()),
+      strokeLineCap: $('#brushStrokeCap').val(), // butt / round / square
+      strokeLineJoin: $('#brushStrokeLineJoin').val(), // bevel / round / miter
+      strokeMiterLimit: $('#brushMiter').val(),
+      stroke: strokePickr.getColor().toRGBA().toString(),
+      fill: fillPickr.getColor().toRGBA().toString(),
+      selectable: true,
+      centeredRotation: true,
+      originX: 'center',
+      originY: 'center'
+    });
+    canvas.add(ellipse);
+  });
+  canvas.on('mouse:move', function(o){
+      if (!isDown) return;
+      var pointer = canvas.getPointer(o.e);
+      var rx = Math.abs(origX - pointer.x)/2;
+      var ry = Math.abs(origY - pointer.y)/2;
+      if (rx > ellipse.strokeWidth) {
+        rx -= ellipse.strokeWidth/2
       }
-      break;
-    case "fill":
-      removeEvents();
-      changeObjectSelection(true);
-      canvas.isDrawingMode = false;
-      $('.canvas-container').css('z-index', 1);
-      $('.history').removeClass('hide');
-      $('[data-selection=tools]').addClass('hide');
-      break;
-    case "erase":
-      removeEvents();
-      changeObjectSelection(false);
-      canvas.freeDrawingBrush = new fabric.EraserBrush(canvas);
-      canvas.freeDrawingBrush.width = parseFloat($('#brushSize').val());
-      canvas.isDrawingMode = true;
-      $('.canvas-container').css('z-index', 1);
-      $('.history').removeClass('hide');
-      $('[data-selection=tools]').addClass('hide');
-      break;
-    case "pencil":
-      removeEvents();
-      changeObjectSelection(false);
-      canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
-      canvas.freeDrawingBrush.width = 1;
-      canvas.freeDrawingBrush.color = pickr.getColor().toRGBA().toString();
-      canvas.isDrawingMode = true;
-      $('.canvas-container').css('z-index', 1);
-      $('.history').removeClass('hide');
-      $('[data-selection=tools]').addClass('hide');
-      break;
-    case "brush":
-      removeEvents();
-      changeObjectSelection(false);
-      canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
-      canvas.freeDrawingBrush.width = parseFloat($('#brushSize').val());
-      canvas.freeDrawingBrush.color = pickr.getColor().toRGBA().toString();
-      canvas.isDrawingMode = true;
-      $('.canvas-container').css('z-index', 1);
-      $('.history').removeClass('hide');
-      $('[data-selection=tools]').addClass('hide');
-      break;
-    case "lasso":
-      removeEvents();
-      changeObjectSelection(false);
-      canvas.freeDrawingBrush = new fabric.LassoBrush(canvas);
-      canvas.freeDrawingBrush.color = pickr.getColor().toRGBA().toString();
-      canvas.isDrawingMode = true;
-      $('.canvas-container').css('z-index', 1);
-      $('.history').removeClass('hide');
-      $('[data-selection=tools]').addClass('hide');
-      break;
-    case "rectb":
-      drawBorderedRect();
-      break;
-    case "rect":
-      drawRect();
-      break;
-    case "ellipseb":
-      drawBorderedEllipse();
-      break;
-    case "ellipse":
-      drawEllipse();
-      break;
-    case "line":
-      drawLine();
-      break;
-    case "triangleb":
-      drawBorderedTriangle();
-      break;
-    case "triangle":
-      drawTriangle();
-      break;
-    case "spray1":
-      removeEvents();
-      changeObjectSelection(false);
-      canvas.freeDrawingBrush = new fabric.SprayBrush(canvas);
-      canvas.freeDrawingBrush.width = parseFloat($('#brushSize').val());
-      canvas.freeDrawingBrush.color = pickr.getColor().toRGBA().toString();
-      canvas.isDrawingMode = true;
-      $('.canvas-container').css('z-index', 1);
-      $('.history').removeClass('hide');
-      $('[data-selection=tools]').addClass('hide');
-      break;
-    case "spray2":
-      removeEvents();
-      changeObjectSelection(false);
-      canvas.freeDrawingBrush = new fabric.CircleBrush(canvas);
-      canvas.freeDrawingBrush.width = parseFloat($('#brushSize').val());
-      canvas.freeDrawingBrush.color = pickr.getColor().toRGBA().toString();
-      canvas.isDrawingMode = true;
-      $('.canvas-container').css('z-index', 1);
-      $('.history').removeClass('hide');
-      $('[data-selection=tools]').addClass('hide');
-      break;
-    default:
-      break;
-  }
-  activeTool = target.id;
-  canvas.discardActiveObject().renderAll();
+       if (ry > ellipse.strokeWidth) {
+        ry -= ellipse.strokeWidth/2
+      }
+      ellipse.set({ rx: rx, ry: ry});
+
+      if(origX>pointer.x){
+          ellipse.set({originX: 'right' });
+      } else {
+          ellipse.set({originX: 'left' });
+      }
+      if(origY>pointer.y){
+          ellipse.set({originY: 'bottom'  });
+      } else {
+          ellipse.set({originY: 'top'  });
+      }
+      canvas.renderAll();
+  });
+  canvas.on('mouse:up', function(o){
+    isDown = false;
+    ellipse.setCoords();
+    if (lockHistory) return;
+  //  console.log("object:modified");
+    undo_history.push(JSON.stringify(canvas));
+    redo_history.length = 0;
+  });
+}
+function drawTriangle() {
+  var triangle, isDown, origX, origY;
+  
+  canvas.on('mouse:down', function(o) {
+    isDown = true;
+    var pointer = canvas.getPointer(o.e);
+    origX = pointer.x;
+    origY = pointer.y;
+    triangle = new fabric.Triangle({
+      left: pointer.x,
+      top: pointer.y,
+      width: pointer.x - origX,
+      height: pointer.y - origY,
+      strokeWidth: parseFloat($('#brushSize').val()),
+      strokeLineCap: $('#brushStrokeCap').val(), // butt / round / square
+      strokeLineJoin: $('#brushStrokeLineJoin').val(), // bevel / round / miter
+      strokeMiterLimit: $('#brushMiter').val(),
+      stroke: strokePickr.getColor().toRGBA().toString(),
+      fill: fillPickr.getColor().toRGBA().toString(),
+      selectable: false,
+      centeredRotation: true,
+      originX: 'left',
+      originY: 'top'
+    });
+    canvas.add(triangle);
+  });
+  canvas.on('mouse:move', function(o) {
+    if (!isDown) return;
+    var pointer = canvas.getPointer(o.e);
+
+    if (origX > pointer.x) {
+      triangle.set({
+        left: Math.abs(pointer.x)
+      });
+    }
+    if (origY > pointer.y) {
+      triangle.set({
+        top: Math.abs(pointer.y)
+      });
+    }
+
+    triangle.set({
+      width: Math.abs(origX - pointer.x)
+    });
+    triangle.set({
+      height: Math.abs(origY - pointer.y)
+    });
+
+
+    canvas.renderAll();
+  });
+  canvas.on('mouse:up', function(o) {
+    isDown = false;
+    triangle.setCoords();
+    if (lockHistory) return;
+  //  console.log("object:modified");
+    undo_history.push(JSON.stringify(canvas));
+    redo_history.length = 0;
+  });
+}
+function enableSelection() {
+  removeEvents();
+  changeObjectSelection(true);
+  canvas.selection = true;
+}
+function changeObjectSelection(value) {
+  canvas.forEachObject(function (obj) {
+    obj.selectable = value;
+  });
+  canvas.renderAll();
+}
+function removeEvents() {
+  canvas.isDrawingMode = false;
+  canvas.selection = false;
+  canvas.off('mouse:down');
+  canvas.off('mouse:up');
+  canvas.off('mouse:move');
 }
 
 // undo redo commandhistory
@@ -820,14 +1074,7 @@ function redo() {
 }
 function clearcanvas() {
   canvas.clear();
-  canvas.backgroundColor = pickrr.getColor().toHEXA().toString();
   canvas.renderAll();
-  $('.canvas').addClass('hidden');
-  $('[data-dimensions]').removeClass('hide');
-  $('[data-project=width]')[0].focus();
-  $('[data-project=width]')[0].select();
-  $('.header').css('z-index', 1);
-  pickrr.show();
 }
 function selectall() {
   canvas.discardActiveObject();
@@ -836,6 +1083,7 @@ function selectall() {
   });
   canvas.setActiveObject(sel);
   canvas.requestRenderAll();
+  $('[data-forselect]').show();
 }
 function copy() {
   // clone what are you copying since you
@@ -1078,7 +1326,7 @@ function sendToBack() {
     canvas.renderAll();
   }
 }
-function bringForward() {
+function sendForward() {
   var activeObj = canvas.getActiveObject() || canvas.getActiveGroup();
   if (activeObj) {
     canvas.bringForward(activeObj);
@@ -1086,7 +1334,7 @@ function bringForward() {
     canvas.renderAll();
   }
 }
-function bringToFront() {
+function sendToFront() {
   var activeObj = canvas.getActiveObject() || canvas.getActiveGroup();
   if (activeObj) {
     canvas.bringToFront(activeObj);
@@ -1117,20 +1365,32 @@ function group() {
   }
   canvas.getActiveObject().toGroup();
   canvas.requestRenderAll();
+  
+  // used to detect the object type
+  var activeObject = canvas.getActiveObject();
+  if(activeObject.type === "group") {
+    $('[data-selectortool=ungroup]').show();
+  }
 }
 
 // fill tool
 function fillTool() {
   var obj = canvas.getActiveObject();
   
-  // detect if it's a fill or a stroke
+  // detect if it's a fill
   if (obj.hasFill()) {
-    // is a fill
-    obj.set('fill', pickr.getColor().toRGBA().toString());
-  } 
-  else {
-    // is a stroke
-    obj.set('stroke', pickr.getColor().toRGBA().toString());
+    obj.set('fill', fillPickr.getColor().toRGBA().toString());
+  } else {
+//    obj.set('stroke', null);
+    obj.set('stroke', strokePickr.getColor().toRGBA().toString());
+  }
+  
+  // detect if it's a stroke
+  if (obj.hasStroke()) {
+    obj.set('stroke', strokePickr.getColor().toRGBA().toString());
+  } else {
+//    obj.set('stroke', null);
+    obj.set('fill', fillPickr.getColor().toRGBA().toString());
   }
 //  var id = canvas.getObjects().indexOf(e.target);
 //  canvas.setActiveObject(canvas.item(id));
@@ -1140,7 +1400,7 @@ function fillTool() {
 }
 canvas.on('selection:created', function() {
   // if fill is not active cancel operation
-  if (!$('.header #fill.active').is(':visible')) {
+  if (!$('[data-tools=fill].active').is(':visible')) {
     return false;
   }
   
@@ -1148,14 +1408,14 @@ canvas.on('selection:created', function() {
 });
 canvas.on('selection:updated', function() {
   // if fill is not active cancel operation
-  if (!$('.header #fill.active').is(':visible')) {
+  if (!$('[data-tools=fill].active').is(':visible')) {
     return false;
   }
   
   fillTool();
 });
 canvas.on('mouse:over', function(event) {
-  if (!$('.header #fill.active').is(':visible')) {
+  if (!$('[data-tools=fill].active').is(':visible')) {
     return false;
   }
   
@@ -1178,459 +1438,6 @@ canvas.on('touch:gesture', function(event) {
   }
 });
 
-// tools
-var line, isDown;
-
-function drawLine() {
-  removeEvents();
-  changeObjectSelection(false);
-  canvas.on('mouse:down', function(o) {
-    isDown = true;
-    var pointer = canvas.getPointer(o.e);
-    var points = [pointer.x, pointer.y, pointer.x, pointer.y];
-    line = new fabric.Line(points, {
-      strokeWidth: parseFloat($('#brushSize').val()),
-      strokeLineCap: 'round',
-      stroke: pickr.getColor().toRGBA().toString(),
-      fill: null,
-      originX: 'center',
-      originY: 'center',
-      centeredRotation: true,
-      selectable: false
-    });
-    canvas.add(line);
-  });
-  canvas.on('mouse:move', function(o) {
-    if (!isDown) return;
-    var pointer = canvas.getPointer(o.e);
-    line.set({
-      x2: pointer.x,
-      y2: pointer.y
-    });
-    canvas.renderAll();
-  });
-  canvas.on('mouse:up', function(o) {
-    isDown = false;
-    line.setCoords();
-    if (lockHistory) return;
-  //  console.log("object:modified");
-    undo_history.push(JSON.stringify(canvas));
-    redo_history.length = 0;
-  });
-}
-function drawBorderedRect() {
-  var rect, isDown, origX, origY;
-  removeEvents();
-  changeObjectSelection(false);
-
-  canvas.on('mouse:down', function(o) {
-    isDown = true;
-    var pointer = canvas.getPointer(o.e);
-    origX = pointer.x;
-    origY = pointer.y;
-    var pointer = canvas.getPointer(o.e);
-    rect = new fabric.Rect({
-      left: origX,
-      top: origY,
-      originX: 'left',
-      originY: 'top',
-      width: pointer.x - origX,
-      height: pointer.y - origY,
-      angle: 0,
-      selectable: false,
-      centeredRotation: true,
-      fill: null,
-      strokeWidth: parseFloat($('#brushSize').val()),
-      stroke: pickr.getColor().toRGBA().toString(),
-      centeredRotation: true,
-    });
-    canvas.add(rect);
-  });
-  canvas.on('mouse:move', function(o) {
-    if (!isDown) return;
-    var pointer = canvas.getPointer(o.e);
-
-    if (origX > pointer.x) {
-      rect.set({
-        left: Math.abs(pointer.x)
-      });
-    }
-    if (origY > pointer.y) {
-      rect.set({
-        top: Math.abs(pointer.y)
-      });
-    }
-
-    rect.set({
-      width: Math.abs(origX - pointer.x)
-    });
-    rect.set({
-      height: Math.abs(origY - pointer.y)
-    });
-
-
-    canvas.renderAll();
-  });
-  canvas.on('mouse:up', function(o) {
-    isDown = false;
-    rect.setCoords();
-    if (lockHistory) return;
-  //  console.log("object:modified");
-    undo_history.push(JSON.stringify(canvas));
-    redo_history.length = 0;
-  });
-}
-function drawRect() {
-  var rect, isDown, origX, origY;
-  removeEvents();
-  changeObjectSelection(false);
-
-  canvas.on('mouse:down', function(o) {
-    isDown = true;
-    var pointer = canvas.getPointer(o.e);
-    origX = pointer.x;
-    origY = pointer.y;
-    var pointer = canvas.getPointer(o.e);
-    rect = new fabric.Rect({
-      left: origX,
-      top: origY,
-      originX: 'left',
-      originY: 'top',
-      width: pointer.x - origX,
-      height: pointer.y - origY,
-      angle: 0,
-      selectable: false,
-      centeredRotation: true,
-      fill: pickr.getColor().toRGBA().toString(),
-      centeredRotation: true,
-    });
-    canvas.add(rect);
-  });
-  canvas.on('mouse:move', function(o) {
-    if (!isDown) return;
-    var pointer = canvas.getPointer(o.e);
-
-    if (origX > pointer.x) {
-      rect.set({
-        left: Math.abs(pointer.x)
-      });
-    }
-    if (origY > pointer.y) {
-      rect.set({
-        top: Math.abs(pointer.y)
-      });
-    }
-
-    rect.set({
-      width: Math.abs(origX - pointer.x)
-    });
-    rect.set({
-      height: Math.abs(origY - pointer.y)
-    });
-
-
-    canvas.renderAll();
-  });
-  canvas.on('mouse:up', function(o) {
-    isDown = false;
-    rect.setCoords();
-    if (lockHistory) return;
-  //  console.log("object:modified");
-    undo_history.push(JSON.stringify(canvas));
-    redo_history.length = 0;
-  });
-}
-function drawCircle() {
-  var circle, isDown, origX, origY;
-  removeEvents();
-  changeObjectSelection(false);
-  
-  canvas.on('mouse:down', function(o) {
-    isDown = true;
-    var pointer = canvas.getPointer(o.e);
-    origX = pointer.x;
-    origY = pointer.y;
-    circle = new fabric.Circle({
-      left: pointer.x,
-      top: pointer.y,
-      radius: 1,
-      fill: pickr.getColor().toRGBA().toString(),
-      selectable: false,
-      originX: 'center',
-      originY: 'center'
-    });
-    canvas.add(circle);
-  });
-  canvas.on('mouse:move', function(o) {
-    if (!isDown) return;
-    var pointer = canvas.getPointer(o.e);
-    circle.set({
-      radius: Math.abs(origX - pointer.x)
-    });
-    canvas.renderAll();
-  });
-  canvas.on('mouse:up', function(o) {
-    isDown = false;
-    circle.setCoords();
-    if (lockHistory) return;
-  //  console.log("object:modified");
-    undo_history.push(JSON.stringify(canvas));
-    redo_history.length = 0;
-  });
-}
-function drawBorderedEllipse() {
-  var ellipse, isDown, origX, origY;
-  removeEvents();
-  changeObjectSelection(false);
-  
-  canvas.on('mouse:down', function(o) {
-    isDown = true;
-    var pointer = canvas.getPointer(o.e);
-    origX = pointer.x;
-    origY = pointer.y;
-    ellipse = new fabric.Ellipse({
-      left: pointer.x,
-      top: pointer.y,
-      rx: pointer.x - origX,
-      ry: pointer.y - origY,
-      angle: 0,
-      fill: null,
-      strokeWidth: parseFloat($('#brushSize').val()),
-      stroke: pickr.getColor().toRGBA().toString(),
-      selectable: true,
-      centeredRotation: true,
-      originX: 'center',
-      originY: 'center'
-    });
-    canvas.add(ellipse);
-  });
-  canvas.on('mouse:move', function(o){
-      if (!isDown) return;
-      var pointer = canvas.getPointer(o.e);
-      var rx = Math.abs(origX - pointer.x)/2;
-      var ry = Math.abs(origY - pointer.y)/2;
-      if (rx > ellipse.strokeWidth) {
-        rx -= ellipse.strokeWidth/2
-      }
-       if (ry > ellipse.strokeWidth) {
-        ry -= ellipse.strokeWidth/2
-      }
-      ellipse.set({ rx: rx, ry: ry});
-
-      if(origX>pointer.x){
-          ellipse.set({originX: 'right' });
-      } else {
-          ellipse.set({originX: 'left' });
-      }
-      if(origY>pointer.y){
-          ellipse.set({originY: 'bottom'  });
-      } else {
-          ellipse.set({originY: 'top'  });
-      }
-      canvas.renderAll();
-  });
-  canvas.on('mouse:up', function(o){
-    isDown = false;
-    ellipse.setCoords();
-    if (lockHistory) return;
-  //  console.log("object:modified");
-    undo_history.push(JSON.stringify(canvas));
-    redo_history.length = 0;
-  });
-}
-function drawEllipse() {
-  var ellipse, isDown, origX, origY;
-  removeEvents();
-  changeObjectSelection(false);
-  
-  canvas.on('mouse:down', function(o) {
-    isDown = true;
-    var pointer = canvas.getPointer(o.e);
-    origX = pointer.x;
-    origY = pointer.y;
-    ellipse = new fabric.Ellipse({
-      left: pointer.x,
-      top: pointer.y,
-      rx: pointer.x - origX,
-      ry: pointer.y - origY,
-      angle: 0,
-      fill: pickr.getColor().toRGBA().toString(),
-      selectable: true,
-      centeredRotation: true,
-      originX: 'center',
-      originY: 'center'
-    });
-    canvas.add(ellipse);
-  });
-  canvas.on('mouse:move', function(o){
-      if (!isDown) return;
-      var pointer = canvas.getPointer(o.e);
-      var rx = Math.abs(origX - pointer.x)/2;
-      var ry = Math.abs(origY - pointer.y)/2;
-      if (rx > ellipse.strokeWidth) {
-        rx -= ellipse.strokeWidth/2
-      }
-       if (ry > ellipse.strokeWidth) {
-        ry -= ellipse.strokeWidth/2
-      }
-      ellipse.set({ rx: rx, ry: ry});
-
-      if(origX>pointer.x){
-          ellipse.set({originX: 'right' });
-      } else {
-          ellipse.set({originX: 'left' });
-      }
-      if(origY>pointer.y){
-          ellipse.set({originY: 'bottom'  });
-      } else {
-          ellipse.set({originY: 'top'  });
-      }
-      canvas.renderAll();
-  });
-  canvas.on('mouse:up', function(o){
-    isDown = false;
-    ellipse.setCoords();
-    if (lockHistory) return;
-  //  console.log("object:modified");
-    undo_history.push(JSON.stringify(canvas));
-    redo_history.length = 0;
-  });
-}
-function drawBorderedTriangle() {
-  var triangle, isDown, origX, origY;
-  removeEvents();
-  changeObjectSelection(false);
-  
-  canvas.on('mouse:down', function(o) {
-    isDown = true;
-    var pointer = canvas.getPointer(o.e);
-    origX = pointer.x;
-    origY = pointer.y;
-    triangle = new fabric.Triangle({
-      left: pointer.x,
-      top: pointer.y,
-      width: pointer.x - origX,
-      height: pointer.y - origY,
-      fill: null,
-      strokeWidth: parseFloat($('#brushSize').val()),
-      stroke: pickr.getColor().toRGBA().toString(),
-      selectable: false,
-      centeredRotation: true,
-      originX: 'left',
-      originY: 'top'
-    });
-    canvas.add(triangle);
-  });
-  canvas.on('mouse:move', function(o) {
-    if (!isDown) return;
-    var pointer = canvas.getPointer(o.e);
-
-    if (origX > pointer.x) {
-      triangle.set({
-        left: Math.abs(pointer.x)
-      });
-    }
-    if (origY > pointer.y) {
-      triangle.set({
-        top: Math.abs(pointer.y)
-      });
-    }
-
-    triangle.set({
-      width: Math.abs(origX - pointer.x)
-    });
-    triangle.set({
-      height: Math.abs(origY - pointer.y)
-    });
-
-
-    canvas.renderAll();
-  });
-  canvas.on('mouse:up', function(o) {
-    isDown = false;
-    triangle.setCoords();
-    if (lockHistory) return;
-  //  console.log("object:modified");
-    undo_history.push(JSON.stringify(canvas));
-    redo_history.length = 0;
-  });
-}
-function drawTriangle() {
-  var triangle, isDown, origX, origY;
-  removeEvents();
-  changeObjectSelection(false);
-  
-  canvas.on('mouse:down', function(o) {
-    isDown = true;
-    var pointer = canvas.getPointer(o.e);
-    origX = pointer.x;
-    origY = pointer.y;
-    triangle = new fabric.Triangle({
-      left: pointer.x,
-      top: pointer.y,
-      width: pointer.x - origX,
-      height: pointer.y - origY,
-      fill: pickr.getColor().toRGBA().toString(),
-      selectable: false,
-      centeredRotation: true,
-      originX: 'left',
-      originY: 'top'
-    });
-    canvas.add(triangle);
-  });
-  canvas.on('mouse:move', function(o) {
-    if (!isDown) return;
-    var pointer = canvas.getPointer(o.e);
-
-    if (origX > pointer.x) {
-      triangle.set({
-        left: Math.abs(pointer.x)
-      });
-    }
-    if (origY > pointer.y) {
-      triangle.set({
-        top: Math.abs(pointer.y)
-      });
-    }
-
-    triangle.set({
-      width: Math.abs(origX - pointer.x)
-    });
-    triangle.set({
-      height: Math.abs(origY - pointer.y)
-    });
-
-
-    canvas.renderAll();
-  });
-  canvas.on('mouse:up', function(o) {
-    isDown = false;
-    triangle.setCoords();
-    if (lockHistory) return;
-  //  console.log("object:modified");
-    undo_history.push(JSON.stringify(canvas));
-    redo_history.length = 0;
-  });
-}
-function enableSelection() {
-  removeEvents();
-  changeObjectSelection(true);
-  canvas.selection = true;
-}
-function changeObjectSelection(value) {
-  canvas.forEachObject(function (obj) {
-    obj.selectable = value;
-  });
-  canvas.renderAll();
-}
-function removeEvents() {
-  canvas.isDrawingMode = false;
-  canvas.selection = false;
-  canvas.off('mouse:down');
-  canvas.off('mouse:up');
-  canvas.off('mouse:move');
-}
-
 // export png or svg
 function downloadImage() {
   var ext = "png";
@@ -1640,46 +1447,71 @@ function downloadImage() {
   });
   var link = document.createElement("a");
   link.href = base64;
-  projectname = $("[data-project=name]")[0].value.toLowerCase().replace(/ /g, "-");
+  projectname = $("[data-projectname]")[0].textContent.toLowerCase().replace(/ /g, "-");
   link.download = projectname + `.${ext}`;
   link.click();
 };
-function exportPNG() {
-  var c = document.getElementById("canvas");
-  var link = document.createElement('a');
-  link.setAttribute('download', 'download.png');
-  link.setAttribute('href', c.toDataURL("image/png").replace("image/png", "image/octet-stream"));
-  link.click();
-}
 function downloadSVG() {
   var svg = canvas.toSVG();
   var a = document.createElement("a");
   var blob = new Blob([svg], { type: "image/svg+xml" });
   var blobURL = URL.createObjectURL(blob);
   a.href = blobURL;
-  projectname = $("[data-project=name]")[0].value.toLowerCase().replace(/ /g, "-").replace(/Created with Fabric.js 4.6.0/g, "Created with TouchDrawer - michaelsboost.github.io/TouchDrawer");
+  projectname = $("[data-projectname]")[0].textContent.toLowerCase().replace(/ /g, "-").replace(/Created with Fabric.js 4.6.0/g, "Created with TouchDrawer - michaelsboost.github.io/TouchDrawer");
   a.download = projectname + ".svg";
   a.click();
   URL.revokeObjectURL(blobURL);
 };
 
-// init panzoom
-var drawArea = document.querySelector('.canvas-container');
-var instance = panzoom(drawArea);
-instance.pause();
+// toggle dialogs
+function openDialog(dialog) {
+  // detect active tool
+  $('[data-dialogs] [data-dialog]').hide();
+  $('[data-dialogs] [data-dialog='+ dialog.toString().toLowerCase() +']').show();
+}
+function closeDialogs() {
+  $('[data-dialogs] [data-dialog]').hide();
+}
+$('[data-call]').on('click', function(val) {
+  thisTool = $(this).attr('data-call').toString().toLowerCase();
+  val = thisTool;
+  
+  // if tool is not active
+  if (!$('[data-call].active').is(':visible')) {
+    $(this).addClass('active');
+    openDialog(val);
+  } else {
+    // if tool is active
+    // are you clicking on same tool or not?
+    $(this).each(function(i) {
+      // if you are remove the class
+      if ($('[data-call].active').attr('data-call').toString().toLowerCase() === thisTool) {
+        $('[data-call].active').removeClass('active');
+        closeDialogs()
 
-// pause panzoom if active is visble
-$('.header .mainh a').click(function() {
-  if ($('.header .active').is(':visible')) {
-    // pause panzoom
-    instance.pause();
+        // if not remove the class from the original and then add it
+      } else {
+        $('[data-call].active').removeClass('active');
+        $(this).addClass('active');
+        openDialog(val);
+      }
+    });
   }
 });
 
-// bot
-//setTimeout(function() {
-//  $('[data-confirm=dimensions]').trigger('click');
-//}, 300);
+// reset zoom position
+$('[data-resetzoompos]').click(function() {
+  $('[data-canvas]').css('transform-origin', '')
+                    .css('transform', '');
+  instance.restore();
+});
+
+// hide tools options onload
+$('[data-toolsmenu]').hide();
+$('[data-toolsmenu] [data-toolsoption]').hide();
+
+// hide dialogs onload
+$('[data-dialogs] [data-dialog]').hide();
 
 // shortcut keys
 window.addEventListener("keydown", function(e) {
@@ -1706,3 +1538,16 @@ window.addEventListener("keydown", function(e) {
     return false;
   }
 });
+
+// init zoom tool onload
+$('[data-tools=colorpicker]').trigger('click');
+$('[data-tools=colorpicker]').trigger('click');
+setTimeout(function() {
+//  $('[data-call=new]').trigger('click');
+//  $('[data-tools=zoom]').trigger('click');
+//  $('[data-tools=select]').trigger('click');
+//  $('[data-tools=brush]').trigger('click');
+  $('[data-tools=filters]').trigger('click');
+}, 300);
+//$('[data-tools=brush]').trigger('click');
+//$('[data-tools=ellipse]').trigger('click');
