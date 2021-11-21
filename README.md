@@ -3,7 +3,7 @@ TouchDrawer
 
 Just a free and open source vector drawing tool for mobile. Try it today at [michaelsboost.com/TouchDrawer](https://michaelsboost.github.io/TouchDrawer)
 
-![](https://raw.githubusercontent.com/michaelsboost/TouchDrawer/gh-pages/header.png)
+![](https://raw.githubusercontent.com/michaelsboost/TouchDrawer/gh-pages/screenshot.png)
 
 Version
 -------------

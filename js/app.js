@@ -754,6 +754,11 @@ function closeToolsMenu() {
   instance.pause();
 }
 $('[data-tools]').on('click', function(val) {
+  // stop animation from playing
+  if ($('[data-play]').attr('data-play').toLowerCase() === 'stop') {
+    $('[data-play=stop]').trigger('click');
+  }
+  
   thisTool = $(this).attr('data-tools').toString().toLowerCase();
   val = thisTool;
   
