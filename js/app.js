@@ -212,6 +212,17 @@ redo_history = [];
 undo_history.push(JSON.stringify(canvas));
 
 canvas.clear();
+
+// add groups as layers
+var roughGroup = new fabric.Group();
+var paintGroup = new fabric.Group();
+var highlightsGroup = new fabric.Group();
+var inkGroup = new fabric.Group();
+canvas.add(roughGroup);
+canvas.add(paintGroup);
+canvas.add(highlightsGroup);
+canvas.add(inkGroup);
+
 canvas.setWidth($('[data-new=width]').val());
 canvas.setHeight($('[data-new=height]').val());
 canvas.calcOffset();
