@@ -54,8 +54,8 @@
 
         <span data-menubuttons>
           <button data-comingsoon data-save>SAVE</button>
-          <button data-comingsoon data-export="zip">ZIP</button>
-          <button data-comingsoon data-export="gif">GIF</button>
+          <button data-export onclick="exportZIP()">ZIP</button>
+          <button data-export onclick="exportGIF()">GIF</button>
 
           <a data-call="settings" title="Settings">
             <img src="svgs/cog.svg">
@@ -84,8 +84,8 @@
 
           <span data-menubuttons>
             <button data-comingsoon data-save>SAVE</button>
-            <button data-comingsoon data-export="zip">ZIP</button>
-            <button data-comingsoon data-export="gif">GIF</button>
+            <button data-export onclick="exportZIP()">ZIP</button>
+            <button data-export onclick="exportGIF()">GIF</button>
 
             <a data-resetzoompos title="Reset Default Size">
               <img src="svgs/resetsize.svg">
@@ -303,8 +303,8 @@
           <h2>Height:</h2>
         </div>
         <div style="display: flex; justify-content: space-between;">
-          <input data-new="width" type="number" min="1" value="1920" placeholder="width">
-          <input data-new="height" type="number" min="1" value="1080" placeholder="height">
+          <input data-new="width" type="number" min="1" value="1280" placeholder="width">
+          <input data-new="height" type="number" min="1" value="800" placeholder="height">
         </div>
 
         <h2>Presets:</h2>
@@ -327,14 +327,14 @@
           <button data-size="800x600">Dribbble Shot</button>
         </div>
         
-        <h2>FPS:</h2>
-        <input data-new="fps" type="number" min="1" value="30">
+        <h2>Frame Rate: (ms)</h2>
+        <input data-new="framerate" type="number" min="1" value="40">
 
         <button data-confirm="newproject">Confirm</button>
       </div>
       <div class="dialog" data-dialog="settings">
-        <h2>FPS:</h2>
-        <input data-fps type="number" min="1" value="30">
+        <h2>Frame Rate: (ms)</h2>
+        <input data-framerate type="number" min="1" value="40">
 
         <h2>Notepad:</h2>
         <textarea data-notepad placeholder="your notes go here...."></textarea>
@@ -343,6 +343,7 @@
         <div class="fill-pickr pickr"></div>
         <div class="stroke-pickr pickr"></div>
       </div>
+      <div class="dialog" data-dialog="play"></div>
     </div>
     
     <!-- left side -->
@@ -425,7 +426,7 @@
         <a data-undo title="Undo" onclick="undo()">
           <img src="svgs/undo.svg">
         </a>
-        <a data-add data-comingsoon title="Add Frame">
+        <a data-add title="Add Frame">
           <img src="svgs/add2.svg">
         </a>
       </span>
@@ -479,7 +480,7 @@
       </span>
       
       <span>
-        <a data-delete data-comingsoon title="Delete Frame">
+        <a data-delete title="Delete Frame">
           <img src="svgs/trash.svg">
         </a>
         <a data-redo title="Redo" onclick="redo()">
@@ -492,15 +493,14 @@
     <script src="libraries/bowser/bowser.min.js"></script>
     <script src="libraries/fabricjs/fabric.min.js"></script>
     <script src="libraries/fabricjs/eraser_brush.mixin.js"></script>
+    <script src="libraries/SVGAnimFrames/SVGAnimFrames.js"></script>
     <script src="libraries/gifshot/gifshot.min.js"></script>
     <script src="libraries/jquery/jquery.js"></script>
     <script src="libraries/jquery/jquery-migrate-1.2.1.min.js"></script>
-<!--
     <script src="libraries/jszip/Blob.js"></script>
     <script src="libraries/jszip/FileSaver.js"></script>
     <script src="libraries/jszip/jszip.min.js"></script>
     <script src="libraries/jszip/jszip-utils.js"></script>
--->
     <script src="libraries/panzoom/panzoom.mod.js"></script>
     <script src="libraries/pickr/pickr.min.js"></script>
     <script src="libraries/saveSvgAsPng/saveSvgAsPng.js"></script>

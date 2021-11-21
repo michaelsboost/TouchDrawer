@@ -7,7 +7,7 @@
 */
 
 // variables
-var $data, thisTool, prevTool, line, isDown, activeLayer;
+var $data, thisTool, prevTool, line, isDown, activeLayer, imagesPNG, imagesSVG;
 
 // feature coming soon
 $('[data-comingsoon]').click(function() {
@@ -50,7 +50,7 @@ $('[data-confirm="newproject"]').click(function() {
       clearcanvas();
       
       // reset fps
-      $('[data-fps]').val( $('[data-new=fps]').val() );
+      $('[data-framerate]').val( $('[data-new=framerate]').val() );
       
       // clear notepad
       $('[data-notepad]').val('');
@@ -1597,9 +1597,18 @@ $('[data-play]').on('click', function() {
   if ($(this).attr('data-play') === 'play') {
     $(this).attr('data-play', 'stop').attr('title', 'Stop').find('img').attr('src', 'svgs/stop.svg');
 //    alertify.log('play animation');
+    
+    // step 1 grab the animation frames
+    $('[data-dialog=play]').show().append($('[data-frames]').html());
+    
+    // step 2 play the animation
+    SVGAnimFrames("[data-dialog=play]", "svg", "repeat", "40", "0");
   } else {
     $(this).attr('data-play', 'play').attr('title', 'Play').find('img').attr('src', 'svgs/play.svg');
 //    alertify.log('stop animation');
+
+    // stop animation
+    $('[data-dialog=play]').hide().empty();
   }
 });
 
@@ -1609,6 +1618,126 @@ $('[data-resetzoompos]').click(function() {
                     .css('transform', '');
   instance.restore();
 });
+
+// add frame
+$('[data-add]').click(function() {
+  var svg = canvas.toSVG().replace(/Created with Fabric.js 4.6.0/g, "Created with TouchDrawer - https://michaelsboost.github.io/TouchDrawer/");
+  $('[data-frames]').append(svg);
+
+  // scroll to last frame
+  document.querySelector('[data-frames]').scrollLeft = document.querySelector('[data-frames]').scrollWidth;
+});
+$('[data-delete]').click(function() {
+  $('[data-frames] svg:last').remove();
+});
+
+// export files
+function exportZIP() {
+  if (!$('[data-frames] svg')) {
+    alertify.error('Error: No frames detected thus no .gif to export!');
+    return false;
+  }
+   else if ($('[data-frames] svg').length === 1) {
+    alertify.error('Error: Only 1 frame detected thus no .gif to export!');
+    return false;
+  } else {
+    imagesPNG = [];
+    imagesSVG = [];
+    $('[data-frames] svg').each(function(i) {
+      // first begin with the array for the svg files
+      
+      // 2. Serialize element into plain SVG
+      var serializedSVG = new XMLSerializer().serializeToString($('[data-frames] svg')[i]);
+
+      var base64Data = window.btoa(serializedSVG);
+      // The generated string will be something like: 
+      // PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdm.........
+
+      var imgSVGSrc = "data:image/svg+xml;base64," + base64Data;
+      
+      // first push the svg to the svg images array
+      imagesSVG.push(imgSVGSrc);
+      
+      // create dummy canvas element to convert our svg to a png
+      var c = document.createElement('canvas');
+      var ctx = c.getContext("2d");
+      c.width  = $('[data-new=width]').val()
+      c.height = $('[data-new=height]').val()
+
+      var img = new Image();
+      img.src = imgSVGSrc;
+      img.onload = function() {
+        ctx.drawImage(img, 0, 0);
+        
+        // next push the png to the png images array
+        imagesPNG.push(c.toDataURL('image/png'));
+      }
+      c.remove();
+    });
+    
+    setTimeout(function() {
+      var zip = new JSZip();
+
+      // png images
+      for (var i = 0; i < imagesPNG.length; i++) {
+        zip.folder('pngs').file("frame-"+[i]+".png", imagesPNG[i].split('base64,')[1],{base64: true});
+      }
+      // svg images
+      for (var i = 0; i < imagesSVG.length; i++) {
+        zip.folder('svgs').file("frame-"+[i]+".svg", imagesSVG[i].split('base64,')[1],{base64: true});
+      }
+
+      var content = zip.generate({type:"blob"});
+      var projectname = $("[data-projectname]")[0].textContent.toLowerCase().replace(/ /g, "-")
+      if (!$("[data-projectname]")[0].textContent.toLowerCase().replace(/ /g, "-")) {
+        projectname = $("[data-projectname]")[0].textContent = "my-awesome-animation";
+      }
+      saveAs(content, projectname + "_TouchDrawer.zip");
+    }, 300);
+  }
+}
+function exportGIF() {
+  if (!$('[data-frames] svg')) {
+    alertify.error('Error: No frames detected thus no .gif to export!');
+    return false;
+  }
+   else if ($('[data-frames] svg').length === 1) {
+    alertify.error('Error: Only 1 frame detected thus no .gif to export!');
+    return false;
+  } else {
+    var images = [];
+    $('[data-frames] svg').each(function(i) {
+      // 2. Serialize element into plain SVG
+      var serializedSVG = new XMLSerializer().serializeToString($('[data-frames] svg')[i]);
+
+      var base64Data = window.btoa(serializedSVG);
+      // The generated string will be something like: 
+      // PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdm.........
+
+      var imgSVGSrc = "data:image/svg+xml;base64," + base64Data;
+      images.push(imgSVGSrc);
+    });
+
+    gifshot.createGIF({
+      images: images,
+      gifWidth: canvas.width,
+      gifHeight: canvas.height,
+      interval: $('[data-framerate]').val() / 1000, // seconds
+      progressCallback: function(captureProgress) { console.log('progress: ', captureProgress); },
+      completeCallback: function() { console.log('completed!!!'); },
+      numWorkers: 2,
+    },function(obj) {
+      if(!obj.error) {
+        var image = obj.image;
+        var link = document.createElement("a");
+        link.href = image;
+        projectname = $("[data-projectname]")[0].textContent.toLowerCase().replace(/ /g, "-");
+        link.download = projectname + '.gif';
+        link.click();
+      }
+    });
+  }
+}
 
 // hide tools options onload
 $('[data-toolsmenu]').hide();

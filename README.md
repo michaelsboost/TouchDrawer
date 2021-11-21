@@ -14,9 +14,8 @@ To Do:
 -------------
  * Allow user to change layers (roughLayer being in the back, paintLayer above that then, highlightsLayer and lastly inkLayer). Add layers as groups in which the objects in that group are only manipulated by the group's class being the active layer such as roughLayer, paintLayer, etc:)
  * Add frame (frame holds the svg created by the single fabricjs object holding the layer groups of id's being what the app requires for roughLayer, paintLayer, etc: and when the user clicks that svg the active layer is what's selected upon that svg once loaded in)
- * Import svg (loads svg )
+ * Import svg (loads svg inside of the editable group WITH THE SVG CONTENTS OF THAT FILE ONLY EDITABLE WITHIN THAT EDITABLE GROUP)
  * Import/Export JSON TouchDrawer project file
- * Integrate the ability to render frame by frame animation  
  * Within select tool add a subtool to edit Paths (Bezier Curves), Polygons, Lines and Polylines  
  * Add help link  
 
@@ -36,7 +35,9 @@ TouchDrawer uses a number of open source projects to work properly:
 * [AlertifyJS](http://alertifyjs.com/) - For the awesome and stylish notification logs
 * [SweetAlert](https://sweetalert.js.org/guides/) - For the awesome and stylish alert dialogs
 * [panzoom](https://github.com/anvaka/panzoom/) - Used to pan and zoom the canvas
-* [Gifshot](https://github.com/yahoo/gifshot) - The technology that makes the gif animation possible
+* [SVGAnimFrames](https://michaelsboost.com/SVGAnimFrames/) - Used to render your animation
+* [JSZip](https://stuk.github.io/jszip/) - package zip files in javascript
+* [Gifshot](https://github.com/yahoo/gifshot) - Used to make the gif animation
 * [FabricJS](http://fabricjs.com/) - The technology that makes the drawing possible
 
 Development

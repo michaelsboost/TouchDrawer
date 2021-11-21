@@ -436,8 +436,8 @@ input.numinhead[type=text] {
   padding: 0;
   text-align: center;
 }
-[data-fps],
-[data-new=fps] {
+[data-framerate],
+[data-new=framerate] {
   width: calc(100vw - 154px);
 }
 .dialog:not(.colorpicker) button {
@@ -473,13 +473,25 @@ input.numinhead[type=text] {
   display: inline-block;
   width: auto;
 }
+.dialog svg {
+  width: 100%;
+  height: 100%;
+}
 
 /* frames */
+[data-frames] {
+  position: absolute;
+  top: 6px;
+  left: 110px;
+  right: 115px;
+  overflow: auto;
+  height: 44px;
+}
 [data-frames] svg {
   cursor: pointer;
   display: inline-block;
   width: auto;
-  height: 40px;
+  height: 39px;
 }
 
 /* colors */
