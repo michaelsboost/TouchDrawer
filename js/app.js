@@ -7,7 +7,7 @@
 */
 
 // variables
-var $data, thisTool, prevTool, line, isDown;
+var $data, thisTool, prevTool, line, isDown, activeLayer;
 
 // feature coming soon
 $('[data-comingsoon]').click(function() {
@@ -46,13 +46,17 @@ $('[data-confirm="newproject"]').click(function() {
   }).then((result) => {
     if (result.value) {
       // initiate a new project
-      alertify.log('Init new project');
+      // first clear the canvas
+      clearcanvas();
       
       // reset fps
       $('[data-fps]').val( $('[data-new=fps]').val() );
       
       // clear notepad
       $('[data-notepad]').val('');
+      
+      // clear frames
+      $('[data-frames]').empty();
   
       // close new icon
       $('[data-call=new]').trigger('click');
@@ -179,6 +183,18 @@ const strokePickr = Pickr.create({
 });
 strokePickr.on('init', () => {
   strokePickr.show();
+});
+
+// toggle canvas layers
+$('[data-righticons] [data-layer]').on('click', function() {
+  activeLayer = $(this).attr('data-layer');
+  
+  if ($('[data-righticons] [data-layer].active').is(':visible')) {
+    $('[data-righticons] [data-layer].active').removeClass('active');
+    $(this).addClass('active');
+  } else {
+    $(this).addClass('active');
+  }
 });
 
 // initialize the canvas
@@ -523,6 +539,7 @@ redo_history.length = 0;
 // open tools menu
 function openToolsMenu(tool) {
   removeEvents();
+  canvas.selection = false;
   canvas.discardActiveObject();
   canvas.renderAll();
   $('[data-mainmenu], [data-dialog]').hide();
@@ -537,9 +554,12 @@ function openToolsMenu(tool) {
   
   // zoom tool
   if (tool.toString().toLowerCase() === 'zoom') {
+    canvas.selection = false;
     instance.resume();
   } else {
+    canvas.selection = false;
     instance.pause();
+    $('[data-toolsoption=zoom] button').removeClass('active');
   }
   
   // color picker tool
@@ -711,6 +731,7 @@ $('[data-toolsoption=colorpicker] button').on('click', function() {
 // close tools menu
 function closeToolsMenu() {
   removeEvents();
+  canvas.selection = false;
   changeObjectSelection(false);
   canvas.discardActiveObject();
   canvas.renderAll();
@@ -768,6 +789,21 @@ $('[data-close=filter]').click(function() {
   
   // now only show filters tool options
   $('[data-toolsoption=filters]').show();
+});
+$('[data-clear=filters]').click(function() {
+  $('[data-frames], [data-frames] img, [data-canvas] .canvas-container').css('filter', '');
+  
+  $('[data-export=pngframe]').attr('onclick', 'downloadPNG()');
+  $('[data-export=svgframe]').attr('onclick', 'downloadSVG()');
+});
+function applyFilters() {
+  $('[data-frames], [data-frames] img, [data-canvas] .canvas-container').css('filter', 'blur('+ blurfilter.value +'px) hue-rotate('+ huefilter.value +'deg) brightness('+ brightnessfilter.value +')  contrast('+ contrastfilter.value +') saturate('+ saturatefilter.value +') grayscale('+ grayscalefilter.value +'%) sepia('+ sepiafilter.value +'%) invert('+ invertfilter.value +'%)');
+  
+  $('[data-export=pngframe]').attr('onclick', 'downloadPNGWithFilters()');
+  $('[data-export=svgframe]').attr('onclick', 'downloadSVGWithFilters()');
+}
+$('.filterval').change(function() {
+  applyFilters();
 });
 
 // tools
@@ -1452,16 +1488,73 @@ function downloadImage() {
   link.click();
 };
 function downloadSVG() {
-  var svg = canvas.toSVG();
+//  // group all before exporting
+//  if ($('[data-tools].active').is(':visible')) {
+//    var prevTool = $('[data-tools].active').attr('data-tool').toString().toLowerCase();
+//    if (prevTool != 'select') {
+//      $('[data-tools=select]').trigger('click');
+//    }
+//    selectall();
+//    group();
+//  } else {
+//    $('[data-tools=select]').trigger('click');
+//    selectall();
+//    group();
+//  }
+  
+  var svg = canvas.toSVG().replace(/Created with Fabric.js 4.6.0/g, "Created with TouchDrawer - https://michaelsboost.github.io/TouchDrawer/");
   var a = document.createElement("a");
   var blob = new Blob([svg], { type: "image/svg+xml" });
   var blobURL = URL.createObjectURL(blob);
   a.href = blobURL;
-  projectname = $("[data-projectname]")[0].textContent.toLowerCase().replace(/ /g, "-").replace(/Created with Fabric.js 4.6.0/g, "Created with TouchDrawer - michaelsboost.github.io/TouchDrawer");
+  projectname = $("[data-projectname]")[0].textContent.toLowerCase().replace(/ /g, "-");
   a.download = projectname + ".svg";
   a.click();
   URL.revokeObjectURL(blobURL);
 };
+function downloadPNGWithFilters() {
+  var svg = canvas.toSVG();
+  var str = '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>\n<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">\n<svg';
+  var svgWithFilter = svg.split(str).join('<?xml version="1.0" encoding="UTF-8" standalone="no" ?>\n<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">\n<svg id="tempTouchDrawerElm" style="filter: blur('+ blurfilter.value +'px) hue-rotate('+ huefilter.value +'deg) brightness('+ brightnessfilter.value +')  contrast('+ contrastfilter.value +') saturate('+ saturatefilter.value +') grayscale('+ grayscalefilter.value +'%) sepia('+ sepiafilter.value +'%) invert('+ invertfilter.value +'%);"');
+  
+  $(document.body).append(svgWithFilter);
+  
+//  $('#tempTouchDrawerElm').find('defs').attr('id', 'bg').html('<rect width="' +  $('#tempTouchDrawerElm').attr('width') + '" height="' + $('#tempTouchDrawerElm').attr('height')  + '"/>');
+//  $('#tempTouchDrawerElm  g:first').attr('clip-path', 'url(#bg)');
+
+  projectname = $("[data-projectname]")[0].textContent.toLowerCase().replace(/ /g, "-");
+  
+  saveSvgAsPng(document.getElementById('tempTouchDrawerElm'), projectname + ".png");
+  $('#tempTouchDrawerElm').remove();
+};
+function downloadSVGWithFilters() {
+//  // group all before exporting
+//  if ($('[data-tools].active').is(':visible')) {
+//    var prevTool = $('[data-tools].active').attr('data-tool').toString().toLowerCase();
+//    if (prevTool != 'select') {
+//      $('[data-tools=select]').trigger('click');
+//    }
+//    selectall();
+//    group();
+//  } else {
+//    $('[data-tools=select]').trigger('click');
+//    selectall();
+//    group();
+//  }
+  
+  var svg = canvas.toSVG().replace(/Created with Fabric.js 4.6.0/g, "Created with TouchDrawer - https://michaelsboost.github.io/TouchDrawer/");
+  var str = '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>\n<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">\n<svg';
+  var svgWithFilter = svg.split(str).join('<?xml version="1.0" encoding="UTF-8" standalone="no" ?>\n<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">\n<svg style="filter: blur('+ blurfilter.value +'px) hue-rotate('+ huefilter.value +'deg) brightness('+ brightnessfilter.value +')  contrast('+ contrastfilter.value +') saturate('+ saturatefilter.value +') grayscale('+ grayscalefilter.value +'%) sepia('+ sepiafilter.value +'%) invert('+ invertfilter.value +'%);"');
+
+  var a = document.createElement("a");
+  var blob = new Blob([svgWithFilter], { type: "image/svg+xml" });
+  var blobURL = URL.createObjectURL(blob);
+  a.href = blobURL;
+  projectname = $("[data-projectname]")[0].textContent.toLowerCase().replace(/ /g, "-");
+  a.download = projectname + ".svg";
+  a.click();
+  URL.revokeObjectURL(blobURL);
+}
 
 // toggle dialogs
 function openDialog(dialog) {
@@ -1496,6 +1589,17 @@ $('[data-call]').on('click', function(val) {
         openDialog(val);
       }
     });
+  }
+});
+
+// toggle play/pause animation
+$('[data-play]').on('click', function() {
+  if ($(this).attr('data-play') === 'play') {
+    $(this).attr('data-play', 'stop').attr('title', 'Stop').find('img').attr('src', 'svgs/stop.svg');
+//    alertify.log('play animation');
+  } else {
+    $(this).attr('data-play', 'play').attr('title', 'Play').find('img').attr('src', 'svgs/play.svg');
+//    alertify.log('stop animation');
   }
 });
 

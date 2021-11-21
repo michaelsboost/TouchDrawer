@@ -19,6 +19,7 @@ a {
   text-decoration: none;
 }
 .alertify-log {
+  font-size: 14px;
   text-shadow: 0 0 #000;
 }
 .alertify-log-success {
@@ -51,7 +52,7 @@ html, body {
 input[type=range] {
   position: relative;
   top: -4px;
-  width: calc(100vw - 210px);
+  width: calc(100vw - 262px);
   margin-top: -3.1px;
   background-color: transparent;
   -webkit-appearance: none;
@@ -388,7 +389,6 @@ input.numinhead[type=text] {
 }
 [data-righticons] a[data-layer] {
   transform: scale(0.8);
-  box-shadow: 0px 0px 0px 1px #fff;
 }
 
 /* canvas and dialogs */
@@ -404,6 +404,9 @@ input.numinhead[type=text] {
 .dialog[data-canvasbg] {
   padding: 0;
   background: transparent;
+}
+[data-canvas] {
+  width: fit-content;
 }
 [data-dialog=new] {
   font-size: 14px;
@@ -444,7 +447,7 @@ input.numinhead[type=text] {
   border-radius: 0.4em;
   text-transform: uppercase;
   font-size: 0.875em;
-  font-weight: bold;
+/*  font-weight: bold;*/
   transition: opacity 0.3s;
   display: block;
   margin: 1.42857em 0;
@@ -469,6 +472,14 @@ input.numinhead[type=text] {
 .dialog:not(.colorpicker) .hscroll button {
   display: inline-block;
   width: auto;
+}
+
+/* frames */
+[data-frames] svg {
+  cursor: pointer;
+  display: inline-block;
+  width: auto;
+  height: 40px;
 }
 
 /* colors */
@@ -522,6 +533,9 @@ input.numinhead,
 [data-righticons] a[data-layer] {
   box-shadow: 0px 0px 0px 1px #fff;
 }
+[data-righticons] a[data-layer].active {
+  box-shadow: 0px 0px 0px 1px #1e7eeb;
+}
 
 /* filter for original blue image */
 .active img {
@@ -566,10 +580,13 @@ input.numinhead,
 [data-mainmenu] button.active {
   color: #1e7eeb;
 }
-[data-canvas] canvas {
+[data-canvas] {
   border: 1px solid #1e7eeb;
 }
 [data-toolsoption=colorpicker] button.active {
+  color: #1e7eeb;
+}
+[data-toolsoption=zoom] button.active {
   color: #1e7eeb;
 }
 
