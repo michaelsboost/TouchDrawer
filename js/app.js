@@ -59,7 +59,8 @@ $('[data-confirm="newproject"]').click(function() {
       $('[data-frames]').empty();
   
       // close new icon
-      $('[data-call=new]').trigger('click');
+      $('[data-call=new].active').removeClass('active');
+      $('[data-dialog=new]').hide();
       
       // init zoom tool by default
       $('[data-tools=zoom]').trigger('click');
