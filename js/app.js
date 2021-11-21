@@ -676,13 +676,18 @@ function openToolsMenu(tool) {
 
 // Hide select tool options for when the object isn't selected
 canvas.on('before:selection:cleared', function() {
-  $('[ data-forselect]').hide();
+  $('[data-forselect]').hide();
   $('[data-selectortool=ungroup]').hide();
 });
 
 // If select tool and user selects object detect that object
 canvas.on("selection:created", function() {
-  $('[ data-forselect]').show();
+  // if no tool is selected disable
+  if (!$('[data-tools].active').is(':visible')) {
+    return false;
+  }
+  
+  $('[data-forselect]').show();
   
   // used to detect the object type
   var activeObject = canvas.getActiveObject();
@@ -1128,6 +1133,11 @@ function redo() {
 function clearcanvas() {
   canvas.clear();
   canvas.renderAll();
+  
+  if (lockHistory) return;
+//  console.log("object:modified");
+  undo_history.push(JSON.stringify(canvas));
+  redo_history.length = 0;
 }
 function selectall() {
   canvas.discardActiveObject();
@@ -1172,6 +1182,11 @@ function paste() {
     canvas.setActiveObject(clonedObj);
     canvas.requestRenderAll();
   });
+  
+  if (lockHistory) return;
+//  console.log("object:modified");
+  undo_history.push(JSON.stringify(canvas));
+  redo_history.length = 0;
 }
 function duplicate() {
   copy();
@@ -1185,6 +1200,11 @@ function remove() {
     });
     canvas.discardActiveObject().renderAll()
   }
+  
+  if (lockHistory) return;
+//  console.log("object:modified");
+  undo_history.push(JSON.stringify(canvas));
+  redo_history.length = 0;
 }
 
 // transforms
@@ -1639,6 +1659,7 @@ $('[data-resetzoompos]').click(function() {
 // add frame
 $('[data-add]').click(function() {
   var svg = canvas.toSVG().replace(/Created with Fabric.js 4.6.0/g, "Created with TouchDrawer - https://michaelsboost.github.io/TouchDrawer/");
+  var svg = svg.split('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"').join('<svg onclick="getFrameCode(this)" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"');
   $('[data-frames]').append(svg);
 
   // scroll to last frame
@@ -1647,6 +1668,50 @@ $('[data-add]').click(function() {
 $('[data-delete]').click(function() {
   $('[data-frames] svg:last').remove();
 });
+
+// click frame to open in editor
+function getFrameCode(event) {
+  var group = [];
+  var svgCode = event.outerHTML;
+  
+  fabric.loadSVGFromString(svgCode.toString(),function(objects,options) {
+      var loadedObjects = new fabric.Group(group);
+      loadedObjects.set({
+          x: 0,
+          y: 0
+      });
+      canvas.centerObject(loadedObjects);
+      canvas.add(loadedObjects);
+      canvas.selection = false;
+      canvas.discardActiveObject();
+      canvas.renderAll();
+  },function(item, object) {
+      object.set('id',item.getAttribute('id'));
+      group.push(object);
+  });
+  
+  if ($('[data-tools].active').is(':visible')) {
+    // deselect and reselect active tool
+    var activeTool = $('[data-tools].active').attr('data-tools');
+    $('[data-tools].active').trigger('click');
+    $('[data-tools='+ activeTool +']').trigger('click');
+  } else {
+    // no active tool selected use select tool by default
+    $('[data-tools=zoom]').trigger('click');
+  }
+}
+canvas.on('selection:created', function(event) {
+  if ($('[data-tools=zoom].active').is(':visible')) {
+    removeEvents();
+    changeObjectSelection(true);
+    canvas.isDrawingMode = false;
+    canvas.selection = false;
+    canvas.discardActiveObject();
+    canvas.renderAll();
+    return false;
+  }
+});
+$('[data-frames] svg:first-child').trigger('click');
 
 // export files
 function exportZIP() {
@@ -1784,7 +1849,9 @@ window.addEventListener("keydown", function(e) {
   }
   // (DEL)
   if ( e.keyCode == 46 ) {
-    remove();
+    if ($('[data-tools=select].active').is(':visible')) {
+      remove();
+    }
     return false;
   }
 });
