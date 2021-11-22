@@ -243,6 +243,9 @@ input.numinhead[type=text] {
 }
 
 /* top menu */
+[data-topmenu] label {
+  cursor: pointer;
+}
 [data-topmenu] > div:not(:first) {
   display: none;
 }
@@ -272,7 +275,9 @@ input.numinhead[type=text] {
   padding: 0 2em;
 }
 [data-mainmenu] button,
-[data-toolsmenu] button {
+[data-toolsmenu] button,
+[data-mainmenu] label,
+[data-toolsmenu] label {
   cursor: pointer;
   display: inline-block;
   font-family: Lato;
@@ -281,12 +286,14 @@ input.numinhead[type=text] {
   position: relative;
   padding: 0 10px;
 }
+[data-mainmenu] label,
 [data-mainmenu] button,
 [data-toolsoption=zoom] [data-menubuttons] button {
   top: -3px;
 }
+[data-toolsmenu] label, 
 [data-toolsmenu] button {
-  top: 6px;
+  top: 5px;
 }
 [data-toolsoption=colorpicker] button {
   top: -3px;

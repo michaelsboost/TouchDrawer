@@ -45,7 +45,9 @@
             <img src="svgs/donate.svg">
           </a>
           <button data-call="new">NEW</button>
-          <button data-comingsoon data-load>LOAD</button>
+          <label for="openfile">
+            LOAD
+          </label>
         </span>
 
         <span>
@@ -53,7 +55,7 @@
         </span>
 
         <span data-menubuttons>
-          <button data-comingsoon data-save>SAVE</button>
+          <button onclick="exportJSON()">SAVE</button>
           <button data-export onclick="exportZIP()">ZIP</button>
           <button data-export onclick="exportGIF()">GIF</button>
 
@@ -75,7 +77,9 @@
         <div data-toolsoption="zoom">
            <span>
             <button data-call="new">NEW</button>
-            <button data-comingsoon data-load>LOAD</button>
+            <label for="openfile">
+              LOAD
+            </label>
           </span>
 
           <span>
@@ -83,7 +87,7 @@
           </span>
 
           <span data-menubuttons>
-            <button data-comingsoon data-save>SAVE</button>
+            <button onclick="exportJSON()">SAVE</button>
             <button data-export onclick="exportZIP()">ZIP</button>
             <button data-export onclick="exportGIF()">GIF</button>
 
@@ -453,6 +457,10 @@
           <img src="svgs/redo.svg">
         </a>
       </span>
+    </div>
+    
+    <div style="display: none;">
+      <input type="file" accept="image/svg+xml, application/json" id="openfile" onchange="loadfile(this)">
     </div>
 
     <script src="libraries/alertifyjs/alertify.js"></script>

@@ -7,7 +7,10 @@
 */
 
 // variables
-var $data, thisTool, prevTool, line, isDown, activeLayer, imagesPNG, imagesSVG;
+var version = 1.000,
+    loadedJSON = {}, projectJSON,
+    activeLayer, imagesPNG, imagesSVG,
+    $data, thisTool, prevTool, line, isDown;
 
 // feature coming soon
 $('[data-comingsoon]').click(function() {
@@ -57,6 +60,11 @@ $('[data-confirm="newproject"]').click(function() {
       
       // clear frames
       $('[data-frames]').empty();
+      
+      // reset canvas dimensions to chosen values
+      canvas.setWidth($('[data-new=width]').val());
+      canvas.setHeight($('[data-new=height]').val());
+      canvas.calcOffset();
   
       // close new icon
       $('[data-call=new].active').removeClass('active');
@@ -68,6 +76,217 @@ $('[data-confirm="newproject"]').click(function() {
       return false;
     }
   })
+});
+
+// load file
+function loadJSON() {
+  $("[data-frames]").empty();
+  $("[data-frames]").html(loadedJSON.frames);
+    
+//  if (!loadedJSON.version) {
+//    swal({
+//      title: 'Warning!',
+//      text: "This project is using a version of TouchDrawer that's no longer supported.",
+//      type: 'warning',
+//    })
+//  } else {
+//    if (parseFloat(loadedJSON.version) <= 0.1) {
+//      swal({
+//        title: 'Warning!',
+//        text: "This project is using a version of TouchDrawer that's no longer supported.",
+//        type: 'warning',
+//      })
+//    } else 
+//    if (parseFloat($version) > parseFloat(loadedJSON.version)) {
+//      swal({
+//        title: 'Warning!',
+//        text: "This project is using an older version of TouchDrawer. Some features may not work!",
+//        type: 'warning',
+//      })
+//    }
+//  }
+  
+  blurfilter.value = loadedJSON.filters[0].blurfilter;
+  huefilter.value = loadedJSON.filters[0].huefilter;
+  brightnessfilter.value = loadedJSON.filters[0].brightnessfilter;
+  contrastfilter.value = loadedJSON.filters[0].contrastfilter;
+  saturatefilter.value = loadedJSON.filters[0].saturatefilter;
+  grayscalefilter.value = loadedJSON.filters[0].grayscalefilter;
+  sepiafilter.value = loadedJSON.filters[0].sepiafilter;
+  invertfilter.value = loadedJSON.filters[0].invertfilter;
+
+  $('[data-projectname]').text(loadedJSON.settings[0].name);
+  canvas.setWidth(loadedJSON.settings[0].width);
+  canvas.setHeight(loadedJSON.settings[0].height);
+  canvas.calcOffset();
+  $('[data-new=width]').val(loadedJSON.settings[0].width);
+  $('[data-new=height]').val(loadedJSON.settings[0].height);
+  $('[data-framerate], [data-new=framerate]').val(loadedJSON.settings[0].framerate);
+  $('[data-notepad]').val(loadedJSON.settings[0].notepad);
+  
+  // clear history when a new project is created
+  canvas.clear();
+  lockHistory = false;
+  undo_history = [];
+  redo_history = [];
+  undo_history.push(JSON.stringify(canvas));
+  
+  // load svg file into editor
+  $('[data-frames] svg:last-child').trigger('click');
+}
+function loadfile(input) {
+  var reader = new FileReader();
+  var path = input.value;
+  reader.onload = function(e) {
+    if (path.toLowerCase().substring(path.length - 4) === ".svg") {
+      // is animation playing? If so stop
+      if ($('[data-play]').attr('data-play') === 'stop') {
+        // trigger stop
+        $('[data-play=stop]').trigger('click');
+      }
+      
+      // load svg file into editor
+      var group = [];
+
+      fabric.loadSVGFromString(e.target.result,function(objects,options) {
+          var loadedObjects = new fabric.Group(group);
+          loadedObjects.set({
+            x: 0,
+            y: 0
+          });
+          canvas.centerObject(loadedObjects);
+          canvas.add(loadedObjects);
+          canvas.selection = false;
+          canvas.discardActiveObject();
+          canvas.renderAll();
+      },function(item, object) {
+          object.set('id',item.getAttribute('id'));
+          group.push(object);
+      });
+
+      // Is there an active tool?
+      if ($('[data-tools].active').is(':visible')) {
+        // deselect and reselect active tool
+        var activeTool = $('[data-tools].active').attr('data-tools');
+        $('[data-tools].active').trigger('click');
+        $('[data-tools='+ activeTool +']').trigger('click');
+      } else {
+        // no active tool selected use select tool by default
+        $('[data-tools=zoom]').trigger('click');
+      }
+    } else if (path.toLowerCase().substring(path.length - 5) === ".json") {
+      // is animation playing? If so stop
+      if ($('[data-play]').attr('data-play') === 'stop') {
+        // trigger stop
+        $('[data-play=stop]').trigger('click');
+      }
+      
+      // load json file into editor
+      loadedJSON = JSON.parse(e.target.result);
+      loadJSON();
+
+      $(document.body).append('<div data-action="fadeOut" style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: #fff; z-index: 3;"></div>');
+      $("[data-action=fadeOut]").fadeOut(400, function() {
+        $("[data-action=fadeOut]").remove();
+      });
+      
+
+      // Is there an active tool?
+      if ($('[data-tools].active').is(':visible')) {
+        // deselect and reselect active tool
+        var activeTool = $('[data-tools].active').attr('data-tools');
+        $('[data-tools].active').trigger('click');
+        $('[data-tools='+ activeTool +']').trigger('click');
+      } else {
+        // no active tool selected use select tool by default
+        $('[data-tools=zoom]').trigger('click');
+      }
+    } else {
+      alertify.error('Error: File type not supported');
+    }
+  };
+  reader.readAsText(input.files[0]);
+}
+function dropfile(file) {
+  var reader = new FileReader();  
+  reader.onload = function(e) {
+    if (file.type === "image/svg+xml") {
+      // is animation playing? If so stop
+      if ($('[data-play]').attr('data-play') === 'stop') {
+        // trigger stop
+        $('[data-play=stop]').trigger('click');
+      }
+      
+      // load svg file into editor
+      var group = [];
+
+      fabric.loadSVGFromString(e.target.result,function(objects,options) {
+          var loadedObjects = new fabric.Group(group);
+          loadedObjects.set({
+            x: 0,
+            y: 0
+          });
+          canvas.centerObject(loadedObjects);
+          canvas.add(loadedObjects);
+          canvas.selection = false;
+          canvas.discardActiveObject();
+          canvas.renderAll();
+      },function(item, object) {
+          object.set('id',item.getAttribute('id'));
+          group.push(object);
+      });
+
+      // Is there an active tool?
+      if ($('[data-tools].active').is(':visible')) {
+        // deselect and reselect active tool
+        var activeTool = $('[data-tools].active').attr('data-tools');
+        $('[data-tools].active').trigger('click');
+        $('[data-tools='+ activeTool +']').trigger('click');
+      } else {
+        // no active tool selected use select tool by default
+        $('[data-tools=zoom]').trigger('click');
+      }
+    } else if (file.type === "application/json") {
+      // is animation playing? If so stop
+      if ($('[data-play]').attr('data-play') === 'stop') {
+        // trigger stop
+        $('[data-play=stop]').trigger('click');
+      }
+      
+      // load json file into editor
+      loadedJSON = JSON.parse(e.target.result);
+      loadJSON();
+
+      $(document.body).append('<div data-action="fadeOut" style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: #fff; z-index: 3;"></div>');
+      $("[data-action=fadeOut]").fadeOut(400, function() {
+        $("[data-action=fadeOut]").remove();
+      });
+      
+      // Is there an active tool?
+      if ($('[data-tools].active').is(':visible')) {
+        // deselect and reselect active tool
+        var activeTool = $('[data-tools].active').attr('data-tools');
+        $('[data-tools].active').trigger('click');
+        $('[data-tools='+ activeTool +']').trigger('click');
+      } else {
+        // no active tool selected use select tool by default
+        $('[data-tools=zoom]').trigger('click');
+      }
+    } else {
+      alertify.error("Sorry that file type is not supported. .svg and .json files only!");
+    }
+  }        
+  reader.readAsText(file,"UTF-8"); 
+}
+
+// load svg file on drop
+document.addEventListener("dragover", function(e) {
+  e.preventDefault();
+});
+document.addEventListener("drop", function(e) {
+  e.preventDefault();
+  var file = e.dataTransfer.files[0];
+  dropfile(file);
 });
 
 // size presets
@@ -85,14 +304,14 @@ $('[data-projectname]').click(function() {
   swal({
     title: 'Project name!',
     input: 'text',
-    inputValue: this.textContent,
+    inputValue: $(this).text(),
     inputPlaceholder: "Project name!",
     showCancelButton: true,
     confirmButtonText: 'Confirm',
     showLoaderOnConfirm: true
   }).then((result) => {
     if (result.value) {
-      this.textContent = result.value.replace(/[^\w\s]/gi, '');
+      $('[data-projectname]').text(result.value.replace(/[^\w\s]/gi, ''));
     } else {
       swal(
         'Oops!',
@@ -211,18 +430,17 @@ lockHistory = false;
 undo_history = [];
 redo_history = [];
 undo_history.push(JSON.stringify(canvas));
-
 canvas.clear();
 
-// add groups as layers
-var roughGroup = new fabric.Group();
-var paintGroup = new fabric.Group();
-var highlightsGroup = new fabric.Group();
-var inkGroup = new fabric.Group();
-canvas.add(roughGroup);
-canvas.add(paintGroup);
-canvas.add(highlightsGroup);
-canvas.add(inkGroup);
+//// add groups as layers
+//var roughGroup = new fabric.Group();
+//var paintGroup = new fabric.Group();
+//var highlightsGroup = new fabric.Group();
+//var inkGroup = new fabric.Group();
+//canvas.add(roughGroup);
+//canvas.add(paintGroup);
+//canvas.add(highlightsGroup);
+//canvas.add(inkGroup);
 
 canvas.setWidth($('[data-new=width]').val());
 canvas.setHeight($('[data-new=height]').val());
@@ -1714,6 +1932,39 @@ canvas.on('selection:created', function(event) {
 $('[data-frames] svg:first-child').trigger('click');
 
 // export files
+function getProjectJSON() {
+  projectJSON = {
+    "version": version,
+    "settings": [{
+      "name": $('[data-projectname]')[0].textContent,
+      "width": $('[data-new=width]').val(),
+      "height": $('[data-new=height]').val(),
+      "framerate": $('[data-framerate]').val(),
+      "notepad": $('[data-notepad]').val()
+    }],
+    "filters": [{
+      "blurfilter": blurfilter.value,
+      "huefilter": huefilter.value,
+      "brightnessfilter": brightnessfilter.value,
+      "contrastfilter": contrastfilter.value,
+      "saturatefilter": saturatefilter.value,
+      "grayscalefilter": grayscalefilter.value,
+      "sepiafilter": sepiafilter.value,
+      "invertfilter": invertfilter.value
+    }],
+    "svg": canvas.toSVG().replace(/Created with Fabric.js 4.6.0/g, "Created with TouchDrawer - https://michaelsboost.github.io/TouchDrawer/"),
+    "frames": $("[data-frames]").html()
+  };
+};
+function exportJSON() {
+  getProjectJSON();
+  var projectname = $('[data-projectname]')[0].textContent.toLowerCase().replace(/ /g, "-")
+  if (!$('[data-projectname]')[0].textContent.toLowerCase().replace(/ /g, "-")) {
+    projectname = $('[data-projectname]')[0].textContent = "_TouchDrawer";
+  }
+  var blob = new Blob([JSON.stringify(projectJSON)], {type: "application/json;charset=utf-8"});
+  saveAs(blob, projectname + ".json");
+}
 function exportZIP() {
   if (!$('[data-frames] svg')) {
     alertify.error('Error: No frames detected thus no .gif to export!');
