@@ -798,6 +798,10 @@ function openToolsMenu(tool) {
   }
   
   // other tools
+  if (tool.toString().toLowerCase() === 'eyedropper') {
+    changeObjectSelection(true);
+    canvas.isDrawingMode = false;
+  }
   if (tool.toString().toLowerCase() === 'select') {
     $('[ data-forselect]').hide();
     changeObjectSelection(true);
@@ -896,22 +900,6 @@ function openToolsMenu(tool) {
 canvas.on('before:selection:cleared', function() {
   $('[data-forselect]').hide();
   $('[data-selectortool=ungroup]').hide();
-});
-
-// If select tool and user selects object detect that object
-canvas.on("selection:created", function() {
-  // if no tool is selected disable
-  if (!$('[data-tools].active').is(':visible')) {
-    return false;
-  }
-  
-  $('[data-forselect]').show();
-  
-  // used to detect the object type
-  var activeObject = canvas.getActiveObject();
-  if(activeObject.type === "group") {
-    $('[data-selectortool=ungroup]').show();
-  }
 });
 
 // trigger tools
@@ -1664,7 +1652,49 @@ function group() {
   }
 }
 
-// fill tool
+// eyedropper and fill tool
+function eyedropperTool() {
+  var obj = canvas.getActiveObject();
+  if (obj.type=="group") {
+    alertify.error('Operation cancelled: Cannot get color of a group object');
+    
+    canvas.discardActiveObject();
+    canvas.renderAll();
+    canvas.renderAll();
+    return false;
+  }
+  
+  // show color picker after click
+  $('[data-tools]').removeClass('active');
+  $('[data-tools=colorpicker]').addClass('active');
+  $('[data-mainmenu], [data-toolsoption=eyedropper]').hide();
+  $('[data-toolsmenu]').css('display', 'flex');
+  $('[data-toolsoption=colorpicker]').show();
+  
+  // now detect and show the correct color picker
+  if ($('[data-toolsoption=colorpicker] button.active').text().toLowerCase() === 'fill') {
+    fillPickr.show();
+    strokePickr.hide();
+  } else {
+    fillPickr.hide();
+    strokePickr.show();
+  }
+  $('[data-dialog]').hide();
+  $('[data-dialog=colorpicker]').show();
+  
+  // detect if it's a fill
+  if (obj.hasFill()) {
+    fillPickr.setColor(obj.get('fill'));
+  }
+  
+  // detect if it's a stroke
+  if (obj.hasStroke()) {
+    strokePickr.setColor(obj.get('stroke'));
+  }
+  canvas.discardActiveObject();
+  canvas.renderAll();
+  canvas.renderAll();
+}
 function fillTool() {
   var obj = canvas.getActiveObject();
   
@@ -1690,28 +1720,44 @@ function fillTool() {
   canvas.renderAll();
 }
 canvas.on('selection:created', function() {
-  // if fill is not active cancel operation
-  if (!$('[data-tools=fill].active').is(':visible')) {
-    return false;
+  // detect if either eyedropped or fill tools are active
+  if ($('[data-tools=eyedropper].active').is(':visible') || $('[data-tools=fill].active').is(':visible')) {
+    if ($('[data-tools=fill].active').is(':visible')) {
+      fillTool();
+    }
+    if ($('[data-tools=eyedropper].active').is(':visible')) {
+      eyedropperTool();
+    }
   }
   
-  fillTool();
+  // show ungroup icon if a group is selected while the select tool is active
+  if ($('[data-tools=select].active').is(':visible')) {
+    $('[data-forselect]').show();
+
+    // used to detect the object type
+    var activeObject = canvas.getActiveObject();
+    if(activeObject.type === "group") {
+      $('[data-selectortool=ungroup]').show();
+    }
+  }
 });
 canvas.on('selection:updated', function() {
-  // if fill is not active cancel operation
-  if (!$('[data-tools=fill].active').is(':visible')) {
-    return false;
+  // detect if either eyedropped or fill tools are active
+  if ($('[data-tools=eyedropper].active').is(':visible') || $('[data-tools=fill].active').is(':visible')) {
+    if ($('[data-tools=fill].active').is(':visible')) {
+      fillTool();
+    }
+    if ($('[data-tools=eyedropper].active').is(':visible')) {
+      eyedropperTool();
+    }
   }
-  
-  fillTool();
 });
 canvas.on('mouse:over', function(event) {
-  if (!$('[data-tools=fill].active').is(':visible')) {
-    return false;
-  }
-  
-  if (event.target != null) {
-    event.target.hoverCursor = 'pointer';
+  // detect if either eyedropped or fill tools are active
+  if ($('[data-tools=eyedropper].active').is(':visible') || $('[data-tools=fill].active').is(':visible')) {
+    if (event.target != null) {
+      event.target.hoverCursor = 'pointer';
+    }
   }
 });
 canvas.on('touch:gesture', function(event) {
