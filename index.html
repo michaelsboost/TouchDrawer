@@ -34,6 +34,85 @@
     <meta property="og:image"       content="https://raw.githubusercontent.com/michaelsboost/TouchDrawer/gh-pages/header.png" />
   </head>
   <body>
+    <!-- left side -->
+    <div data-lefticons>
+      <a data-tools="zoom" title="Pan/Zoom Tool">
+        <img src="svgs/zoom.svg">
+      </a>
+      <a data-tools="colorpicker" title="Color Picker">
+        <img src="svgs/color.svg">
+      </a>
+      <a data-tools="eyedropper" title="Eyedropper">
+        <img src="svgs/eyedropper.svg">
+      </a>
+      <a data-tools="select" title="Select">
+        <img src="svgs/select.svg">
+      </a>
+      <a data-tools="pencil" title="Pencil">
+        <img src="svgs/pencil.svg">
+      </a>
+      <a data-tools="brush" title="Brush">
+        <img src="svgs/brush.svg">
+      </a>
+      <a data-tools="lasso" title="Lasso">
+        <img src="svgs/lasso.svg">
+      </a>
+      <a data-tools="rect" title="Rect">
+        <img src="svgs/rect.svg">
+      </a>
+      <a data-tools="ellipse" title="Ellipse">
+        <img src="svgs/ellipse.svg">
+      </a>
+      <a data-tools="line" title="Line">
+        <img src="svgs/line2.svg">
+      </a>
+      <a data-tools="triangle" title="Triangle">
+        <img src="svgs/triangle.svg">
+      </a>
+      <a data-tools="splatter" title="Splatter">
+        <img src="svgs/splatter.svg">
+      </a>
+      <a data-tools="spray" title="Spray">
+        <img src="svgs/spray.svg">
+      </a>
+      <a data-tools="eraser" title="Eraser">
+        <img src="svgs/eraser.svg">
+      </a>
+      <a data-tools="fill" title="Fill">
+        <img src="svgs/fill.svg">
+      </a>
+      <a data-tools="filters" title="Filters">
+        <img src="svgs/filters.svg">
+      </a>
+    </div>
+    
+    <!-- right side -->
+    <div data-righticons>
+<!--
+      <a data-layer="roughCanvas" title="Rough Layer" class="active">
+        <img src="svgs/layers1.svg">
+      </a>
+      <a data-layer="paintCanvas" title="Paint Layer">
+        <img src="svgs/layers2.svg">
+      </a>
+      <a data-layer="highlightsCanvas" title="Highlights Layer">
+        <img src="svgs/layers3.svg">
+      </a>
+      <a data-layer="inkCanvas" title="Ink Layer">
+        <img src="svgs/layers4.svg">
+      </a>
+-->
+      <a data-play="play" title="Play">
+        <img src="svgs/play.svg">
+      </a>
+      <a data-export="pngframe" title="Export Frame As PNG" onclick="downloadPNGWithFilters()">
+        <img src="svgs/saveimage2.svg">
+      </a>
+      <a data-export="svgframe" title="Export Frame As SVG" onclick="downloadSVGWithFilters()">
+        <img src="svgs/savecode2.svg">
+      </a>
+    </div>
+    
     <!-- main menu -->
     <div data-topmenu>
       <div data-mainmenu>
@@ -349,85 +428,6 @@
         <div class="stroke-pickr pickr"></div>
       </div>
       <div class="dialog" data-dialog="play"></div>
-    </div>
-    
-    <!-- left side -->
-    <div data-lefticons>
-      <a data-tools="zoom" title="Pan/Zoom Tool">
-        <img src="svgs/zoom.svg">
-      </a>
-      <a data-tools="colorpicker" title="Color Picker">
-        <img src="svgs/color.svg">
-      </a>
-      <a data-tools="eyedropper" title="Eyedropper">
-        <img src="svgs/eyedropper.svg">
-      </a>
-      <a data-tools="select" title="Select">
-        <img src="svgs/select.svg">
-      </a>
-      <a data-tools="pencil" title="Pencil">
-        <img src="svgs/pencil.svg">
-      </a>
-      <a data-tools="brush" title="Brush">
-        <img src="svgs/brush.svg">
-      </a>
-      <a data-tools="lasso" title="Lasso">
-        <img src="svgs/lasso.svg">
-      </a>
-      <a data-tools="rect" title="Rect">
-        <img src="svgs/rect.svg">
-      </a>
-      <a data-tools="ellipse" title="Ellipse">
-        <img src="svgs/ellipse.svg">
-      </a>
-      <a data-tools="line" title="Line">
-        <img src="svgs/line2.svg">
-      </a>
-      <a data-tools="triangle" title="Triangle">
-        <img src="svgs/triangle.svg">
-      </a>
-      <a data-tools="splatter" title="Splatter">
-        <img src="svgs/splatter.svg">
-      </a>
-      <a data-tools="spray" title="Spray">
-        <img src="svgs/spray.svg">
-      </a>
-      <a data-tools="eraser" title="Eraser">
-        <img src="svgs/eraser.svg">
-      </a>
-      <a data-tools="fill" title="Fill">
-        <img src="svgs/fill.svg">
-      </a>
-      <a data-tools="filters" title="Filters">
-        <img src="svgs/filters.svg">
-      </a>
-    </div>
-    
-    <!-- right side -->
-    <div data-righticons>
-<!--
-      <a data-layer="roughCanvas" title="Rough Layer" class="active">
-        <img src="svgs/layers1.svg">
-      </a>
-      <a data-layer="paintCanvas" title="Paint Layer">
-        <img src="svgs/layers2.svg">
-      </a>
-      <a data-layer="highlightsCanvas" title="Highlights Layer">
-        <img src="svgs/layers3.svg">
-      </a>
-      <a data-layer="inkCanvas" title="Ink Layer">
-        <img src="svgs/layers4.svg">
-      </a>
--->
-      <a data-play="play" title="Play">
-        <img src="svgs/play.svg">
-      </a>
-      <a data-export="pngframe" title="Export Frame As PNG" onclick="downloadPNGWithFilters()">
-        <img src="svgs/saveimage2.svg">
-      </a>
-      <a data-export="svgframe" title="Export Frame As SVG" onclick="downloadSVGWithFilters()">
-        <img src="svgs/savecode2.svg">
-      </a>
     </div>
     
     <!-- bottom menu -->

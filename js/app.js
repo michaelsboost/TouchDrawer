@@ -7,10 +7,12 @@
 */
 
 // variables
-var version = 1.000,
+var version = '1.000',
+    fillPickr, strokePickr,
     loadedJSON = {}, projectJSON,
     activeLayer, imagesPNG, imagesSVG,
-    $data, thisTool, prevTool, line, isDown;
+    $data, thisTool, prevTool, line, isDown, loadedSVGCode,
+    swatches = ['rgb(0, 0, 0)', 'rgb(255, 255, 255)', 'rgba(0, 0, 0, 0)'];
 
 // feature coming soon
 $('[data-comingsoon]').click(function() {
@@ -52,6 +54,9 @@ $('[data-confirm="newproject"]').click(function() {
       // first clear the canvas
       clearcanvas();
       
+      // reset project name
+      $('[data-projectname]').text('My Project');
+      
       // reset fps
       $('[data-framerate]').val( $('[data-new=framerate]').val() );
       
@@ -83,37 +88,31 @@ function loadJSON() {
   $("[data-frames]").empty();
   $("[data-frames]").html(loadedJSON.frames);
     
-//  if (!loadedJSON.version) {
-//    swal({
-//      title: 'Warning!',
-//      text: "This project is using a version of TouchDrawer that's no longer supported.",
-//      type: 'warning',
-//    })
-//  } else {
-//    if (parseFloat(loadedJSON.version) <= 0.1) {
-//      swal({
-//        title: 'Warning!',
-//        text: "This project is using a version of TouchDrawer that's no longer supported.",
-//        type: 'warning',
-//      })
-//    } else 
-//    if (parseFloat($version) > parseFloat(loadedJSON.version)) {
-//      swal({
-//        title: 'Warning!',
-//        text: "This project is using an older version of TouchDrawer. Some features may not work!",
-//        type: 'warning',
-//      })
-//    }
-//  }
+  if (parseFloat(loadedJSON.version) <= 0.1) {
+    swal({
+      title: 'Warning!',
+      text: "This project is using a version of TouchDrawer that's no longer supported.",
+      type: 'warning',
+    })
+  } else 
+  if (parseFloat(version) > parseFloat(loadedJSON.version)) {
+    swal({
+      title: 'Warning!',
+      text: "This project is using an older version of TouchDrawer. Some features may not work!",
+      type: 'warning',
+    })
+  }
   
-  blurfilter.value = loadedJSON.filters[0].blurfilter;
-  huefilter.value = loadedJSON.filters[0].huefilter;
-  brightnessfilter.value = loadedJSON.filters[0].brightnessfilter;
-  contrastfilter.value = loadedJSON.filters[0].contrastfilter;
-  saturatefilter.value = loadedJSON.filters[0].saturatefilter;
-  grayscalefilter.value = loadedJSON.filters[0].grayscalefilter;
-  sepiafilter.value = loadedJSON.filters[0].sepiafilter;
-  invertfilter.value = loadedJSON.filters[0].invertfilter;
+  $('#blurfilter').val(loadedJSON.filters[0].blurfilter);
+  $('#huefilter').val(loadedJSON.filters[0].huefilter);
+  $('#brightnessfilter').val(loadedJSON.filters[0].brightnessfilter);
+  $('#contrastfilter').val(loadedJSON.filters[0].contrastfilter);
+  $('#saturatefilter').val(loadedJSON.filters[0].saturatefilter);
+  $('#grayscalefilter').val(loadedJSON.filters[0].grayscalefilter);
+  $('#sepiafilter').val(loadedJSON.filters[0].sepiafilter);
+  $('#invertfilter').val(loadedJSON.filters[0].invertfilter).trigger('change');
+  
+  swatches = loadedJSON.swatches[0];
 
   $('[data-projectname]').text(loadedJSON.settings[0].name);
   canvas.setWidth(loadedJSON.settings[0].width);
@@ -124,6 +123,98 @@ function loadJSON() {
   $('[data-framerate], [data-new=framerate]').val(loadedJSON.settings[0].framerate);
   $('[data-notepad]').val(loadedJSON.settings[0].notepad);
   
+//  fillPickr.destroyAndRemove();
+//  strokePickr.destroyAndRemove();
+//  $('[data-dialog=colorpicker]').empty();
+//  $('[data-dialog=colorpicker]').append('<div class="fill-pickr pickr"></div>');
+//  $('[data-dialog=colorpicker]').append('<div class="stroke-pickr pickr"></div>');
+//
+//  fillPickr = Pickr.create({
+//    // Which theme you want to use. Can be 'classic', 'monolith' or 'nano'
+//    theme: 'classic',
+//    el: '.fill-pickr',
+//    inline: 'true',
+//    default: 'hsl(0, 0%, 100%)',
+//    comparison: true,
+//    swatches,
+//    components: {
+//
+//      // Main components
+//      preview: true,
+//      opacity: true,
+//      hue: true,
+//
+//      // Input / output Options
+//      interaction: {
+//        hex: true,
+//        rgba: true,
+//        hsla: true,
+//        hsva: true,
+//        cmyk: true,
+//        input: true,
+//        clear: false,
+//        cancel: true,
+//        save: true
+//      }
+//    }
+//  });
+//  fillPickr.on('init', () => {
+//    fillPickr.show();
+//  });
+//  fillPickr.hide();
+//  fillPickr.on('save', () => {
+//    swatches.push(fillPickr.getColor().toRGBA().toString());
+//    swatches = swatches;
+//    fillPickr.addSwatch(fillPickr.getColor().toRGBA().toString());
+//  });
+//
+//  strokePickr = Pickr.create({
+//    // Which theme you want to use. Can be 'classic', 'monolith' or 'nano'
+//    theme: 'classic',
+//    el: '.stroke-pickr',
+//    inline: 'true',
+//    default: 'hsl(0, 0%, 100%)',
+//    comparison: true,
+//    swatches,
+//    components: {
+//
+//      // Main components
+//      preview: true,
+//      opacity: true,
+//      hue: true,
+//
+//      // Input / output Options
+//      interaction: {
+//        hex: true,
+//        rgba: true,
+//        hsla: true,
+//        hsva: true,
+//        cmyk: true,
+//        input: true,
+//        clear: false,
+//        cancel: true,
+//        save: true
+//      }
+//    }
+//  });
+//  strokePickr.on('init', () => {
+//    strokePickr.show();
+//  });
+//  strokePickr.hide();
+//  strokePickr.on('save', () => {
+//    swatches.push(strokePickr.getColor().toRGBA().toString());
+//    swatches = swatches;
+//    strokePickr.addSwatch(strokePickr.getColor().toRGBA().toString());
+//  });
+  
+  // select zoom tool and reset to default size
+  if ($('[data-tools=zoom].active').is(':visible')) {
+    $('[data-resetzoompos]').trigger('click');
+  } else {
+    $('[data-tools=zoom]').trigger('click');
+    $('[data-resetzoompos]').trigger('click');
+  }
+ 
   // clear history when a new project is created
   canvas.clear();
   lockHistory = false;
@@ -131,8 +222,44 @@ function loadJSON() {
   redo_history = [];
   undo_history.push(JSON.stringify(canvas));
   
+  loadedSVGCode = loadedJSON.svg.toString();
+  
   // load svg file into editor
-  $('[data-frames] svg:last-child').trigger('click');
+  if (!$('[data-frames] svg').is(':visible')) {
+    $('[data-frames]').append(loadedSVGCode);
+    loadedSVGCode = $('[data-frames] svg:last-child')[0].outerHTML.toString().split('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"').join('<svg onclick="getFrameCode(this)" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"');
+    $('[data-frames]').empty().append(loadedSVGCode);
+    $('[data-frames] svg:last-child').trigger('click');
+    
+    // select the select tool for modifications
+    setTimeout(function() {
+      $('[data-tools=select]').trigger('click');
+    
+      // select active object
+      canvas.discardActiveObject();
+      var sel = new fabric.ActiveSelection(canvas.getObjects(), {
+        canvas: canvas,
+      });
+      canvas.setActiveObject(sel);
+      canvas.renderAll();
+
+      // ungroup active object
+      var activeObject = canvas.getActiveObject();
+      if(activeObject.type=="group"){
+        var items = activeObject._objects;
+        activeObject._restoreObjectsState();
+        canvas.remove(activeObject);
+        for(var i = 0; i < items.length; i++) {
+          canvas.add(items[i]);
+          canvas.item(canvas.size()-1).hasControls = true;
+        }
+
+        canvas.renderAll();
+      }
+    }, 300);
+  } else {
+    $('[data-frames] svg:last-child').trigger('click');
+  }
 }
 function loadfile(input) {
   var reader = new FileReader();
@@ -332,18 +459,14 @@ instance.pause();
 
 // initialize color picker
 // fill color
-const fillPickr = Pickr.create({
+fillPickr = Pickr.create({
   // Which theme you want to use. Can be 'classic', 'monolith' or 'nano'
   theme: 'classic',
   el: '.fill-pickr',
   inline: 'true',
   default: 'hsl(0, 0%, 100%)',
   comparison: true,
-//  swatches: [
-//    '#000',
-//    '#fff',
-//    'rgba(0, 0, 0, 0)'
-//  ],
+  swatches,
   components: {
 
     // Main components
@@ -359,28 +482,35 @@ const fillPickr = Pickr.create({
       hsva: true,
       cmyk: true,
       input: true,
+      save: true,
+      cancel: false,
       clear: false
-//      save: true
     }
   }
 });
 fillPickr.on('init', () => {
   fillPickr.show();
 });
+fillPickr.on('save', () => {
+  swatches.push(fillPickr.getColor().toRGBA().toString());
+  swatches = swatches;
+  fillPickr.addSwatch(fillPickr.getColor().toRGBA().toString());
+});
+fillPickr.on('cancel', () => {
+  fillPickr.removeSwatch(swatches.indexOf(fillPickr.getColor().toRGBA().toString()));
+  swatches.filter(e => e !== fillPickr.getColor().toRGBA().toString());
+  swatches = swatches;
+});
 
 // stroke color
-const strokePickr = Pickr.create({
+strokePickr = Pickr.create({
   // Which theme you want to use. Can be 'classic', 'monolith' or 'nano'
   theme: 'classic',
   el: '.stroke-pickr',
   inline: 'true',
   default: 'hsla(45, 100%, 0%, 1)',
   comparison: true,
-//  swatches: [
-//    '#000',
-//    '#fff',
-//    'rgba(0, 0, 0, 0)'
-//  ],
+  swatches,
   components: {
 
     // Main components
@@ -396,13 +526,24 @@ const strokePickr = Pickr.create({
       hsva: true,
       cmyk: true,
       input: true,
+      save: true,
+      cancel: false,
       clear: false
-//      save: true
     }
   }
 });
 strokePickr.on('init', () => {
   strokePickr.show();
+});
+strokePickr.on('save', () => {
+  swatches.push(strokePickr.getColor().toRGBA().toString());
+  swatches = swatches;
+  strokePickr.addSwatch(strokePickr.getColor().toRGBA().toString());
+});
+strokePickr.on('cancel', () => {
+  strokePickr.removeSwatch(swatches.indexOf(strokePickr.getColor().toRGBA().toString()));
+  swatches.filter(e => e !== strokePickr.getColor().toRGBA().toString());
+  swatches = swatches;
 });
 
 // toggle canvas layers
@@ -1993,6 +2134,7 @@ function getProjectJSON() {
       "framerate": $('[data-framerate]').val(),
       "notepad": $('[data-notepad]').val()
     }],
+    swatches,
     "filters": [{
       "blurfilter": blurfilter.value,
       "huefilter": huefilter.value,
