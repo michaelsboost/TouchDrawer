@@ -70,6 +70,16 @@ $('[data-confirm="newproject"]').click(function() {
       canvas.setWidth($('[data-new=width]').val());
       canvas.setHeight($('[data-new=height]').val());
       canvas.calcOffset();
+      
+      // reset filters
+      blurfilter.value = 0;
+      huefilter.value = 0;
+      brightnessfilter.value = 1;
+      contrastfilter.value = 1;
+      saturatefilter.value = 1;
+      grayscalefilter.value = 0;
+      sepiafilter.value = 0;
+      $('#invertfilter').val(0).trigger('change');
   
       // close new icon
       $('[data-call=new].active').removeClass('active');
