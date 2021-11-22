@@ -1761,18 +1761,23 @@ canvas.on('mouse:over', function(event) {
   }
 });
 canvas.on('touch:gesture', function(event) {
-  if (event.e.touches && event.e.touches.length == 2) {
-    // Get event point
-    var point = new fabric.Point(event.self.x, event.self.y);
-    // Remember canvas scale at gesture start
-    if (event.self.state == "start") {
-      zoomStartScale = self.canvas.getZoom();
-    }
-    // Calculate delta from start scale
-    var delta = zoomStartScale * event.self.scale;
-    // Zoom to pinch point
-    self.canvas.zoomToPoint(point, delta);
-  }
+  // canvas stays the same size it just zooms and pans all within the canvas
+
+  // // detect if select tool is active
+  // if ($('[data-tools=select].active').is(':visible')) {
+  //   if (event.e.touches && event.e.touches.length == 2) {
+  //     // Get event point
+  //     var point = new fabric.Point(event.self.x, event.self.y);
+  //     // Remember canvas scale at gesture start
+  //     if (event.self.state == "start") {
+  //       zoomStartScale = self.canvas.getZoom();
+  //     }
+  //     // Calculate delta from start scale
+  //     var delta = zoomStartScale * event.self.scale;
+  //     // Zoom to pinch point
+  //     self.canvas.zoomToPoint(point, delta);
+  //   }
+  // }
 });
 
 // export png or svg
