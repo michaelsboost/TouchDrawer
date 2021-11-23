@@ -1490,11 +1490,6 @@ function redo() {
 function clearcanvas() {
   canvas.clear();
   canvas.renderAll();
-  
-  if (lockHistory) return;
-//  console.log("object:modified");
-  undo_history.push(JSON.stringify(canvas));
-  redo_history.length = 0;
 }
 function selectall() {
   canvas.discardActiveObject();
@@ -2084,9 +2079,61 @@ $('[data-add]').click(function() {
 
   // scroll to last frame
   document.querySelector('[data-frames]').scrollLeft = document.querySelector('[data-frames]').scrollWidth;
+  
+  clearcanvas();
+
+  // 2. Serialize element into plain SVG
+  var serializedSVG = new XMLSerializer().serializeToString($('[data-frames] svg:last-child')[0]);
+
+  // 3. convert svg to base64
+  var base64Data = window.btoa(serializedSVG);
+  // The generated string will be something like: 
+  // PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdm.........
+
+  // If you want to display it in the browser via URL:
+  var imgSVGSrc = "data:image/svg+xml;base64," + base64Data;
+
+  var c = document.createElement('canvas');
+  var ctx = c.getContext("2d");
+  c.width  = parseFloat($('[data-frames] svg:last-child').attr('width'));
+  c.height = parseFloat($('[data-frames] svg:last-child').attr('height'));
+
+  var img = new Image();
+  img.src = imgSVGSrc;
+  img.onload = function() {
+    ctx.drawImage(img, 10, 10);
+    $('[data-canvas]').css("background-image", "linear-gradient(45deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('"+ c.toDataURL('image/png') +"')");
+  }
 });
 $('[data-delete]').click(function() {
   $('[data-frames] svg:last').remove();
+  
+  if (!$('[data-frames] svg:last-child').is(':visible')) {
+    $('[data-canvas]').css('background-image', '');
+  } else {
+    // 2. Serialize element into plain SVG
+    var serializedSVG = new XMLSerializer().serializeToString($('[data-frames] svg:last-child')[0]);
+
+    // 3. convert svg to base64
+    var base64Data = window.btoa(serializedSVG);
+    // The generated string will be something like: 
+    // PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdm.........
+
+    // If you want to display it in the browser via URL:
+    var imgSVGSrc = "data:image/svg+xml;base64," + base64Data;
+
+    var c = document.createElement('canvas');
+    var ctx = c.getContext("2d");
+    c.width  = parseFloat($('[data-frames] svg:last-child').attr('width'));
+    c.height = parseFloat($('[data-frames] svg:last-child').attr('height'));
+
+    var img = new Image();
+    img.src = imgSVGSrc;
+    img.onload = function() {
+      ctx.drawImage(img, 10, 10);
+      $('[data-canvas]').css("background-image", "linear-gradient(45deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('"+ c.toDataURL('image/png') +"')");
+    }
+  }
 });
 
 // click frame to open in editor
@@ -2097,8 +2144,8 @@ function getFrameCode(event) {
   fabric.loadSVGFromString(svgCode.toString(),function(objects,options) {
       var loadedObjects = new fabric.Group(group);
       loadedObjects.set({
-          x: 0,
-          y: 0
+        x: 0,
+        y: 0
       });
       canvas.centerObject(loadedObjects);
       canvas.add(loadedObjects);
@@ -2132,6 +2179,8 @@ canvas.on('selection:created', function(event) {
   }
 });
 $('[data-frames] svg:first-child').trigger('click');
+$('[data-frames]').empty();
+$('[data-add]').trigger('click');
 
 // export files
 function getProjectJSON() {
