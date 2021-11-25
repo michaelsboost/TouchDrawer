@@ -462,6 +462,7 @@ input.numinhead[type=text] {
 .dialog:not(.colorpicker) textarea {
   width: calc(100vw - 154px);
   height: calc(100% - 251px);
+  min-height: 100px;
   padding: 10px;
 }
 .canvas {
