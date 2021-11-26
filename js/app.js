@@ -3,7 +3,7 @@
   TouchDrawer, copyright (c) by Michael Schwartz
   Distributed under an MIT license: https://github.com/michaelsboost/TouchDrawer/blob/gh-pages/LICENSE
   
-  This is svgMotion (https://michaelsboost.github.io/TouchDrawer/), Just a free and open source vector drawing tool for mobile.
+  This is TouchDrawer (https://michaelsboost.github.io/TouchDrawer/), Just a free and open source vector drawing tool for mobile.
 */
 
 // variables
