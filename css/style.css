@@ -305,7 +305,7 @@ input.numinhead[type=text] {
   justify-content: space-between;
 }
 [data-toolsmenu] select {
-  font-size: 4vh;
+  font-size: 18.45px;
   text-align: center;
 }
 
