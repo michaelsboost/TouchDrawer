@@ -414,6 +414,9 @@ input.numinhead[type=text] {
 }
 [data-canvas] {
   width: fit-content;
+  background-position: right 10px bottom 10px;
+  /* background-position: right 1px bottom 6px;
+  background-size: calc(100% + 10px); */
 }
 [data-dialog=new] {
   font-size: 14px;
