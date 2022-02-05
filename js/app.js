@@ -275,7 +275,7 @@ function loadfile(input) {
   var reader = new FileReader();
   var path = input.value;
   reader.onload = function(e) {
-    if (path.toLowerCase().substring(path.length - 4) === ".svg") {
+    if (input.files[0].type === 'image/svg+xml' || 'image/jpg' || 'image/jpeg' || 'image/png' || 'image/tiff' || 'image/bmp' || 'application/json') {
       // is animation playing? If so stop
       if ($('[data-play]').attr('data-play') === 'stop') {
         // trigger stop
@@ -285,85 +285,48 @@ function loadfile(input) {
       // load svg file into editor
       var group = [];
 
-      fabric.loadSVGFromString(e.target.result,function(objects,options) {
-          var loadedObjects = new fabric.Group(group);
-          loadedObjects.set({
+      if (input.files[0].type === 'image/svg+xml') {
+        fabric.loadSVGFromString(e.target.result,function(objects,options) {
+            var loadedObjects = new fabric.Group(group);
+            loadedObjects.set({
+              x: 0,
+              y: 0
+            });
+            canvas.centerObject(loadedObjects);
+            canvas.add(loadedObjects);
+            canvas.selection = false;
+            canvas.discardActiveObject();
+            canvas.renderAll();
+        },function(item, object) {
+            object.set('id',item.getAttribute('id'));
+            group.push(object);
+        });
+      } else if (input.files[0].type === 'application/json') {
+        // load json file into editor
+        loadedJSON = JSON.parse(e.target.result);
+        loadJSON();
+
+        $(document.body).append('<div data-action="fadeOut" style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: #fff; z-index: 3;"></div>');
+        $("[data-action=fadeOut]").fadeOut(400, function() {
+          $("[data-action=fadeOut]").remove();
+        });
+      }
+      else {
+        var imgObj = new Image();
+        imgObj.src = e.target.result;
+        imgObj.onload = function() {
+          var image = new fabric.Image(imgObj);
+          image.set({
             x: 0,
             y: 0
           });
-          canvas.centerObject(loadedObjects);
-          canvas.add(loadedObjects);
+          canvas.centerObject(image);
+          canvas.add(image);
           canvas.selection = false;
           canvas.discardActiveObject();
           canvas.renderAll();
-      },function(item, object) {
-          object.set('id',item.getAttribute('id'));
-          group.push(object);
-      });
-
-      // Is there an active tool?
-      if ($('[data-tools].active').is(':visible')) {
-        // deselect and reselect active tool
-        var activeTool = $('[data-tools].active').attr('data-tools');
-        $('[data-tools].active').trigger('click');
-        $('[data-tools='+ activeTool +']').trigger('click');
-      } else {
-        // no active tool selected use select tool by default
-        $('[data-tools=zoom]').trigger('click');
+        }
       }
-    }
-    else if (path.toLowerCase().substring(path.length - 4) === ".jpg" || ".png" || ".tif" || ".bmp") {
-      // is animation playing? If so stop
-      if ($('[data-play]').attr('data-play') === 'stop') {
-        // trigger stop
-        $('[data-play=stop]').trigger('click');
-      }
-      
-      // load svg file into editor
-      var group = [];
-      
-      var imgObj = new Image();
-      imgObj.src = e.target.result;
-      imgObj.onload = function() {
-        var image = new fabric.Image(imgObj);
-        image.set({
-          x: 0,
-          y: 0
-        });
-        canvas.centerObject(image);
-        canvas.add(image);
-        canvas.selection = false;
-        canvas.discardActiveObject();
-        canvas.renderAll();
-      }
-
-      // Is there an active tool?
-      if ($('[data-tools].active').is(':visible')) {
-        // deselect and reselect active tool
-        var activeTool = $('[data-tools].active').attr('data-tools');
-        $('[data-tools].active').trigger('click');
-        $('[data-tools='+ activeTool +']').trigger('click');
-      } else {
-        // no active tool selected use select tool by default
-        $('[data-tools=zoom]').trigger('click');
-      }
-    }
-    else if (path.toLowerCase().substring(path.length - 5) === ".json") {
-      // is animation playing? If so stop
-      if ($('[data-play]').attr('data-play') === 'stop') {
-        // trigger stop
-        $('[data-play=stop]').trigger('click');
-      }
-      
-      // load json file into editor
-      loadedJSON = JSON.parse(e.target.result);
-      loadJSON();
-
-      $(document.body).append('<div data-action="fadeOut" style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: #fff; z-index: 3;"></div>');
-      $("[data-action=fadeOut]").fadeOut(400, function() {
-        $("[data-action=fadeOut]").remove();
-      });
-      
 
       // Is there an active tool?
       if ($('[data-tools].active').is(':visible')) {
@@ -393,7 +356,7 @@ function loadfile(input) {
 function dropfile(file) {
   var reader = new FileReader();  
   reader.onload = function(e) {
-    if (file.type === "image/svg+xml") {
+    if (file.type === 'image/svg+xml' || 'image/jpg' || 'image/jpeg' || 'image/png' || 'image/tiff' || 'image/bmp' || 'application/json') {
       // is animation playing? If so stop
       if ($('[data-play]').attr('data-play') === 'stop') {
         // trigger stop
@@ -403,48 +366,49 @@ function dropfile(file) {
       // load svg file into editor
       var group = [];
 
-      fabric.loadSVGFromString(e.target.result,function(objects,options) {
-          var loadedObjects = new fabric.Group(group);
-          loadedObjects.set({
+      if (file.type === 'image/svg+xml') {
+        fabric.loadSVGFromString(e.target.result,function(objects,options) {
+            var loadedObjects = new fabric.Group(group);
+            loadedObjects.set({
+              x: 0,
+              y: 0
+            });
+            canvas.centerObject(loadedObjects);
+            canvas.add(loadedObjects);
+            canvas.selection = false;
+            canvas.discardActiveObject();
+            canvas.renderAll();
+        },function(item, object) {
+            object.set('id',item.getAttribute('id'));
+            group.push(object);
+        });
+      } else if (file.type === 'application/json') {
+        // load json file into editor
+        loadedJSON = JSON.parse(e.target.result);
+        loadJSON();
+
+        $(document.body).append('<div data-action="fadeOut" style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: #fff; z-index: 3;"></div>');
+        $("[data-action=fadeOut]").fadeOut(400, function() {
+          $("[data-action=fadeOut]").remove();
+        });
+      }
+      else {
+        var imgObj = new Image();
+        imgObj.src = e.target.result;
+        imgObj.onload = function() {
+          var image = new fabric.Image(imgObj);
+          image.set({
             x: 0,
             y: 0
           });
-          canvas.centerObject(loadedObjects);
-          canvas.add(loadedObjects);
+          canvas.centerObject(image);
+          canvas.add(image);
           canvas.selection = false;
           canvas.discardActiveObject();
           canvas.renderAll();
-      },function(item, object) {
-          object.set('id',item.getAttribute('id'));
-          group.push(object);
-      });
-
-      // Is there an active tool?
-      if ($('[data-tools].active').is(':visible')) {
-        // deselect and reselect active tool
-        var activeTool = $('[data-tools].active').attr('data-tools');
-        $('[data-tools].active').trigger('click');
-        $('[data-tools='+ activeTool +']').trigger('click');
-      } else {
-        // no active tool selected use select tool by default
-        $('[data-tools=zoom]').trigger('click');
+        }
       }
-    } else if (file.type === "application/json") {
-      // is animation playing? If so stop
-      if ($('[data-play]').attr('data-play') === 'stop') {
-        // trigger stop
-        $('[data-play=stop]').trigger('click');
-      }
-      
-      // load json file into editor
-      loadedJSON = JSON.parse(e.target.result);
-      loadJSON();
 
-      $(document.body).append('<div data-action="fadeOut" style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: #fff; z-index: 3;"></div>');
-      $("[data-action=fadeOut]").fadeOut(400, function() {
-        $("[data-action=fadeOut]").remove();
-      });
-      
       // Is there an active tool?
       if ($('[data-tools].active').is(':visible')) {
         // deselect and reselect active tool
@@ -458,8 +422,17 @@ function dropfile(file) {
     } else {
       alertify.error("Sorry that file type is not supported. .svg and .json files only!");
     }
-  }        
-  reader.readAsText(file,"UTF-8"); 
+  } 
+  if (file.type === 'image/svg+xml' || 'application/json') {
+    reader.readAsText(file,"UTF-8"); 
+  }
+   else if (file.type === 'image/jpg' || 'image/jpeg' || 'image/png' || 'image/tiff' || 'image/bmp') {
+    reader.readAsDataURL(file); 
+  }
+  else {
+    alertify.error('Error: Unable to read file type!');
+    return false;
+  }
 }
 
 // load svg file on drop
