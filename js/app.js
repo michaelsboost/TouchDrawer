@@ -311,7 +311,44 @@ function loadfile(input) {
         // no active tool selected use select tool by default
         $('[data-tools=zoom]').trigger('click');
       }
-    } else if (path.toLowerCase().substring(path.length - 5) === ".json") {
+    }
+    else if (path.toLowerCase().substring(path.length - 4) === ".jpg" || ".png" || ".tif" || ".bmp") {
+      // is animation playing? If so stop
+      if ($('[data-play]').attr('data-play') === 'stop') {
+        // trigger stop
+        $('[data-play=stop]').trigger('click');
+      }
+      
+      // load svg file into editor
+      var group = [];
+      
+      var imgObj = new Image();
+      imgObj.src = e.target.result;
+      imgObj.onload = function() {
+        var image = new fabric.Image(imgObj);
+        image.set({
+          x: 0,
+          y: 0
+        });
+        canvas.centerObject(image);
+        canvas.add(image);
+        canvas.selection = false;
+        canvas.discardActiveObject();
+        canvas.renderAll();
+      }
+
+      // Is there an active tool?
+      if ($('[data-tools].active').is(':visible')) {
+        // deselect and reselect active tool
+        var activeTool = $('[data-tools].active').attr('data-tools');
+        $('[data-tools].active').trigger('click');
+        $('[data-tools='+ activeTool +']').trigger('click');
+      } else {
+        // no active tool selected use select tool by default
+        $('[data-tools=zoom]').trigger('click');
+      }
+    }
+    else if (path.toLowerCase().substring(path.length - 5) === ".json") {
       // is animation playing? If so stop
       if ($('[data-play]').attr('data-play') === 'stop') {
         // trigger stop
@@ -342,7 +379,16 @@ function loadfile(input) {
       alertify.error('Error: File type not supported');
     }
   };
-  reader.readAsText(input.files[0]);
+  if (input.files[0].type === 'image/jpg' || 'image/jpeg' || 'image/png' || 'image/tiff' || 'image/bmp') {
+    reader.readAsDataURL(input.files[0]);
+  }
+  else if (input.files[0].type === 'image/svg+xml' || 'application/json') {
+    reader.readAsText(input.files[0]);
+  }
+  else {
+    alertify.error('Error: Unable to read file type!');
+    return false;
+  }
 }
 function dropfile(file) {
   var reader = new FileReader();  
