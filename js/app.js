@@ -1,5 +1,5 @@
 /*
-  Version: 1.000-alpha
+  Version: 1.000-dev
   TouchDrawer, copyright (c) by Michael Schwartz
   Distributed under an MIT license: https://github.com/michaelsboost/TouchDrawer/blob/gh-pages/LICENSE
   
@@ -26,10 +26,10 @@ $('[data-alert]').on('click', function() {
 
 // TouchDrawer info
 $('[data-info]').click(function() {
-//  alertify.log('<div style="font-size: 14px; text-align: center;"><img src="logo.svg" style="width: 50%;"><br><h1>TouchDrawer</h1><h5>Version 1.000-alpha</h5></div>');
+//  alertify.log('<div style="font-size: 14px; text-align: center;"><img src="logo.svg" style="width: 50%;"><br><h1>TouchDrawer</h1><h5>Version 1.000-dev</h5></div>');
   
   swal({
-    html: '<img src="logo.svg" style="isolation:isolate; width: 50%; cursor: pointer;" viewBox="0 0 512 512" onclick="window.open(\'https://github.com/michaelsboost/TouchDrawer\', \'_blank\')"><br><h1>TouchDrawer</h1><h5>Version 1.000-alpha</h5><a href="https://github.com/michaelsboost/TouchDrawer/blob/gh-pages/LICENSE" target="_blank">Open Source License</a>'
+    html: '<img src="logo.svg" style="isolation:isolate; width: 50%; cursor: pointer;" viewBox="0 0 512 512" onclick="window.open(\'https://github.com/michaelsboost/TouchDrawer\', \'_blank\')"><br><h1>TouchDrawer</h1><h5>Version 1.000-dev</h5><a href="https://github.com/michaelsboost/TouchDrawer/blob/gh-pages/LICENSE" target="_blank">Open Source License</a>'
   });
 //  $('.swal2-show').css('background', '#000');
   $('.swal2-show').css('font-size', '14px');
@@ -591,7 +591,8 @@ $('[data-righticons] [data-layer]').on('click', function() {
 var canvas = this.__canvas = new fabric.Canvas('canvas', {
   backgroundColor: '#fff'
 });
-canvas.setOverlayColor("rgba(255,255,255,0)",undefined,{erasable:false});
+$('[data-tools=fillasbg] > div > div').css('background', fillPickr.getColor().toRGBA().toString());
+canvas.setOverlayColor('transparent'.toString(),undefined,{erasable:false});
 fabric.Object.prototype.transparentCorners = false;
 fabric.Object.prototype.cornerColor = '#1faeff';
 
@@ -974,6 +975,7 @@ function openToolsMenu(tool) {
   }
   if (tool.toString().toLowerCase() === 'select') {
     $('[ data-forselect]').hide();
+    $('[ data-selectall]').show();
     changeObjectSelection(true);
     canvas.isDrawingMode = false;
     canvas.selection = true;
@@ -1063,6 +1065,14 @@ function openToolsMenu(tool) {
     canvas.freeDrawingBrush.color = fillPickr.getColor().toRGBA().toString();
     canvas.isDrawingMode = true;
     $('[data-toolsoption=brushsize]').show();
+  }
+  if (tool.toString().toLowerCase() === 'fillasbg') {
+    $('[data-tools=fillasbg] > div > div').css('background', fillPickr.getColor().toRGBA().toString());
+    canvas.setBackgroundColor(fillPickr.getColor().toRGBA().toString(),undefined,{erasable:false});
+    canvas.renderAll();
+    undo_history.push(JSON.stringify(canvas));
+    redo_history.length = 0;
+    $('[data-tools=zoom]').trigger('click');
   }
 }
 
@@ -2099,7 +2109,7 @@ $('[data-add]').click(function() {
   // scroll to last frame
   document.querySelector('[data-frames]').scrollLeft = document.querySelector('[data-frames]').scrollWidth;
   
-  clearcanvas();
+  // clearcanvas();
 
   // 2. Serialize element into plain SVG
   var serializedSVG = new XMLSerializer().serializeToString($('[data-frames] svg:last-child')[0]);
@@ -2197,9 +2207,11 @@ canvas.on('selection:created', function(event) {
     return false;
   }
 });
-$('[data-frames] svg:first-child').trigger('click');
+// open frame in editor
+//$('[data-frames] svg:first-child').trigger('click');
+// empty frames
 $('[data-frames]').empty();
-$('[data-add]').trigger('click');
+undo();
 
 // export files
 function getProjectJSON() {
@@ -2234,7 +2246,7 @@ function exportJSON() {
     projectname = $('[data-projectname]')[0].textContent = "_TouchDrawer";
   }
   var blob = new Blob([JSON.stringify(projectJSON)], {type: "application/json;charset=utf-8"});
-  saveAs(blob, projectname + ".json");
+  saveAs(blob, projectname + "_TouchDrawer.json");
 }
 function exportZIP() {
   if (!$('[data-frames] svg')) {

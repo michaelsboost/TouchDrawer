@@ -1,5 +1,5 @@
 <!--
-  Version: 1.000-alpha
+  Version: 1.000-dev
   TouchDrawer, copyright (c) by Michael Schwartz
   Distributed under an MIT license: https://github.com/michaelsboost/TouchDrawer/blob/gh-pages/LICENSE
   
@@ -54,6 +54,9 @@
       <a data-tools="brush" title="Brush">
         <img src="svgs/brush.svg">
       </a>
+      <a data-tools="eraser" title="Eraser">
+        <img src="svgs/eraser.svg">
+      </a>
       <a data-tools="lasso" title="Lasso">
         <img src="svgs/lasso.svg">
       </a>
@@ -75,14 +78,21 @@
       <a data-tools="spray" title="Spray">
         <img src="svgs/spray.svg">
       </a>
-      <a data-tools="eraser" title="Eraser">
-        <img src="svgs/eraser.svg">
-      </a>
       <a data-tools="fill" title="Fill">
         <img src="svgs/fill.svg">
       </a>
+<!--
+      <a data-tools="eraser" title="Eraser">
+        <img src="svgs/eraser.svg">
+      </a>
+-->
       <a data-tools="filters" title="Filters">
         <img src="svgs/filters.svg">
+      </a>
+      <a data-tools="fillasbg" title="Apply Fill as Background Color">
+        <div>
+          <div></div>
+        </div>
       </a>
     </div>
     
@@ -188,6 +198,10 @@
         </div>
         <div data-toolsoption="eyedropper"></div>
         <div data-toolsoption="select">
+          <a data-forselect data-selectall onclick="selectall()">
+<!--            <img src="svgs/selectall.svg">-->
+            <img src="svgs/selectall2.svg">
+          </a>
           <a data-forselect onclick="group()">
             <img src="svgs/group.svg">
           </a>
@@ -485,6 +499,7 @@
     <script src="libraries/sweetalert2/sweetalert2.min.js"></script>
 <!--    <script src="libraries/tinycolor/tinycolor.js"></script>-->
     <script src="js/browsersupport.js"></script>
+<!--    <script src="libraries/gsap/minified/gsap.min.js"></script>-->
     <script src="js/app.js"></script>
 <!--
     <script id="__bs_script__">

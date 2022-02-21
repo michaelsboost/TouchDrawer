@@ -8,7 +8,7 @@ Just a free and open source vector drawing tool for mobile. Try it today at [mic
 Version
 -------------
 
-1.000-alpha
+1.000-dev
 
 To Do:
 -------------
