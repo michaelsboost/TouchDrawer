@@ -52,7 +52,8 @@ $('[data-confirm="newproject"]').click(function() {
     if (result.value) {
       // initiate a new project
       // first clear the canvas
-      clearcanvas();
+      selectall();
+      remove();
       
       // reset project name
       $('[data-projectname]').text('My Project');
@@ -87,6 +88,14 @@ $('[data-confirm="newproject"]').click(function() {
       
       // init zoom tool by default
       $('[data-tools=zoom]').trigger('click');
+      
+      setTimeout(function() {
+        // clear history when a new project is created
+        lockHistory = false;
+        undo_history = [];
+        redo_history = [];
+        undo_history.push(JSON.stringify(canvas));
+      }, 100);
     } else {
       return false;
     }
