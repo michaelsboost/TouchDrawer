@@ -974,8 +974,8 @@ function openToolsMenu(tool) {
     canvas.isDrawingMode = false;
   }
   if (tool.toString().toLowerCase() === 'select') {
-    $('[ data-forselect]').hide();
-    $('[ data-selectall]').show();
+    $('[data-forselect]').hide();
+    $('[data-selectall]').show();
     changeObjectSelection(true);
     canvas.isDrawingMode = false;
     canvas.selection = true;
@@ -1079,6 +1079,7 @@ function openToolsMenu(tool) {
 // Hide select tool options for when the object isn't selected
 canvas.on('before:selection:cleared', function() {
   $('[data-forselect]').hide();
+  $('[data-selectall]').show();
   $('[data-selectortool=ungroup]').hide();
 });
 
@@ -1488,9 +1489,6 @@ $('[data-selectall]').click(function() {
   $('[data-selection=tools]').addClass('hide');
   
   selectall();
-  group();
-  $('#select').trigger('click');
-  canvas.setActiveObject(canvas.item(0));
   canvas.renderAll();
 });
 
