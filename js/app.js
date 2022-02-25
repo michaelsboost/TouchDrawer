@@ -599,10 +599,11 @@ $('[data-righticons] [data-layer]').on('click', function() {
 
 // initialize the canvas
 var canvas = this.__canvas = new fabric.Canvas('canvas', {
-  backgroundColor: '#fff'
+  backgroundColor: '#fff',
+  globalCompositeOperation: 'destination-atop'
 });
 $('[data-tools=fillasbg] > div > div').css('background', fillPickr.getColor().toRGBA().toString());
-canvas.setOverlayColor('transparent'.toString(),undefined,{erasable:false});
+canvas.setOverlayColor('transparent'.toString(),undefined,{erasable:false, globalCompositeOperation: 'source-over'});
 fabric.Object.prototype.transparentCorners = false;
 fabric.Object.prototype.cornerColor = '#1faeff';
 
@@ -1032,6 +1033,11 @@ function openToolsMenu(tool) {
     changeObjectSelection(false);
     canvas.freeDrawingBrush = new fabric.LassoBrush(canvas);
     canvas.freeDrawingBrush.color = fillPickr.getColor().toRGBA().toString();
+    canvas.isDrawingMode = true;
+  }
+  if (tool.toString().toLowerCase() === 'lassoerase') {
+    changeObjectSelection(false);
+    canvas.freeDrawingBrush = new fabric.LassoEraserBrush(canvas);
     canvas.isDrawingMode = true;
   }
   if (tool.toString().toLowerCase() === 'rect') {
