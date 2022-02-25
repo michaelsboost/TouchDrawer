@@ -2230,9 +2230,9 @@ canvas.on('selection:created', function(event) {
 });
 // open frame in editor
 //$('[data-frames] svg:first-child').trigger('click');
-//// empty frames
-//$('[data-frames]').empty();
-//undo();
+// empty frames
+$('[data-frames]').empty();
+undo();
 
 // export files
 function getProjectJSON() {
