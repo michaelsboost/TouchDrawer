@@ -89,6 +89,7 @@ $('[data-confirm="newproject"]').click(function() {
       // init zoom tool by default
       $('[data-tools=zoom]').trigger('click');
       
+      // reset undo history
       setTimeout(function() {
         // clear history when a new project is created
         lockHistory = false;
@@ -1524,8 +1525,12 @@ function redo() {
   }
 }
 function clearcanvas() {
-  canvas.clear();
-  canvas.renderAll();
+//  // clear all adding transparent background
+//  canvas.clear();
+//  canvas.renderAll();
+  
+  selectall();
+  remove();
 }
 function selectall() {
   canvas.discardActiveObject();
