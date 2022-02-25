@@ -1483,6 +1483,15 @@ canvas.on("object:added", function() {
   redo_history.length = 0;
 //  console.log(undo_history.length);
 });
+canvas.on("path:created", function() {
+  if ($('[data-tools=lassoerase].active').is(':visible')) {
+    if (lockHistory) return;
+  //  console.log("object:added");
+    undo_history.push(JSON.stringify(canvas));
+    redo_history.length = 0;
+  //  console.log(undo_history.length);
+}
+});
 canvas.on("object:modified", function() {
   if (lockHistory) return;
 //  console.log("object:modified");
