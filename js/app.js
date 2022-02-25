@@ -97,6 +97,9 @@ $('[data-confirm="newproject"]').click(function() {
         redo_history = [];
         undo_history.push(JSON.stringify(canvas));
       }, 100);
+      
+      // close new dialog
+      $('[data-call=new]').trigger('click');
     } else {
       return false;
     }
@@ -2227,9 +2230,9 @@ canvas.on('selection:created', function(event) {
 });
 // open frame in editor
 //$('[data-frames] svg:first-child').trigger('click');
-// empty frames
-$('[data-frames]').empty();
-undo();
+//// empty frames
+//$('[data-frames]').empty();
+//undo();
 
 // export files
 function getProjectJSON() {
