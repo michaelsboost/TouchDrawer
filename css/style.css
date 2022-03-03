@@ -511,6 +511,17 @@ input.numinhead[type=text] {
   overflow: auto;
   height: 44px;
 }
+[data-frames] ul, [data-frames] ul li {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+}
+[data-frames] ul li {
+  margin-right: 4px;
+}
+[data-frames] ul li .dragging {
+  opacity: .5;
+}
 [data-frames] svg {
   cursor: pointer;
   display: inline-block;

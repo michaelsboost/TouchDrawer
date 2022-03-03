@@ -2134,7 +2134,13 @@ $('[data-resetzoompos]').click(function() {
 $('[data-add]').click(function() {
   var svg = canvas.toSVG().replace(/Created with Fabric.js 4.6.0/g, "Created with TouchDrawer - https://michaelsboost.github.io/TouchDrawer/");
   var svg = svg.split('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"').join('<svg onclick="getFrameCode(this)" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"');
-  $('[data-frames]').append(svg);
+  $('[data-frames] ul').append('<li>'+ svg + '</li>');
+  
+  // refresh sortable
+  $('[data-frames] ul').sortable({
+    animation: 150,
+    ghostClass: "dragging"
+  });
 
   // scroll to last frame
   document.querySelector('[data-frames]').scrollLeft = document.querySelector('[data-frames]').scrollWidth;
@@ -2165,7 +2171,7 @@ $('[data-add]').click(function() {
   }
 });
 $('[data-delete]').click(function() {
-  $('[data-frames] svg:last').remove();
+  $('[data-frames] svg:last').parent().remove();
   
   if (!$('[data-frames] svg:last-child').is(':visible')) {
     $('[data-canvas]').css('background-image', '');
@@ -2240,7 +2246,7 @@ canvas.on('selection:created', function(event) {
 // open frame in editor
 //$('[data-frames] svg:first-child').trigger('click');
 // empty frames
-$('[data-frames]').empty();
+//$('[data-frames]').empty();
 undo();
 
 // export files
