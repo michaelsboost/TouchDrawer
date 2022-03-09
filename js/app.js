@@ -108,8 +108,14 @@ $('[data-confirm="newproject"]').click(function() {
 
 // load file
 function loadJSON() {
-  $("[data-frames]").empty();
-  $("[data-frames]").html(loadedJSON.frames);
+  $("[data-frames] ul").empty();
+  $("[data-frames] ul").html(loadedJSON.frames);
+  
+  // refresh sortable
+  $('[data-frames] ul').sortable({
+    animation: 150,
+    ghostClass: "dragging"
+  });
     
   if (parseFloat(loadedJSON.version) <= 0.1) {
     swal({
@@ -249,10 +255,10 @@ function loadJSON() {
   
   // load svg file into editor
   if (!$('[data-frames] svg').is(':visible')) {
-    $('[data-frames]').append(loadedSVGCode);
+    $('[data-frames] ul').append(loadedSVGCode);
     loadedSVGCode = $('[data-frames] svg:last-child')[0].outerHTML.toString().split('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"').join('<svg onclick="getFrameCode(this)" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"');
-    $('[data-frames]').empty().append(loadedSVGCode);
-    $('[data-frames] svg:last-child').trigger('click');
+    $('[data-frames] ul').empty().append(loadedSVGCode);
+    $('[data-frames] ul li:last-child svg').trigger('click');
     
     // select the select tool for modifications
     setTimeout(function() {
@@ -281,7 +287,7 @@ function loadJSON() {
       }
     }, 300);
   } else {
-    $('[data-frames] svg:last-child').trigger('click');
+    $('[data-frames] ul li:last-child svg').trigger('click');
   }
 }
 function loadfile(input) {
@@ -2272,7 +2278,7 @@ function getProjectJSON() {
       "invertfilter": invertfilter.value
     }],
     "svg": canvas.toSVG().replace(/Created with Fabric.js 4.6.0/g, "Created with TouchDrawer - https://michaelsboost.github.io/TouchDrawer/"),
-    "frames": $("[data-frames]").html()
+    "frames": $("[data-frames] ul").html()
   };
 };
 function exportJSON() {
