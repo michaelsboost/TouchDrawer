@@ -8,7 +8,7 @@ Just a free and open source vector drawing tool for mobile. Try it today at [mic
 Version
 -------------
 
-1.000-dev
+1.000-release
 
 To Do:
 -------------
@@ -16,7 +16,6 @@ To Do:
  * Add frame (frame holds the svg created by the single fabricjs object holding the layer groups of id's being what the app requires for roughLayer, paintLayer, etc: and when the user clicks that svg the active layer is what's selected upon that svg once loaded in)
  * Import svg (loads svg inside of the editable group WITH THE SVG CONTENTS OF THAT FILE ONLY EDITABLE WITHIN THAT EDITABLE GROUP)
  * Within select tool add a subtool to edit Paths (Bezier Curves), Polygons, Lines and Polylines  
- * Add help link  
 
 License
 -------------

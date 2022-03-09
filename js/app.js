@@ -1,5 +1,5 @@
 /*
-  Version: 1.000-dev
+  Version: 1.000-release
   TouchDrawer, copyright (c) by Michael Schwartz
   Distributed under an MIT license: https://github.com/michaelsboost/TouchDrawer/blob/gh-pages/LICENSE
   
@@ -26,10 +26,10 @@ $('[data-alert]').on('click', function() {
 
 // TouchDrawer info
 $('[data-info]').click(function() {
-//  alertify.log('<div style="font-size: 14px; text-align: center;"><img src="logo.svg" style="width: 50%;"><br><h1>TouchDrawer</h1><h5>Version 1.000-dev</h5></div>');
+//  alertify.log('<div style="font-size: 14px; text-align: center;"><img src="logo.svg" style="width: 50%;"><br><h1>TouchDrawer</h1><h5>Version 1.000-release</h5></div>');
   
   swal({
-    html: '<img src="logo.svg" style="isolation:isolate; width: 50%; cursor: pointer;" viewBox="0 0 512 512" onclick="window.open(\'https://github.com/michaelsboost/TouchDrawer\', \'_blank\')"><br><h1>TouchDrawer</h1><h5>Version 1.000-dev</h5><a href="https://github.com/michaelsboost/TouchDrawer/blob/gh-pages/LICENSE" target="_blank">Open Source License</a>'
+    html: '<img src="logo.svg" style="isolation:isolate; width: 50%; cursor: pointer;" viewBox="0 0 512 512" onclick="window.open(\'https://github.com/michaelsboost/TouchDrawer\', \'_blank\')"><br><h1>TouchDrawer</h1><h5>Version 1.000-release</h5><a href="https://github.com/michaelsboost/TouchDrawer/blob/gh-pages/LICENSE" target="_blank">Open Source License</a>'
   });
 //  $('.swal2-show').css('background', '#000');
   $('.swal2-show').css('font-size', '14px');
@@ -65,7 +65,7 @@ $('[data-confirm="newproject"]').click(function() {
       $('[data-notepad]').val('');
       
       // clear frames
-      $('[data-frames]').empty();
+      $('[data-frames] ul').empty();
       
       // reset canvas dimensions to chosen values
       canvas.setWidth($('[data-new=width]').val());

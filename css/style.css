@@ -1,5 +1,5 @@
 /*
-  Version: 1.000-dev
+  Version: 1.000-release
   TouchDrawer, copyright (c) by Michael Schwartz
   Distributed under an MIT license: https://github.com/michaelsboost/TouchDrawer/blob/gh-pages/LICENSE
   
