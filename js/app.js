@@ -50,10 +50,8 @@ $('[data-confirm="newproject"]').click(function() {
     showCancelButton: true
   }).then((result) => {
     if (result.value) {
-      // initiate a new project
-      // first clear the canvas
-      selectall();
-      remove();
+      // clear frames
+      $('[data-frames] ul').empty();
       
       // reset project name
       $('[data-projectname]').text('My Project');
@@ -63,9 +61,6 @@ $('[data-confirm="newproject"]').click(function() {
       
       // clear notepad
       $('[data-notepad]').val('');
-      
-      // clear frames
-      $('[data-frames] ul').empty();
       
       // reset canvas dimensions to chosen values
       canvas.setWidth($('[data-new=width]').val());
@@ -87,7 +82,17 @@ $('[data-confirm="newproject"]').click(function() {
       $('[data-dialog=new]').hide();
       
       // init zoom tool by default
-      $('[data-tools=zoom]').trigger('click');
+      if (!$('[data-tools=zoom].active').is(':visible')) {
+        $('[data-tools=zoom]').trigger('click');
+      }
+      
+      // clear canvas
+      canvas.clear();
+      
+      // reset canvas background
+      $('[data-tools=fillasbg] > div > div').css('background', '#fff');
+      canvas.setBackgroundColor('#fff',undefined,{erasable:false});
+      canvas.renderAll();
       
       // reset undo history
       setTimeout(function() {
@@ -96,10 +101,16 @@ $('[data-confirm="newproject"]').click(function() {
         undo_history = [];
         redo_history = [];
         undo_history.push(JSON.stringify(canvas));
-      }, 100);
       
-      // close new dialog
-      $('[data-call=new]').trigger('click');
+        // close new dialog
+        $('[data-call=new]').trigger('click');
+        
+        // make sure dialog is closed
+        if ($('[data-call=new].active').is(':visible')) {
+          $('[data-dialog=new]').hide();
+          $('[data-call=new].active').removeClass('active');
+        }
+      }, 100);
     } else {
       return false;
     }
@@ -322,7 +333,9 @@ function loadfile(input) {
         });
       } else if (input.files[0].type === 'application/json') {
         // load json file into editor
-        loadedJSON = JSON.parse(e.target.result);
+        encoded = e.target.result.toString();
+        encoded = encoded.split('data:application/json;base64,').join('');
+        loadedJSON = JSON.parse(atob(encoded));
         loadJSON();
 
         $(document.body).append('<div data-action="fadeOut" style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: #fff; z-index: 3;"></div>');
