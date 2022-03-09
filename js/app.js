@@ -2129,7 +2129,8 @@ $('[data-play]').on('click', function() {
 //    alertify.log('play animation');
     
     // step 1 grab the animation frames
-    $('[data-dialog=play]').show().append($('[data-frames]').html());
+    $('[data-dialog=play]').show().append($('[data-frames] ul').html());
+    $('[data-dialog=play] svg').unwrap();
     
     // step 2 play the animation
     SVGAnimFrames("[data-dialog=play]", "svg", "repeat", "40", "0");
