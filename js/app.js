@@ -87,6 +87,9 @@ $('[data-confirm="newproject"]').click(function() {
         $('[data-tools=zoom]').trigger('click');
       }
       
+      // empty swatches
+      $('.pcr-swatches').empty();
+      
       // clear canvas
       canvas.clear();
       
