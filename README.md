@@ -27,9 +27,8 @@ Shortcut Keys
 
 To Do:
 -------------
- * Allow user to change layers (roughLayer being in the back, paintLayer above that then, highlightsLayer and lastly inkLayer). Add layers as canvas objects or groups in which the objects in that group are only manipulated by the group's class being the active layer such as roughLayer, paintLayer, etc:)
- * Add frame (frame holds the svg created by the single fabricjs object holding the layer groups of id's being what the app requires for roughLayer, paintLayer, etc: and when the user clicks that svg the active layer is what's selected upon that svg once loaded in)
- * Import svg (loads svg inside of the editable group WITH THE SVG CONTENTS OF THAT FILE ONLY EDITABLE WITHIN THAT EDITABLE GROUP)
+ * Allow user to change layers (roughLayer being in the back, paintLayer above that then, highlightsLayer and lastly inkLayer)  
+ * Filters for selected objects  
  * Within select tool add a subtool to edit Paths (Bezier Curves), Polygons, Lines and Polylines  
 
 License
