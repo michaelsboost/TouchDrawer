@@ -37,6 +37,8 @@ $('[data-info]').click(function() {
     'font-weight': '100',
     'color': '#fff'
   });
+  
+  $('.swal2-container img').on('dragstart', function(e) { e.preventDefault(); });
 });
 
 // init new project
@@ -2189,7 +2191,7 @@ window.addEventListener("keydown", function(e) {
 });
 
 // disable image drag and drop on webpage (bug fix)
-$('[data-topmenu] img, [data-lefticons] img, [data-righticons] img, [data-bottommenu] img, .swal2-container img').on('dragstart', function(e) { e.preventDefault(); });
+$('[data-topmenu] img, [data-lefticons] img, [data-righticons] img, [data-bottommenu] img').on('dragstart', function(e) { e.preventDefault(); });
 
 // init zoom tool onload
 $('[data-tools=colorpicker]').trigger('click');
