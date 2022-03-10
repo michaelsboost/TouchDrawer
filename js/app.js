@@ -12,7 +12,8 @@ var version = '1.000',
     loadedJSON = {}, projectJSON,
     activeLayer, imagesPNG, imagesSVG,
     $data, thisTool, prevTool, line, isDown, loadedSVGCode,
-    swatches = ['rgb(0, 0, 0)', 'rgb(255, 255, 255)', 'rgba(0, 0, 0, 0)'];
+    swatches        = ['rgb(0, 0, 0)', 'rgb(255, 255, 255)', 'rgba(0, 0, 0, 0)'],
+    swatchesStrokes = ['rgb(0, 0, 0)', 'rgb(255, 255, 255)', 'rgba(0, 0, 0, 0)'];
 
 // feature coming soon
 $('[data-comingsoon]').click(function() {
@@ -152,7 +153,8 @@ function loadJSON() {
   $('#sepiafilter').val(loadedJSON.filters[0].sepiafilter);
   $('#invertfilter').val(loadedJSON.filters[0].invertfilter).trigger('change');
   
-  swatches = loadedJSON.swatches[0];
+  swatches = loadedJSON.swatches;
+  swatchesStrokes = loadedJSON.swatchesStrokes;
 
   $('[data-projectname]').text(loadedJSON.settings[0].name);
   canvas.setWidth(loadedJSON.settings[0].width);
@@ -163,89 +165,17 @@ function loadJSON() {
   $('[data-framerate], [data-new=framerate]').val(loadedJSON.settings[0].framerate);
   $('[data-notepad]').val(loadedJSON.settings[0].notepad);
   
-//  fillPickr.destroyAndRemove();
-//  strokePickr.destroyAndRemove();
-//  $('[data-dialog=colorpicker]').empty();
-//  $('[data-dialog=colorpicker]').append('<div class="fill-pickr pickr"></div>');
-//  $('[data-dialog=colorpicker]').append('<div class="stroke-pickr pickr"></div>');
-//
-//  fillPickr = Pickr.create({
-//    // Which theme you want to use. Can be 'classic', 'monolith' or 'nano'
-//    theme: 'classic',
-//    el: '.fill-pickr',
-//    inline: 'true',
-//    default: 'hsl(0, 0%, 100%)',
-//    comparison: true,
-//    swatches,
-//    components: {
-//
-//      // Main components
-//      preview: true,
-//      opacity: true,
-//      hue: true,
-//
-//      // Input / output Options
-//      interaction: {
-//        hex: true,
-//        rgba: true,
-//        hsla: true,
-//        hsva: true,
-//        cmyk: true,
-//        input: true,
-//        clear: false,
-//        cancel: true,
-//        save: true
-//      }
-//    }
-//  });
-//  fillPickr.on('init', () => {
-//    fillPickr.show();
-//  });
-//  fillPickr.hide();
-//  fillPickr.on('save', () => {
-//    swatches.push(fillPickr.getColor().toRGBA().toString());
-//    swatches = swatches;
-//    fillPickr.addSwatch(fillPickr.getColor().toRGBA().toString());
-//  });
-//
-//  strokePickr = Pickr.create({
-//    // Which theme you want to use. Can be 'classic', 'monolith' or 'nano'
-//    theme: 'classic',
-//    el: '.stroke-pickr',
-//    inline: 'true',
-//    default: 'hsl(0, 0%, 100%)',
-//    comparison: true,
-//    swatches,
-//    components: {
-//
-//      // Main components
-//      preview: true,
-//      opacity: true,
-//      hue: true,
-//
-//      // Input / output Options
-//      interaction: {
-//        hex: true,
-//        rgba: true,
-//        hsla: true,
-//        hsva: true,
-//        cmyk: true,
-//        input: true,
-//        clear: false,
-//        cancel: true,
-//        save: true
-//      }
-//    }
-//  });
-//  strokePickr.on('init', () => {
-//    strokePickr.show();
-//  });
-//  strokePickr.hide();
-//  strokePickr.on('save', () => {
-//    swatches.push(strokePickr.getColor().toRGBA().toString());
-//    swatches = swatches;
-//    strokePickr.addSwatch(strokePickr.getColor().toRGBA().toString());
-//  });
+  // empty swatches
+  $('.pcr-swatches').empty();
+  
+  // add swatches for fill color
+  for (i = 0; i < loadedJSON.swatches.length; i++) {
+    fillPickr.addSwatch(loadedJSON.swatches[i]);
+  }
+  // add swatches for stroke color
+  for (i = 0; i < loadedJSON.swatchesStrokes.length; i++) {
+    strokePickr.addSwatch(loadedJSON.swatchesStrokes[i]);
+  }
   
   // select zoom tool and reset to default size
   if ($('[data-tools=zoom].active').is(':visible')) {
@@ -597,14 +527,14 @@ strokePickr.on('init', () => {
   strokePickr.show();
 });
 strokePickr.on('save', () => {
-  swatches.push(strokePickr.getColor().toRGBA().toString());
-  swatches = swatches;
+  swatchesStrokes.push(strokePickr.getColor().toRGBA().toString());
+  swatchesStrokes = swatchesStrokes;
   strokePickr.addSwatch(strokePickr.getColor().toRGBA().toString());
 });
 strokePickr.on('cancel', () => {
   strokePickr.removeSwatch(swatches.indexOf(strokePickr.getColor().toRGBA().toString()));
-  swatches.filter(e => e !== strokePickr.getColor().toRGBA().toString());
-  swatches = swatches;
+  swatchesStrokes.filter(e => e !== strokePickr.getColor().toRGBA().toString());
+  swatchesStrokes = swatchesStrokes;
 });
 
 // toggle canvas layers
@@ -2280,7 +2210,8 @@ function getProjectJSON() {
       "framerate": $('[data-framerate]').val(),
       "notepad": $('[data-notepad]').val()
     }],
-    swatches,
+    swatches: swatches,
+    swatchesStrokes: swatchesStrokes,
     "filters": [{
       "blurfilter": blurfilter.value,
       "huefilter": huefilter.value,
@@ -2420,22 +2351,64 @@ $('[data-dialogs] [data-dialog]').hide();
 
 // shortcut keys
 window.addEventListener("keydown", function(e) {
-//  // (CMD+N)
-//  if ( e.metaKey && e.keyCode == 78 ) {
-//    //
-//  }
-//  // (CMD+S)
-//  if ( e.metaKey && e.keyCode == 83 ) {
-//    //
-//  }
-  // (SHIFT+CTRL+Z)
-  if ( e.shiftKey && e.ctrlKey && e.keyCode == 90 ) {
+  // (Ctrl+Shift+Z) Redo (Cmd+Shift+Z)
+  if ( e.ctrlKey && e.shiftKey && e.keyCode == 90 || e.metaKey && e.shiftKey && e.keyCode == 90 ) {
     redo();
     return false;
   }
-  // (CTRL+Z)
-  if ( e.ctrlKey && e.keyCode == 90 ) {
+  // (Ctrl+Z) Undo (Cmd+Z)
+  if ( e.ctrlKey && e.keyCode == 90 || e.metaKey && e.keyCode == 90 ) {
     undo();
+  }
+  // (Ctrl+A) Select All (Cmd+A)
+  if ( e.ctrlKey && e.keyCode == 65 || e.metaKey && e.keyCode == 65 ) {
+    if (!$('input, textarea').is(':focus')) {
+      if ($('[data-tools=select].active').is(':visible')) {
+        selectall();
+        window.getSelection().removeAllRanges();
+      } else {
+        $('[data-tools=select]').trigger('click');
+        selectall();
+        window.getSelection().removeAllRanges();
+      }
+    }
+  }
+  // (Ctrl+G) Group (Cmd+G)
+  if ( e.ctrlKey && e.keyCode == 71 || e.metaKey && e.keyCode == 71 ) {
+    if ($('[data-tools=select].active').is(':visible')) {
+      group();
+    }
+  }
+  // (Ctrl+Shift+G) Ungroup (Cmd+Shift+G) 
+  if ( e.ctrlKey && e.shiftKey && e.keyCode == 71 || e.metaKey && e.shiftKey && e.keyCode == 71 ) {
+    if ($('[data-tools=select].active').is(':visible')) {
+      ungroup();
+    }
+  }
+  // (Ctrl+C) Copy (Cmd+C)
+  if ( e.ctrlKey && e.keyCode == 67 || e.metaKey && e.keyCode == 67 ) {
+    if ($('[data-tools=select].active').is(':visible')) {
+      copy();
+    }
+  }
+  // (Ctrl+V) Paste (Cmd+V)
+  if ( e.ctrlKey && e.keyCode == 86 || e.metaKey && e.keyCode == 86 ) {
+    if ($('[data-tools=select].active').is(':visible')) {
+      paste();
+    }
+  }
+  // (Ctrl+S) Save (Cmd+S)
+  if ( e.ctrlKey && e.keyCode == 83 || e.metaKey && e.keyCode == 83 ) {
+    exportJSON();
+  }
+  // (Ctrl+E) Export Image Sequence
+  if ( e.ctrlKey && e.keyCode == 69 || e.ctrlKey && e.keyCode == 69 ) {
+    exportZIP()
+  }
+  // (Ctrl+N) New Project (Cmd+N) and even (Alt+N)
+  if ( e.ctrlKey && e.keyCode == 78 || e.metaKey && e.keyCode == 78 || e.altKey && e.keyCode == 78 ) {
+    $('[data-confirm=newproject]').trigger('click');
+    e.preventDefault();
   }
   // (DEL)
   if ( e.keyCode == 46 ) {

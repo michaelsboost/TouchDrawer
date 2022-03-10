@@ -10,6 +10,21 @@ Version
 
 1.000-release
 
+Shortcut Keys
+-------------
+
+  1. (Ctrl+Shift+Z) Redo (Cmd+Shift+Z)  
+  2. (Ctrl+Z) Undo (Cmd+Z)  
+  3. (Ctrl+A) Select All (Cmd+A)  
+  4. (Ctrl+G) Group (Cmd+G)  
+  5. (Ctrl+Shift+G) Ungroup (Cmd+Shift+G)  
+  6. (Ctrl+C) Copy (Cmd+C)  
+  7. (Ctrl+V) Paste (Cmd+V)  
+  8. (Ctrl+S) Save (Cmd+S)  
+  9. (Ctrl+E) Export Image Sequence  
+  10. (Ctrl+N) New Project (Cmd+N) and even (Alt+N)  
+  11. (DEL) - Delete selected object
+
 To Do:
 -------------
  * Allow user to change layers (roughLayer being in the back, paintLayer above that then, highlightsLayer and lastly inkLayer). Add layers as canvas objects or groups in which the objects in that group are only manipulated by the group's class being the active layer such as roughLayer, paintLayer, etc:)
