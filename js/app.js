@@ -455,7 +455,7 @@ fillPickr = Pickr.create({
   theme: 'classic',
   el: '.fill-pickr',
   inline: 'true',
-  default: 'hsl(0, 0%, 100%)',
+  default: 'hsl(0, 0%, 0%)',
   comparison: true,
   swatches,
   components: {
@@ -1701,16 +1701,22 @@ $('[data-call]').on('click', function(val) {
 // toggle play/pause animation
 $('[data-play]').on('click', function() {
   if ($(this).attr('data-play') === 'play') {
-    $(this).attr('data-play', 'stop').attr('title', 'Stop').find('img').attr('src', 'svgs/stop.svg');
+    $(this).attr('data-play', 'stop').attr('title', 'Stop (Spacebar)').find('img').attr('src', 'svgs/stop.svg');
     
     // step 1 grab the animation frames
     $('[data-dialog=play]').show().append($('[data-frames] ul').html());
     $('[data-dialog=play] svg').unwrap();
     
+//    // clear all timeouts (to avoid issues while playing animation over and over again)
+//    var id = window.setTimeout(function() {}, 0);
+//    while (id--) {
+//      window.clearTimeout(id); // will do nothing if no timeout with id is present
+//    }
+    
     // step 2 play the animation
     SVGAnimFrames("[data-dialog=play]", "svg", "repeat", "40", "0");
   } else {
-    $(this).attr('data-play', 'play').attr('title', 'Play').find('img').attr('src', 'svgs/play.svg');
+    $(this).attr('data-play', 'play').attr('title', 'Play (Spacebar)').find('img').attr('src', 'svgs/play.svg');
 
     // stop animation
     $('[data-dialog=play]').hide().empty();
@@ -2002,14 +2008,15 @@ window.addEventListener("keydown", function(e) {
   // (Ctrl+A) Select All (Cmd+A)
   if ( e.ctrlKey && e.keyCode == 65 || e.metaKey && e.keyCode == 65 ) {
     if (!$('input, textarea').is(':focus')) {
-      if ($('[data-tools=select].active').is(':visible')) {
-        selectall();
-        window.getSelection().removeAllRanges();
-      } else {
+      if (!$('[data-tools=select].active').is(':visible')) {
         $('[data-tools=select]').trigger('click');
-        selectall();
-        window.getSelection().removeAllRanges();
       }
+      selectall();
+      
+      // remove accidental selections outside of the canvas
+      setTimeout(function() {
+        window.getSelection().removeAllRanges();
+      }, 100);
     }
   }
   // (Ctrl+G) Group (Cmd+G)
@@ -2022,6 +2029,13 @@ window.addEventListener("keydown", function(e) {
   if ( e.ctrlKey && e.shiftKey && e.keyCode == 71 || e.metaKey && e.shiftKey && e.keyCode == 71 ) {
     if ($('[data-tools=select].active').is(':visible')) {
       ungroup();
+    }
+  }
+  // (Ctrl+X) Cut (Cmd+X)
+  if ( e.ctrlKey && e.keyCode == 88 || e.metaKey && e.keyCode == 88 ) {
+    if ($('[data-tools=select].active').is(':visible')) {
+      copy();
+      remove();
     }
   }
   // (Ctrl+C) Copy (Cmd+C)
@@ -2055,6 +2069,122 @@ window.addEventListener("keydown", function(e) {
       remove();
     }
     return false;
+  }
+  // (Alt++) Add frame
+  if (e.altKey && e.keyCode == 187) {
+    $('[data-add]').trigger('click');
+  }
+  // (Alt+-) Delete last frame
+  if (e.altKey && e.keyCode == 189) {
+    $('[data-delete]').trigger('click');
+  }
+  // (Alt+X) Clear canvas
+  if (e.altKey && e.keyCode == 88) {
+    if (!$('[data-tools=select].active').is(':visible')) {
+      $('[data-tools=select]').trigger('click');
+    }
+    clearcanvas();
+  }
+  // (Shift+Alt+S) Export frame as svg
+  if (e.shiftKey && e.altKey && e.keyCode == 83) {
+    downloadSVGWithFilters();
+    return false;
+  }
+  // (Alt+S) Export frame as png
+  if (e.altKey && e.keyCode == 83) {
+    downloadPNGWithFilters();
+  }
+  
+  // toggles tools
+  if ($('input, textarea').is(':focus') || $('.swal2-shown').is(':visible')) {
+    // first we detect if we can use the keys by disabling them in areas they're not usable
+    return false;
+  } else 
+  {
+    // (I) Open Application Info
+    if (e.keyCode == 73) {
+      $('[data-info]').trigger('click');
+      e.preventDefault();
+    }
+    
+    // (Spacebar) Start/Stop Animation
+    if (e.keyCode == 32) {
+      $('[data-play]').trigger('click');
+      e.preventDefault();
+    }
+    
+    // (1) zoom
+    if (e.keyCode == 49) {
+      $('[data-tools=zoom]').trigger('click');
+    }
+    // (2) colorpicker
+    if (e.keyCode == 50) {
+      $('[data-tools=colorpicker]').trigger('click');
+    }
+    // (3) eyedropper
+    if (e.keyCode == 51) {
+      $('[data-tools=eyedropper]').trigger('click');
+    }
+    // (4) select
+    if (e.keyCode == 52) {
+      $('[data-tools=select]').trigger('click');
+    }
+    // (5) pencil
+    if (e.keyCode == 53) {
+      $('[data-tools=pencil]').trigger('click');
+    }
+    // (6) brush
+    if (e.keyCode == 54) {
+      $('[data-tools=brush]').trigger('click');
+    }
+    // (7) eraser
+    if (e.keyCode == 55) {
+      $('[data-tools=eraser]').trigger('click');
+    }
+    // (8) lasso
+    if (e.keyCode == 56) {
+      $('[data-tools=lasso]').trigger('click');
+    }
+    // (9) lassoerase
+    if (e.keyCode == 57) {
+      $('[data-tools=lassoerase]').trigger('click');
+    }
+    // (Shift+1) rect
+    if (e.shiftKey && e.keyCode == 49) {
+      $('[data-tools=rect]').trigger('click');
+    }
+    // (Shift+2) ellipse
+    if (e.shiftKey && e.keyCode == 50) {
+      $('[data-tools=ellipse]').trigger('click');
+    }
+    // (Shift+3) line
+    if (e.shiftKey && e.keyCode == 51) {
+      $('[data-tools=line]').trigger('click');
+    }
+    // (Shift+4) triangle
+    if (e.shiftKey && e.keyCode == 52) {
+      $('[data-tools=triangle]').trigger('click');
+    }
+    // (Shift+5) splatter
+    if (e.shiftKey && e.keyCode == 53) {
+      $('[data-tools=splatter]').trigger('click');
+    }
+    // (Shift+6) spray
+    if (e.shiftKey && e.keyCode == 54) {
+      $('[data-tools=spray]').trigger('click');
+    }
+    // (Shift+7) fill
+    if (e.shiftKey && e.keyCode == 55) {
+      $('[data-tools=fill]').trigger('click');
+    }
+    // (Shift+8) filters
+    if (e.shiftKey && e.keyCode == 56) {
+      $('[data-tools=filters]').trigger('click');
+    }
+    // (0) fillasbg
+    if (e.keyCode == 48) {
+      $('[data-tools=fillasbg]').trigger('click');
+    }
   }
 });
 

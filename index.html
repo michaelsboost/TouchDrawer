@@ -36,63 +36,58 @@
   <body>
     <!-- left side -->
     <div data-lefticons>
-      <a data-tools="zoom" title="Pan/Zoom Tool">
+      <a data-tools="zoom" title="Pan/Zoom Tool (1)">
         <img src="svgs/zoom.svg">
       </a>
-      <a data-tools="colorpicker" title="Color Picker">
+      <a data-tools="colorpicker" title="Color Picker (2)">
         <img src="svgs/color.svg">
       </a>
-      <a data-tools="eyedropper" title="Eyedropper">
+      <a data-tools="eyedropper" title="Eyedropper (3)">
         <img src="svgs/eyedropper.svg">
       </a>
-      <a data-tools="select" title="Select">
+      <a data-tools="select" title="Select (4)">
         <img src="svgs/select.svg">
       </a>
-      <a data-tools="pencil" title="Pencil">
+      <a data-tools="pencil" title="Pencil (5)">
         <img src="svgs/pencil.svg">
       </a>
-      <a data-tools="brush" title="Brush">
+      <a data-tools="brush" title="Brush (6)">
         <img src="svgs/brush.svg">
       </a>
-      <a data-tools="eraser" title="Eraser">
+      <a data-tools="eraser" title="Eraser (7)">
         <img src="svgs/eraser.svg">
       </a>
-      <a data-tools="lasso" title="Lasso">
+      <a data-tools="lasso" title="Lasso (8)">
         <img src="svgs/lasso.svg">
       </a>
-      <a data-tools="lassoerase" title="Lasso Eraser">
+      <a data-tools="lassoerase" title="Lasso Eraser (9)">
         <img src="svgs/eraser3.svg">
       </a>
-      <a data-tools="rect" title="Rect">
+      <a data-tools="rect" title="Rect (Shift+1)">
         <img src="svgs/rect.svg">
       </a>
-      <a data-tools="ellipse" title="Ellipse">
+      <a data-tools="ellipse" title="Ellipse (Shift+2)">
         <img src="svgs/ellipse.svg">
       </a>
-      <a data-tools="line" title="Line">
+      <a data-tools="line" title="Line (Shift+3)">
         <img src="svgs/line2.svg">
       </a>
-      <a data-tools="triangle" title="Triangle">
+      <a data-tools="triangle" title="Triangle (Shift+4)">
         <img src="svgs/triangle.svg">
       </a>
-      <a data-tools="splatter" title="Splatter">
+      <a data-tools="splatter" title="Splatter (Shift+5)">
         <img src="svgs/splatter.svg">
       </a>
-      <a data-tools="spray" title="Spray">
+      <a data-tools="spray" title="Spray (Shift+6)">
         <img src="svgs/spray.svg">
       </a>
-      <a data-tools="fill" title="Fill">
+      <a data-tools="fill" title="Fill (Shift+7)">
         <img src="svgs/fill.svg">
       </a>
-<!--
-      <a data-tools="eraser" title="Eraser">
-        <img src="svgs/eraser.svg">
-      </a>
--->
-      <a data-tools="filters" title="Filters">
+      <a data-tools="filters" title="Filters (Shift+8)">
         <img src="svgs/filters.svg">
       </a>
-      <a data-tools="fillasbg" title="Apply Fill as Background Color">
+      <a data-tools="fillasbg" title="Apply Fill as Background Color (0)">
         <div>
           <div></div>
         </div>
@@ -101,16 +96,16 @@
     
     <!-- right side -->
     <div data-righticons>
-      <a data-play="play" title="Play">
+      <a data-play="play" title="Play (Spacebar)">
         <img src="svgs/play.svg">
       </a>
-      <a data-export="pngframe" title="Export Frame As PNG" onclick="downloadPNGWithFilters()">
+      <a data-export="pngframe" title="Export Frame As PNG (Alt+S)" onclick="downloadPNGWithFilters()">
         <img src="svgs/saveimage2.svg">
       </a>
-      <a data-export="svgframe" title="Export Frame As SVG" onclick="downloadSVGWithFilters()">
+      <a data-export="svgframe" title="Export Frame As SVG (Shift+Alt+S)" onclick="downloadSVGWithFilters()">
         <img src="svgs/savecode2.svg">
       </a>
-      <a data-clearcanvas title="Clear canvas" onclick="clearcanvas()">
+      <a data-clearcanvas title="Clear canvas (Alt+X)" onclick="clearcanvas()">
         <img src="svgs/broom.svg">
       </a>
     </div>
@@ -125,7 +120,7 @@
           <a href="https://michaelsboost.com/donate/" target="_blank" title="Donate">
             <img src="svgs/donate.svg">
           </a>
-          <button data-call="new">NEW</button>
+          <button data-call="new" title="New Project (Ctrl+N/Alt+N)">NEW</button>
           <label for="openfile">
             LOAD
           </label>
@@ -136,8 +131,8 @@
         </span>
 
         <span data-menubuttons>
-          <button onclick="exportJSON()">SAVE</button>
-          <button data-export onclick="exportZIP()">ZIP</button>
+          <button onclick="exportJSON()" title="Save Project (Ctrl+S)">SAVE</button>
+          <button data-export onclick="exportZIP()" title="Export Frame Sequence as Images (Ctrl+E)">ZIP</button>
           <button data-export onclick="exportGIF()">GIF</button>
 
           <a data-call="settings" title="Settings">
@@ -157,7 +152,7 @@
         
         <div data-toolsoption="zoom">
            <span>
-            <button data-call="new">NEW</button>
+            <button data-call="new" title="New Project (Ctrl+N/Alt+N)">NEW</button>
             <label for="openfile">
               LOAD
             </label>
@@ -168,8 +163,8 @@
           </span>
 
           <span data-menubuttons>
-            <button onclick="exportJSON()">SAVE</button>
-            <button data-export onclick="exportZIP()">ZIP</button>
+            <button onclick="exportJSON()" title="Save Project (Ctrl+S)">SAVE</button>
+            <button data-export onclick="exportZIP()" title="Export Frame Sequence as Images (Ctrl+E)">ZIP</button>
             <button data-export onclick="exportGIF()">GIF</button>
 
             <a data-resetzoompos title="Reset Default Size">
@@ -420,7 +415,7 @@
         <h2>Frame Rate: (ms)</h2>
         <input data-new="framerate" type="number" min="1" value="40">
 
-        <button data-confirm="newproject">Confirm</button>
+        <button data-confirm="newproject" title="Confirm New Project (Ctrl+N / Alt+N)">Confirm</button>
       </div>
       <div class="dialog" data-dialog="settings">
         <h2>Frame Rate: (ms)</h2>
@@ -439,10 +434,10 @@
     <!-- bottom menu -->
     <div data-bottommenu>
       <span>
-        <a data-undo title="Undo" onclick="undo()">
+        <a data-undo title="Undo (Ctrl+Z)" onclick="undo()">
           <img src="svgs/undo.svg">
         </a>
-        <a data-add title="Add Frame">
+        <a data-add title="Add Frame (Alt++)">
           <img src="svgs/add2.svg">
         </a>
       </span>
@@ -452,10 +447,10 @@
       </span>
       
       <span>
-        <a data-delete title="Delete Frame">
+        <a data-delete title="Delete Frame (Alt+-)">
           <img src="svgs/trash.svg">
         </a>
-        <a data-redo title="Redo" onclick="redo()">
+        <a data-redo title="Redo (Shift+Ctrl+Z)" onclick="redo()">
           <img src="svgs/redo.svg">
         </a>
       </span>

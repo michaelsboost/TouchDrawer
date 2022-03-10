@@ -18,12 +18,36 @@ Shortcut Keys
   3. (Ctrl+A) Select All (Cmd+A)  
   4. (Ctrl+G) Group (Cmd+G)  
   5. (Ctrl+Shift+G) Ungroup (Cmd+Shift+G)  
-  6. (Ctrl+C) Copy (Cmd+C)  
-  7. (Ctrl+V) Paste (Cmd+V)  
-  8. (Ctrl+S) Save (Cmd+S)  
-  9. (Ctrl+E) Export Image Sequence  
-  10. (Ctrl+N) New Project (Cmd+N) and even (Alt+N)  
-  11. (DEL) - Delete selected object
+  6. (Ctrl+X) Cut (Cmd+X)  
+  7. (Ctrl+C) Copy (Cmd+C)  
+  8. (Ctrl+V) Paste (Cmd+V)  
+  9. (Ctrl+S) Save (Cmd+S)  
+  10. (Ctrl+E) Export Image Sequence  
+  11. (Ctrl+N) New Project (Cmd+N) and even (Alt+N)  
+  12. (DEL) - Delete selected object
+  13. (Alt++) - Add frame
+  14. (Alt+-) - Delete last frame
+  15. (Alt+X) - Clear canvas
+  16. (Spacebar) - Start/Stop Animation
+  17. (1) - Toggle Zoom/Pan
+  18. (2) - Toggle Color Picker
+  19. (3) - Toggle Eyedropper
+  20. (4) - Toggle Select
+  21. (5) - Toggle Pencil
+  22. (6) - Toggle Brush
+  23. (7) - Toggle Eraser
+  24. (8) - Toggle Lasso
+  25. (9) - Toggle LassoErase
+  26. (Shift+1) - Toggle Rect
+  27. (Shift+2) - Toggle Ellipse
+  28. (Shift+3) - Toggle Line
+  29. (Shift+4) - Toggle Triangle
+  30. (Shift+5) - Toggle Splatter
+  31. (Shift+6) - Toggle Spray
+  32. (Shift+7) - Toggle Fill
+  33. (Shift+8) - Toggle Filters
+  34. (0) - Apply Fill As Canvas Background Color
+  35. (I) - Open Application Info
 
 To Do:
 -------------
