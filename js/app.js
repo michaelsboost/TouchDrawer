@@ -2188,6 +2188,9 @@ window.addEventListener("keydown", function(e) {
   }
 });
 
+// disable image drag and drop on webpage (bug fix)
+$('[data-topmenu] img, [data-lefticons] img, [data-righticons] img, [data-bottommenu] img').on('dragstart', function(e) { e.preventDefault(); });
+
 // init zoom tool onload
 $('[data-tools=colorpicker]').trigger('click');
 $('[data-tools=colorpicker]').trigger('click');
